@@ -1,0 +1,21 @@
+# --- .NET ---
+bin/
+obj/
+.vs/
+*.user
+
+# --- Angular/Node ---
+node_modules/
+dist/
+.angular/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+.env
+
+# --- OS Junk ---
+.DS_Store
+Thumbs.db
