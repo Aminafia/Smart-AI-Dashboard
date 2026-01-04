@@ -1,20 +1,30 @@
+using Application.DTOs.Users;
+using Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
 [ApiController]
-[Route("api/users")]
+[Route("api/[controller]")]
 public class UsersController : ControllerBase
 {
-    [HttpPost]
-    public IActionResult CreateUser()
+    private readonly IUserService _userService;
+
+    public UsersController(IUserService userService)
     {
-        return Ok("TODO");
+        _userService = userService;
     }
 
-    [HttpGet("{id}")]
-    public IActionResult GetUser(Guid id)
+    [HttpPost]
+    public IActionResult CreateUser([FromBody] CreateUserRequest request)
     {
-        return Ok("TODO");
+        var result = _userService.CreateUser(request);
+        return Ok(result);
+    }
+
+    [HttpGet]
+    public IActionResult GetUsers()
+    {
+        return Ok(_userService.GetAllUsers());
     }
 }

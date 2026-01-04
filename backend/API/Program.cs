@@ -1,4 +1,6 @@
 using API.Services;
+using Application.Services;
+using Application.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,7 @@ builder.Services.AddHttpClient<IAiService, AiService>(
         client.Timeout = TimeSpan.FromSeconds(180);
     }
 );
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
