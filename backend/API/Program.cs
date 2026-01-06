@@ -1,6 +1,10 @@
 using API.Services;
 using Application.Services;
 using Application.Services.Interfaces;
+using Core.Interfaces;
+using Infrastructure.Repositories;
+using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +21,12 @@ builder.Services.AddHttpClient<IAiService, AiService>(
     }
 );
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    options.UseInMemoryDatabase("SmartAIDashboardDb");
+});
+
 
 var app = builder.Build();
 

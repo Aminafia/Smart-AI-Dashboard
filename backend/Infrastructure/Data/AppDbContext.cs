@@ -1,10 +1,15 @@
-namespace Infrastrcuture.Data;
+using Core.Entities;
+using Microsoft.EntityFrameworkCore;
 
-public class AppDbContext : DbContext
+namespace Infrastructure.Data
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    public class AppDbContext : DbContext
     {
-    }
+        public AppDbContext(DbContextOptions<AppDbContext> options)
+            : base(options)
+        {
+        }
 
-    public DbSet<User> Users { get; set; } = null!;
+        public DbSet<User> Users { get; set; } = null!;
+    }
 }
