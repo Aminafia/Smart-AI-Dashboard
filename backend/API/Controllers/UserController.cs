@@ -16,15 +16,16 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult CreateUser([FromBody] CreateUserRequest request)
+    public async Task<IActionResult> CreateUser(CreateUserRequest request)
     {
-        var result = _userService.CreateUser(request);
-        return Ok(result);
+        var user = await _userService.CreateUserAsync(request);
+        return Ok(user);
     }
 
     [HttpGet]
-    public IActionResult GetUsers()
+    public async Task<IActionResult> GetAllUsers()
     {
-        return Ok(_userService.GetAllUsers());
+        var users = await _userService.GetAllUsersAsync();
+        return Ok(users);
     }
 }
