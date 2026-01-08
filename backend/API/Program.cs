@@ -26,6 +26,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseInMemoryDatabase("SmartAIDashboardDb");
 });
+builder.Services.AddApplication();
+
 
 
 var app = builder.Build();
