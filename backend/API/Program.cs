@@ -6,6 +6,10 @@ using Core.Interfaces;
 using Infrastructure.Repositories;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Application.Validation;
+using Application.Common.Behaviors;
+using FluentValidation;
+using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +31,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseInMemoryDatabase("SmartAIDashboardDb");
 });
 builder.Services.AddApplication();
+builder.Services.AddTransient(
+    typeof(IPipelineBehavior<,>),
+    typeof(ValidationBehavior<,>)
+);
+builder.Services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>();
+
 
 
 

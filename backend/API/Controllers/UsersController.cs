@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
+using Application.Features.Users.Commands.CreateUser;
 using MediatR;
-using Application.Features.Users.Commands;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
@@ -16,9 +16,10 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateUser(CreateUserCommand command)
+    public async Task<IActionResult> CreateUser(
+        [FromBody] CreateUserCommand command)
     {
-        var userId = await _mediator.Send(command);
-        return Ok(userId);
+        var result = await _mediator.Send(command);
+        return Ok(result);
     }
 }
