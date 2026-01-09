@@ -1,7 +1,8 @@
-using Application.Features.Users.Commands.CreateUser;
-using Application.Features.Users.Queries.GetUsers;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using MediatR;
+using Application.Features.Users.Commands;
+
+namespace API.Controllers;
 
 [ApiController]
 [Route("api/users")]
@@ -15,16 +16,9 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateUserCommand command)
+    public async Task<IActionResult> CreateUser(CreateUserCommand command)
     {
-        var id = await _mediator.Send(command);
-        return Ok(id);
-    }
-
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
-    {
-        var users = await _mediator.Send(new GetUsersQuery());
-        return Ok(users);
+        var userId = await _mediator.Send(command);
+        return Ok(userId);
     }
 }
