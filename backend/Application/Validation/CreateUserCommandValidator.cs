@@ -15,5 +15,10 @@ public class CreateUserCommandValidator
         RuleFor(x => x.FullName)
             .NotEmpty()
             .MaximumLength(100);
+
+        RuleFor(x => x.Password)
+            .NotEmpty()
+            .MinimumLength(8);
+
     }
 }
