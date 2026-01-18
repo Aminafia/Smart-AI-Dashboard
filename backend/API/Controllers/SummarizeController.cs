@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using API.Models;
 using API.Services;
 
@@ -6,6 +7,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/summarize")]
+    [Authorize]
     public class SummarizeController : ControllerBase
     {
         private readonly IAiService _aiService;

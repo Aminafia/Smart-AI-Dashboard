@@ -1,35 +1,32 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Application.Services;
-using Core.Entities;
-using Infrastructure.Auth;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Core.Entities;
 
-namespace Application.Services;
+namespace Infrastructure.Auth;
 
-public class JwtTokenService
+public class JwtTokenGenerator
 {
     private readonly JwtSettings _jwtSettings;
 
-    public JwtTokenService(IOptions<JwtSettings> options)
+    public JwtTokenGenerator(IOptions<JwtSettings> jwtOptions)
     {
-        _jwtSettings = options.Value;
+        _jwtSettings = jwtOptions.Value;
     }
 
     public string GenerateToken(User user)
     {
         var claims = new List<Claim>
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Role, user.Role)
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new Claim(JwtRegisteredClaimNames.Email, user.Email),
+            new Claim(ClaimTypes.Role, user.Role) // 👈 ROLE CLAIM (DAY 10)
         };
 
         var key = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(_jwtSettings.Secret)
-        );
+            Encoding.UTF8.GetBytes(_jwtSettings.Secret));
 
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

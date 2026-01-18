@@ -13,6 +13,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Infrastructure.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,21 +41,40 @@ builder.Services.AddTransient(
 );
 builder.Services.AddValidatorsFromAssemblyContaining<CreateUserCommandValidator>();
 builder.Services.AddScoped<JwtTokenService>();
+
+builder.Services.AddAuthorization();
+builder.Services.Configure<JwtSettings>(
+    builder.Configuration.GetSection("JwtSettings"));
+var jwtSettings = builder.Configuration
+    .GetSection("JwtSettings")
+    .Get<JwtSettings>();
+
+if (jwtSettings == null)
+{
+    throw new Exception("JwtSettings is missing from configuration");
+}
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = false,
-            ValidateAudience = false,
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
+
+            ValidIssuer = jwtSettings.Issuer,
+            ValidAudience = jwtSettings.Audience,
+
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!)
+                Encoding.UTF8.GetBytes(jwtSettings.Secret)
             )
         };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddScoped<JwtTokenGenerator>();
+
 
 
 
@@ -95,6 +115,32 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
+
+    var adminEmail = "admin@admin.com";
+
+    var existingAdmin = await userRepository.GetByEmailAsync(adminEmail);
+
+    if (existingAdmin == null)
+    {
+        var adminUser = new Core.Entities.User
+        {
+            Id = Guid.NewGuid(),
+            Email = adminEmail,
+            FullName = "System Admin",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123"),
+            Role = "Admin",
+            CreatedAt = DateTime.UtcNow
+        };
+
+        await userRepository.AddAsync(adminUser);
+    }
+}
+
+
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)

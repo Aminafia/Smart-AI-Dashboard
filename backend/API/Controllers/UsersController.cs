@@ -1,11 +1,13 @@
 using Application.Features.Users.Commands.CreateUser;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
 [ApiController]
 [Route("api/users")]
+[Authorize(Roles = "Admin")]
 public class UsersController : ControllerBase
 {
     private readonly IMediator _mediator;
