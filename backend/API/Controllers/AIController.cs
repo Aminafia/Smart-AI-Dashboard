@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Core.Constants;
 
 namespace API.Controllers;
 
 [ApiController]
 [Route("api/ai")]
-[Authorize]
+[Authorize(Roles = Roles.User)]
 public class AIController : ControllerBase
 {
     [HttpPost("analyze")]

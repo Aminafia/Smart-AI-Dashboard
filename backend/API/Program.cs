@@ -3,6 +3,7 @@ using Application.Services;
 using Application.Services.Interfaces;
 using Application;
 using Core.Interfaces;
+using Core.Constants;
 using Infrastructure.Repositories;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -68,14 +69,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = jwtSettings.Audience,
 
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(jwtSettings.Secret)
-            )
+                Encoding.UTF8.GetBytes(jwtSettings.Secret)),
+            RoleClaimType = ClaimTypes.Role
+
         };
     });
-
-builder.Services.AddScoped<JwtTokenGenerator>();
-
-
 
 
 
@@ -132,7 +130,7 @@ using (var scope = app.Services.CreateScope())
             Email = adminEmail,
             FullName = "System Admin",
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123"),
-            Role = "Admin",
+            Role = Roles.Admin,
             CreatedAt = DateTime.UtcNow
         };
 

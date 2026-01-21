@@ -1,3 +1,5 @@
+using SmartAI.Dashboard.Core.Constants;
+
 namespace Core.Entities;
 
 public class User
