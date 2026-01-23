@@ -1,4 +1,4 @@
-using SmartAI.Dashboard.Core.Constants;
+using Core.Constants;
 
 namespace Core.Entities;
 

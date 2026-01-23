@@ -2,6 +2,8 @@ using MediatR;
 using Core.Entities;
 using Core.Interfaces;
 using Infrastructure.Auth;
+using Application.Services;
+
 
 namespace Application.Features.Auth.Commands.Login;
 
@@ -9,14 +11,14 @@ public class LoginCommandHandler
     : IRequestHandler<LoginCommand, string>
 {
     private readonly IUserRepository _userRepository;
-    private readonly JwtTokenGenerator _jwtTokenGenerator;
+    private readonly JwtTokenService _jwtTokenService;
 
     public LoginCommandHandler(
         IUserRepository userRepository,
-        JwtTokenGenerator jwtTokenGenerator)
+        JwtTokenService jwtTokenService)
     {
         _userRepository = userRepository;
-        _jwtTokenGenerator = jwtTokenGenerator;
+        _jwtTokenService = jwtTokenService;
     }
 
     public async Task<string> Handle(
@@ -35,6 +37,6 @@ public class LoginCommandHandler
         if (!isPasswordValid)
             throw new Exception("Invalid email or password");
 
-        return _jwtTokenGenerator.GenerateToken(user);
+        return _jwtTokenService.GenerateToken(user);
     }
 }
