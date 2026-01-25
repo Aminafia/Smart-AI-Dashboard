@@ -16,6 +16,10 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Infrastructure.Auth;
 using System.Security.Claims;
+using Core.AI.Providers;
+using Core.AI.Services;
+using Core.AI.Interfaces;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -75,6 +79,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
         };
     });
+
+builder.Services.AddScoped<IAIProvider, OpenAIProvider>();
+builder.Services.AddScoped<IAIService, AIService>();
+
 
 
 

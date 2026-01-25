@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Core.Constants;
+using Core.AI.Interfaces;
+using Core.AI.Models;
+using Core.AI.Services;
 
 namespace API.Controllers;
 
@@ -9,10 +12,19 @@ namespace API.Controllers;
 [Authorize(Roles = Roles.User)]
 public class AIController : ControllerBase
 {
-    [HttpPost("analyze")]
-    public IActionResult Analyze()
+
+    private readonly IAIService _aiService;
+
+    public AIController(IAIService aiService)
     {
-        return Ok("TODO");
+        _aiService = aiService;
+    }
+    
+    [HttpPost("analyze")]
+    public async Task<IActionResult> Analyze([FromBody] AIRequest request)
+    {
+        var response = await _aiService.AnalyzeAsync(request);
+        return Ok(response);
     }
 
     [HttpPost("summarize")]
