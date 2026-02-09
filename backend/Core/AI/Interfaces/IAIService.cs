@@ -4,5 +4,5 @@ namespace Core.AI.Interfaces;
 
 public interface IAIService
 {
-    Task<AIResponse> AnalyzeAsync(AIRequest request);
+    Task<AIResponse> GenerateAsync(AIRequest request);
 }

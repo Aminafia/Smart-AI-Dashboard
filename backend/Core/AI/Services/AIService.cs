@@ -13,15 +13,16 @@ public class AIService : IAIService
         _provider = provider;
     }
 
-    public async Task<AIResponse> AnalyzeAsync(AIRequest request)
+    public async Task<AIResponse> GenerateAsync(AIRequest request)
     {
         var prompt = PromptBuilder.Build(request);
+
         var result = await _provider.ExecuteAsync(prompt);
 
         return new AIResponse
         {
             Result = result,
-            Success = true
+            IsSuccess = true
         };
     }
 }

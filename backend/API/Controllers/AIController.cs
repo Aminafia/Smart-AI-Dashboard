@@ -23,7 +23,7 @@ public class AIController : ControllerBase
     [HttpPost("analyze")]
     public async Task<IActionResult> Analyze([FromBody] AIRequest request)
     {
-        var response = await _aiService.AnalyzeAsync(request);
+        var response = await _aiService.GenerateAsync(request);
         return Ok(response);
     }
 
