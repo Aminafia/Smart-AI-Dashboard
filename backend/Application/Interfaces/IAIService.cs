@@ -1,6 +1,6 @@
-using Core.AI.Models;
+using Application.DTOs.AI;
 
-namespace Core.AI.Interfaces;
+namespace Application.Interfaces;
 
 public interface IAIService
 {

@@ -1,9 +1,9 @@
 using Application.DTOs.Auth;
-using Application.Services;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using BCrypt.Net;
 using Microsoft.AspNetCore.Authorization;
+using Infrastructure.Auth;
 
 namespace API.Controllers;
 

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using API.Models;
-using API.Services;
+using Application.Interfaces;
+using Application.DTOs.AI;
 
 namespace API.Controllers
 {
@@ -10,9 +10,9 @@ namespace API.Controllers
     [Authorize]
     public class SummarizeController : ControllerBase
     {
-        private readonly IAiService _aiService;
+        private readonly IAIService _aiService;
 
-        public SummarizeController(IAiService aiService)
+        public SummarizeController(IAIService aiService)
         {
             _aiService = aiService;
         }
@@ -22,8 +22,13 @@ namespace API.Controllers
         {
             if (string.IsNullOrWhiteSpace(request.Text))
                 return BadRequest("Text cannot be empty");
-        
-            var result = await _aiService.SummarizeAsync(request);
+            var aiRequest = new AIRequest
+            {
+                Prompt = request.Text,
+            };
+
+            var result = await _aiService.GenerateAsync(aiRequest);
+
             return Ok(result);
         }
     }

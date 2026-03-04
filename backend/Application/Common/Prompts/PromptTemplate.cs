@@ -1,4 +1,4 @@
-namespace Core.AI.Prompts;
+namespace Application.Common.Prompts;
 
 public static class PromptTemplate
 {

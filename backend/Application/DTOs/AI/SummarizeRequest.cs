@@ -1,4 +1,4 @@
-namespace API.Models
+namespace Application.DTOs.AI
 {
     public class SummarizeRequest
     {

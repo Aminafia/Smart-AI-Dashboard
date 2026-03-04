@@ -1,15 +1,14 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Application.Services;
 using Core.Entities;
-using Infrastructure.Auth;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Application.Interfaces;
 
-namespace Application.Services;
+namespace Infrastructure.Auth;
 
-public class JwtTokenService
+public class JwtTokenService: IJwtTokenService
 {
     private readonly JwtSettings _jwtSettings;
 

@@ -1,9 +1,7 @@
 using MediatR;
 using Core.Entities;
 using Core.Interfaces;
-using Infrastructure.Auth;
-using Application.Services;
-
+using Application.Interfaces;
 
 namespace Application.Features.Auth.Commands.Login;
 
@@ -11,11 +9,11 @@ public class LoginCommandHandler
     : IRequestHandler<LoginCommand, string>
 {
     private readonly IUserRepository _userRepository;
-    private readonly JwtTokenService _jwtTokenService;
+    private readonly IJwtTokenService _jwtTokenService;
 
     public LoginCommandHandler(
         IUserRepository userRepository,
-        JwtTokenService jwtTokenService)
+        IJwtTokenService jwtTokenService)
     {
         _userRepository = userRepository;
         _jwtTokenService = jwtTokenService;
