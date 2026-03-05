@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Infrastructure.Data;
@@ -5,7 +6,6 @@ using Infrastructure.Repositories;
 using Infrastructure.Auth;
 using Infrastructure.AI;
 using Infrastructure.AI.Providers;
-using Microsoft.EntityFrameworkCore;
 using Application.Interfaces;
 using Core.Interfaces;
 
@@ -18,7 +18,7 @@ public static class DependencyInjection
         IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options =>
-            options.UseInMemoryDatabase("SmartAIDashboardDb"));
+            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<IUserRepository, UserRepository>();
 
