@@ -1,7 +1,9 @@
 using MediatR;
 using Core.Entities;
 using Core.Interfaces;
+using Core.Constants;
 using BCrypt.Net;
+using Application.Common.Exceptions;
 
 namespace Application.Features.Users.Commands.CreateUser;
 
@@ -10,40 +12,41 @@ public class CreateUserCommandHandler
 {
     private readonly IUserRepository _userRepository;
 
-    // 🔹 1. Inject repository via constructor
+    // 1. Inject repository via constructor
     public CreateUserCommandHandler(IUserRepository userRepository)
     {
         _userRepository = userRepository;
     }
 
-    // 🔹 2. Real implementation
+    // 2. Real implementation
     public async Task<Guid> Handle(
         CreateUserCommand request,
         CancellationToken cancellationToken)
     {
-        // Optional but recommended: prevent duplicate emails
-        var emailExists = await _userRepository.EmailExistsAsync(request.Email);
+        var emailExists = await _userRepository.EmailExistsAsync(
+            request.Email,
+            cancellationToken
+        );
         if (emailExists)
         {
-            throw new InvalidOperationException(
-                "A user with this email already exists.");
+            throw new DuplicateEmailException(request.Email);
         }
 
-        // 🔹 3. Create real User entity
+        // 3. Create real User entity
         var user = new User
         {
             Id = Guid.NewGuid(),
             Email = request.Email,
-            FullName = request.FullName,
+            FullName = request.Name,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
-            Role = "User",
+            Role = Roles.User,
             CreatedAt = DateTime.UtcNow
         };
 
-        // 🔹 4. Persist to DB
-        await _userRepository.AddAsync(user);
+        // 4. Persist to DB
+        await _userRepository.AddAsync(user, cancellationToken);
 
-        // 🔹 5. Return actual ID
+        // 5. Return actual ID
         return user.Id;
     }
 }

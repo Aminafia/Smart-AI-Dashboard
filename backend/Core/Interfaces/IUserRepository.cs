@@ -4,9 +4,8 @@ namespace Core.Interfaces;
 
 public interface IUserRepository
 {
-    Task AddAsync(User user);
-    Task<List<User>> GetAllAsync();
-    Task<bool> EmailExistsAsync(string email);
-    Task<User?> GetByEmailAsync(string email);
+    Task AddAsync(User user, CancellationToken cancellationToken);
+    Task<List<User>> GetAllAsync(CancellationToken cancellationToken);
+    Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken);    Task<User?> GetByEmailAsync(string email);
 
 }

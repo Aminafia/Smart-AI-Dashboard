@@ -1,22 +1,31 @@
-using Application.Features.Users.DTOs;
 using MediatR;
+using Core.Interfaces;
+using Application.Features.Users.DTOs;
 
 namespace Application.Features.Users.Queries.GetUsers;
 
 public class GetUsersQueryHandler
     : IRequestHandler<GetUsersQuery, List<UserDto>>
 {
-    public Task<List<UserDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
-    {
-        var users = new List<UserDto>
-        {
-            new UserDto
-            {
-                Id = Guid.NewGuid(),
-                Email = "test@example.com" //default user for demonstration
-            }
-        };
+    private readonly IUserRepository _userRepository;
 
-        return Task.FromResult(users);
+    public GetUsersQueryHandler(IUserRepository userRepository)
+    {
+        _userRepository = userRepository;
+    }
+
+    public async Task<List<UserDto>> Handle(
+        GetUsersQuery request,
+        CancellationToken cancellationToken)
+    {
+        var users = await _userRepository.GetAllAsync(cancellationToken);
+
+        return users.Select(user => new UserDto
+        {
+            Id = user.Id,
+            Email = user.Email,
+            FullName = user.FullName,
+            Role = user.Role
+        }).ToList();
     }
 }

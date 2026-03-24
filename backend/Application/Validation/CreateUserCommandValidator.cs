@@ -12,7 +12,7 @@ public class CreateUserCommandValidator
             .NotEmpty()
             .EmailAddress();
 
-        RuleFor(x => x.FullName)
+        RuleFor(x => x.Name)
             .NotEmpty()
             .MaximumLength(100);
 

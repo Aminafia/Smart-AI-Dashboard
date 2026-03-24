@@ -4,6 +4,6 @@ namespace Application.Features.Users.Commands.CreateUser;
 
 public record CreateUserCommand(
     string Email,
-    string FullName, 
+    string Name, 
     string Password
 ) : IRequest<Guid>;
