@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using FluentValidation;
 
 namespace API.Middleware;
 
@@ -17,18 +18,39 @@ public class ExceptionHandlingMiddleware
     }
 
     public async Task InvokeAsync(HttpContext context)
+{
+    try
     {
-        try
-        {
-            await _next(context);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Unhandled exception occurred.");
-
-            await HandleExceptionAsync(context, ex);
-        }
+        await _next(context);
     }
+    catch (ValidationException ex)
+    {
+        context.Response.StatusCode = StatusCodes.Status400BadRequest;
+        context.Response.ContentType = "application/json";
+
+        var errors = ex.Errors
+            .GroupBy(e => new { e.PropertyName, e.ErrorMessage })
+            .Select(g => new
+            {
+                field = g.Key.PropertyName,
+                message = g.Key.ErrorMessage
+            });
+
+        await context.Response.WriteAsJsonAsync(errors);
+    }
+    catch (Exception ex)
+    {
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        context.Response.ContentType = "application/json";
+
+        await context.Response.WriteAsJsonAsync(new
+        {
+            error = "An unexpected error occurred.",
+            message = ex.Message,
+            traceId = context.TraceIdentifier
+        });
+    }
+}
 
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
