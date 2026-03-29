@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using BCrypt.Net;
 using Microsoft.AspNetCore.Authorization;
 using Infrastructure.Auth;
+using Application.Interfaces;
 
 namespace API.Controllers;
 
@@ -12,10 +13,10 @@ namespace API.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IUserRepository _userRepository;
-    private readonly JwtTokenService _jwtTokenService;
+    private readonly IJwtTokenService _jwtTokenService;
 
     public AuthController(IUserRepository userRepository,
-                          JwtTokenService jwtTokenService) 
+                          IJwtTokenService jwtTokenService) 
     {
         _userRepository = userRepository;
         _jwtTokenService = jwtTokenService;

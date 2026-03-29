@@ -11,6 +11,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Application.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -24,7 +25,34 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "Enter: Bearer {your token}"
+    });
+
+    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
+
 
 builder.Services.AddAuthentication(options =>
 {
@@ -46,6 +74,10 @@ builder.Services.AddAuthentication(options =>
         )
     };
 });
+builder.Services.Configure<JwtSettings>(
+    builder.Configuration.GetSection("JwtSettings")
+);
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 
 builder.Services.AddAuthorization();
 builder.Services.Configure<ApiBehaviorOptions>(options =>

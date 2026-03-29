@@ -8,7 +8,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/users")]
-// [Authorize(Roles = "Admin")]
+[Authorize]
 public class UsersController : ControllerBase
 {
     private readonly IMediator _mediator;
