@@ -8,7 +8,7 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/users")]
-[Authorize]
+[Authorize(Policy = "AdminOnly")] // Only admins can manage users
 public class UsersController : ControllerBase
 {
     private readonly IMediator _mediator;

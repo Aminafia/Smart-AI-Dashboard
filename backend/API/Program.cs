@@ -84,6 +84,8 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy =>
         policy.RequireRole(Roles.Admin));
+    options.AddPolicy("UserOnly", policy =>
+        policy.RequireRole(Roles.User));
 });
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
