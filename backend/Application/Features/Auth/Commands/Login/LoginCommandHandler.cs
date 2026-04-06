@@ -3,6 +3,7 @@ using Core.Entities;
 using Core.Interfaces;
 using Application.Interfaces;
 using Application.Features.Auth.Commands.Login;
+using Application.Common.Exceptions;
 
 namespace Application.Features.Auth.Commands.Login;
 
@@ -27,14 +28,14 @@ public class LoginCommandHandler
         var user = await _userRepository.GetByEmailAsync(request.Email);
 
         if (user is null)
-            throw new UnauthorizedAccessException("Invalid email or password");
+            throw new UnauthorizedException("Invalid email or password");
 
         var isPasswordValid = BCrypt.Net.BCrypt.Verify(
             request.Password,
             user.PasswordHash);
 
         if (!isPasswordValid)
-            throw new UnauthorizedAccessException("Invalid email or password");
+            throw new UnauthorizedException("Invalid email or password");
 
         return new LoginResponse
         {

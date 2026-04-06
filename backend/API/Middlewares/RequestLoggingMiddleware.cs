@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace API.Middleware;
+namespace API.Middlewares;
 
 public class RequestLoggingMiddleware
 {

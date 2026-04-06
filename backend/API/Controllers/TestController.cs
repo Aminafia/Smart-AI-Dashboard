@@ -1,5 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
+using Application.Common.Exceptions;
+using Application.Common.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
@@ -10,22 +12,20 @@ public class TestController : ControllerBase
     [HttpGet("error")]
     public IActionResult ThrowError()
     {
-        throw new Exception("Test exception for middleware");
+        throw new BadRequestException("Test exception for middleware");
     }
 
-    // Authenticated users only
     [Authorize]
     [HttpGet("secure")]
     public IActionResult Secure()
     {
-        return Ok("You are authenticated!");
+        return Ok(ApiResponse<string>.SuccessResponse("You are authenticated!", "Success"));
     }
 
-    // Admins only
     [Authorize(Policy = "AdminOnly")]
     [HttpGet("admin")]
     public IActionResult AdminOnly()
     {
-        return Ok("You are an admin!");
+        return Ok(ApiResponse<string>.SuccessResponse("You are an admin!", "Success"));
     }
 }

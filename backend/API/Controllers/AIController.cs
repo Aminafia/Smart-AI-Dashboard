@@ -1,3 +1,5 @@
+using Application.Common.Exceptions;
+using Application.Common.Models;
 using Application.DTOs.AI;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -15,17 +17,16 @@ public class AIController : ControllerBase
     {
         _aiService = aiService;
     }
-    
+
     [Authorize]
     [HttpPost("generate")]
-    public async Task<ActionResult<AIResponse>> Generate(AIRequest request)
+    public async Task<IActionResult> Generate(AIRequest request)
     {
         if (string.IsNullOrWhiteSpace(request.Prompt))
-        {
-            return BadRequest("Prompt cannot be empty");
-        }
+            throw new BadRequestException("Prompt cannot be empty");
 
         var response = await _aiService.GenerateAsync(request);
-        return Ok(response);
+
+        return Ok(ApiResponse<AIResponse>.SuccessResponse(response, "AI response generated"));
     }
 }

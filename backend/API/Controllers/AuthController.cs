@@ -1,10 +1,9 @@
+using Application.Common.Models;
+using Application.Features.Auth.Commands.Login;
 using Application.DTOs.Auth;
-using Core.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using BCrypt.Net;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Infrastructure.Auth;
-using Application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
@@ -12,30 +11,25 @@ namespace API.Controllers;
 [Route("api/auth")]
 public class AuthController : ControllerBase
 {
-    private readonly IUserRepository _userRepository;
-    private readonly IJwtTokenService _jwtTokenService;
+    private readonly IMediator _mediator;
 
-    public AuthController(IUserRepository userRepository,
-                          IJwtTokenService jwtTokenService) 
+    public AuthController(IMediator mediator)
     {
-        _userRepository = userRepository;
-        _jwtTokenService = jwtTokenService;
+        _mediator = mediator;
     }
 
-    [AllowAnonymous] 
+    [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<ActionResult<AuthResponse>> Login(LoginRequest request)
+    public async Task<IActionResult> Login(LoginRequest request)
     {
-        var user = await _userRepository.GetByEmailAsync(request.Email);
-
-        if (user == null ||
-            !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+        var command = new LoginCommand
         {
-            return Unauthorized("Invalid credentials");
-        }
+            Email = request.Email,
+            Password = request.Password
+        };
 
-        var token = _jwtTokenService.GenerateToken(user);
+        var result = await _mediator.Send(command);
 
-        return Ok(new AuthResponse { Token = token });
+        return Ok(ApiResponse<LoginResponse>.SuccessResponse(result, "Login successful"));
     }
 }
