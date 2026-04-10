@@ -1,6 +1,5 @@
 using MediatR;
 using Core.Entities;
-using Core.Interfaces;
 using Application.Interfaces;
 using Application.Features.Auth.Commands.Login;
 using Application.Common.Exceptions;
@@ -25,7 +24,7 @@ public class LoginCommandHandler
         LoginCommand request,
         CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByEmailAsync(request.Email);
+        var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
 
         if (user is null)
             throw new UnauthorizedException("Invalid email or password");

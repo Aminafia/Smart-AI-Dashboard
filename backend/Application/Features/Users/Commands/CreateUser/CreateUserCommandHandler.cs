@@ -1,6 +1,6 @@
 using MediatR;
 using Core.Entities;
-using Core.Interfaces;
+using Application.Interfaces;
 using Core.Constants;
 using BCrypt.Net;
 using Application.Common.Exceptions;

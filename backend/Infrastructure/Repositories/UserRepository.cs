@@ -1,5 +1,5 @@
 using Core.Entities;
-using Core.Interfaces;
+using Application.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,10 +32,9 @@ public class UserRepository : IUserRepository
         );
     }
 
-    public async Task<User?> GetByEmailAsync(string email)
-    {
-        return await _context.Users
-            .FirstOrDefaultAsync(u => u.Email == email);
-    }
- 
+    public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken)
+{
+    return await _context.Users
+        .FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
+}
 }

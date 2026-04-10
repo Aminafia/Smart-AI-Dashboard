@@ -7,7 +7,6 @@ using Infrastructure.Auth;
 using Infrastructure.AI;
 using Infrastructure.AI.Providers;
 using Application.Interfaces;
-using Core.Interfaces;
 
 namespace Infrastructure;
 
@@ -17,14 +16,18 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        // Database
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
-
+        
+        // Repositories
         services.AddScoped<IUserRepository, UserRepository>();
-
+        
+        // AI Services 
         services.AddScoped<IAIProvider, OpenAIProvider>();
         services.AddScoped<IAIService, AiService>();
-
+        
+        // Authentication
         services.AddScoped<IJwtTokenService, JwtTokenService>();
 
         return services;
