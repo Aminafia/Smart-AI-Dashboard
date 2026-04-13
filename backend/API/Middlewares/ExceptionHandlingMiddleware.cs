@@ -26,7 +26,11 @@ public class ExceptionHandlingMiddleware
         }
         catch (ValidationException ex)
         {
-            _logger.LogWarning(ex, "Validation error");
+            var correlationId = context.Items["X-Correlation-ID"];
+
+            _logger.LogWarning(ex,
+                "Validation error | CorrelationId: {CorrelationId}",
+                correlationId);
 
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
             context.Response.ContentType = "application/json";
@@ -41,8 +45,13 @@ public class ExceptionHandlingMiddleware
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unhandled exception");
+            var correlationId = context.Items["X-Correlation-ID"];
 
+            _logger.LogError(ex,
+                "Unhandled exception | Path: {Path} | CorrelationId: {CorrelationId}",
+                context.Request.Path,
+                correlationId);
+                
             await HandleExceptionAsync(context, ex);
         }
     }

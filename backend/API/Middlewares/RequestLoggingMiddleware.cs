@@ -1,40 +1,50 @@
+using Serilog;
 using System.Diagnostics;
 
 namespace API.Middlewares;
-
 public class RequestLoggingMiddleware
 {
     private readonly RequestDelegate _next;
-    private readonly ILogger<RequestLoggingMiddleware> _logger;
 
-    public RequestLoggingMiddleware(
-        RequestDelegate next,
-        ILogger<RequestLoggingMiddleware> logger)
+    public RequestLoggingMiddleware(RequestDelegate next)
     {
         _next = next;
-        _logger = logger;
     }
 
-    public async Task InvokeAsync(HttpContext context)
+    public async Task Invoke(HttpContext context)
     {
+        var correlationId = context.Items["X-Correlation-ID"]?.ToString();
+
         var stopwatch = Stopwatch.StartNew();
 
-        var requestMethod = context.Request.Method;
-        var requestPath = context.Request.Path;
+        try
+        {
+            await _next(context);
 
-        _logger.LogInformation("Incoming Request: {Method} {Path}", requestMethod, requestPath);
+            stopwatch.Stop();
 
-        await _next(context);
+            Log.Information(
+                "HTTP {Method} {Path} responded {StatusCode} in {Duration} ms | CorrelationId: {CorrelationId}",
+                context.Request.Method,
+                context.Request.Path,
+                context.Response.StatusCode,
+                stopwatch.ElapsedMilliseconds,
+                correlationId
+            );
+        }
+        catch (Exception ex)
+        {
+            stopwatch.Stop();
 
-        stopwatch.Stop();
+            Log.Error(ex,
+                "HTTP {Method} {Path} FAILED in {Duration} ms | CorrelationId: {CorrelationId}",
+                context.Request.Method,
+                context.Request.Path,
+                stopwatch.ElapsedMilliseconds,
+                correlationId
+            );
 
-        var statusCode = context.Response.StatusCode;
-
-        _logger.LogInformation(
-            "Completed Request: {Method} {Path} → {StatusCode} in {Elapsed}ms",
-            requestMethod,
-            requestPath,
-            statusCode,
-            stopwatch.ElapsedMilliseconds);
+            throw;
+        }
     }
 }
