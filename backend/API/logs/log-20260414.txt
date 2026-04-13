@@ -1,0 +1,53 @@
+2026-04-14 00:46:49.331 +05:30 [INF] User profile is available. Using 'C:\Users\amina\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-04-14 00:46:49.419 +05:30 [INF] Creating key {fef1d55d-04e6-4272-bdaf-3cbaebd770e5} with creation date 2026-04-13 19:16:49Z, activation date 2026-04-15 13:19:47Z, and expiration date 2026-07-12 19:16:49Z.
+2026-04-14 00:46:49.437 +05:30 [INF] Writing data to file 'C:\Users\amina\AppData\Local\ASP.NET\DataProtection-Keys\key-fef1d55d-04e6-4272-bdaf-3cbaebd770e5.xml'.
+2026-04-14 00:46:49.512 +05:30 [INF] Now listening on: http://localhost:5260
+2026-04-14 00:46:49.520 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-14 00:46:49.522 +05:30 [INF] Hosting environment: Development
+2026-04-14 00:46:49.523 +05:30 [INF] Content root path: D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API
+2026-04-14 00:46:56.832 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/index.html - null null
+2026-04-14 00:46:57.089 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/index.html - 200 null text/html;charset=utf-8 259.1821ms
+2026-04-14 00:46:57.359 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/v1/swagger.json - null null
+2026-04-14 00:46:57.493 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 134.0165ms
+2026-04-14 00:46:57.513 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/index.html - null null
+2026-04-14 00:46:57.516 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/index.html - 200 null text/html;charset=utf-8 2.8233ms
+2026-04-14 00:47:21.482 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/api/users - null null
+2026-04-14 00:47:21.496 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-04-14 00:47:23.131 +05:30 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin)
+2026-04-14 00:47:23.135 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-04-14 00:47:23.136 +05:30 [INF] HTTP GET /api/users responded 401 in 1644 ms | CorrelationId: 83a8fa08-20a3-49ae-ac0b-f5656c31cc88
+2026-04-14 00:47:23.140 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/api/users - 401 0 null 1657.9648ms
+2026-04-14 00:48:01.461 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/api/test/error - null null
+2026-04-14 00:48:01.467 +05:30 [INF] Executing endpoint 'API.Controllers.TestController.ThrowError (API)'
+2026-04-14 00:48:01.490 +05:30 [INF] Route matched with {action = "ThrowError", controller = "Test"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult ThrowError() on controller API.Controllers.TestController (API).
+2026-04-14 00:48:01.500 +05:30 [INF] Executed action API.Controllers.TestController.ThrowError (API) in 3.9304ms
+2026-04-14 00:48:01.502 +05:30 [INF] Executed endpoint 'API.Controllers.TestController.ThrowError (API)'
+2026-04-14 00:48:01.504 +05:30 [ERR] Unhandled exception | Path: /api/test/error | CorrelationId: 614ee759-f3c0-4e83-8a8c-3c5966eddcbe
+Application.Common.Exceptions.BadRequestException: Test exception for middleware
+   at API.Controllers.TestController.ThrowError() in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API\Controllers\TestController.cs:line 15
+   at lambda_method2(Closure, Object, Object[])
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at API.Middlewares.ExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API\Middlewares\ExceptionHandlingMiddleware.cs:line 25
+2026-04-14 00:48:01.898 +05:30 [INF] HTTP GET /api/test/error responded 400 in 433 ms | CorrelationId: 614ee759-f3c0-4e83-8a8c-3c5966eddcbe
+2026-04-14 00:48:01.900 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/api/test/error - 400 null application/json 438.5771ms
+2026-04-14 00:48:17.147 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/api/test/secure - null null
+2026-04-14 00:48:17.153 +05:30 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-04-14 00:48:17.154 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-04-14 00:48:17.155 +05:30 [INF] HTTP GET /api/test/secure responded 401 in 4 ms | CorrelationId: d8711e7a-af97-4d45-b72b-a5d0b34e24d1
+2026-04-14 00:48:17.158 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/api/test/secure - 401 0 null 10.4456ms
