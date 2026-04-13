@@ -7,6 +7,7 @@ using Infrastructure.Auth;
 using Infrastructure.AI;
 using Infrastructure.AI.Providers;
 using Application.Interfaces;
+using Infrastructure.Services;
 
 namespace Infrastructure;
 
@@ -29,6 +30,9 @@ public static class DependencyInjection
         
         // Authentication
         services.AddScoped<IJwtTokenService, JwtTokenService>();
+
+        // Caching
+        services.AddScoped<ICacheService, CacheService>();
 
         return services;
     }

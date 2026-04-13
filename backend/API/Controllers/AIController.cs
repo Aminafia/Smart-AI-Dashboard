@@ -4,6 +4,7 @@ using Application.DTOs.AI;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace API.Controllers;
 
@@ -19,10 +20,11 @@ public class AIController : ControllerBase
     }
 
     [Authorize]
+    [EnableRateLimiting("fixed")]
     [HttpPost("generate")]
     public async Task<IActionResult> Generate(AIRequest request)
     {
-        if (string.IsNullOrWhiteSpace(request.Prompt))
+        if (request == null || string.IsNullOrWhiteSpace(request.Prompt))
             throw new BadRequestException("Prompt cannot be empty");
 
         var response = await _aiService.GenerateAsync(request);

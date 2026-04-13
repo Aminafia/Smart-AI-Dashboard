@@ -1,16 +1,38 @@
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Text.Json;
 using Application.Interfaces;
 
 namespace Infrastructure.AI.Providers;
 
 public class OpenAIProvider : IAIProvider
 {
+    private readonly HttpClient _httpClient;
+
+    public OpenAIProvider(IHttpClientFactory factory)
+    {
+        _httpClient = factory.CreateClient("AIClient");
+    }
+
     public async Task<string> GenerateAsync(string prompt)
     {
-        // For now, simple mock response
-        // Later we will connect to real OpenAI API
+        // Temporary test endpoint (no API key needed)
+        var url = "https://postman-echo.com/post";
 
-        await Task.Delay(500);
+        var requestBody = new
+        {
+            input = prompt
+        };
 
-        return $"AI Response to: {prompt}";
+        var response = await _httpClient.PostAsJsonAsync(url, requestBody);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception("AI API failed");
+        }
+
+        var json = await response.Content.ReadAsStringAsync();
+
+        return $"Processed Response: {json}";
     }
 }

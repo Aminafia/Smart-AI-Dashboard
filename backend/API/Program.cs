@@ -14,7 +14,10 @@ using Microsoft.EntityFrameworkCore;
 using Application.Interfaces;
 using Core.Constants;
 using Serilog;
-
+using Polly;
+using Polly.Extensions.Http;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.AspNetCore.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -26,11 +29,19 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
+// 1. Core Services
 builder.Services.AddControllers();
 
+// 2. Application layers
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+// 3. External integrations (Polly / HttpClient)
+builder.Services.AddHttpClient("AIClient")
+    .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(5))
+    .AddPolicyHandler(GetRetryPolicy());
+
+// 4. API tools
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -60,7 +71,7 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-
+// 5. Auth
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -81,6 +92,8 @@ builder.Services.AddAuthentication(options =>
         )
     };
 });
+
+
 builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("JwtSettings")
 );
@@ -100,6 +113,25 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 builder.Host.UseSerilog();
 
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = "localhost:6379";
+});
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddConcurrencyLimiter("concurrency", opt =>
+    {
+        opt.PermitLimit = 2;
+        opt.QueueLimit = 0;
+    });
+    options.AddFixedWindowLimiter("fixed", opt =>
+    {
+        opt.PermitLimit = 5;
+        opt.Window = TimeSpan.FromSeconds(10);
+    });
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -108,14 +140,35 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<RequestLoggingMiddleware>();
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseRateLimiter();
+
+app.MapControllers().RequireRateLimiting("concurrency");
 
 app.Run();
+
+static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+{
+    return HttpPolicyExtensions
+        .HandleTransientHttpError()
+        .WaitAndRetryAsync(
+            3,
+            retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+            (outcome, timespan, retryAttempt, context) =>
+            {
+                Log.Warning(
+                    "Retry {RetryAttempt} after {Delay}s due to {Reason}",
+                    retryAttempt,
+                    timespan.TotalSeconds,
+                    outcome.Exception?.Message ?? outcome.Result.StatusCode.ToString()
+                );
+            });
+}
