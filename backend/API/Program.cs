@@ -18,6 +18,7 @@ using Polly;
 using Polly.Extensions.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.AspNetCore.RateLimiting;
+using Infrastructure.Resilience;
 
 var builder = WebApplication.CreateBuilder(args);
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -38,8 +39,9 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 // 3. External integrations (Polly / HttpClient)
 builder.Services.AddHttpClient("AIClient")
-    .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(5))
-    .AddPolicyHandler(GetRetryPolicy());
+    .AddPolicyHandler(AIResiliencePolicy.GetRetryPolicy())
+    .AddPolicyHandler(AIResiliencePolicy.GetCircuitBreakerPolicy())
+    .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(5));
 
 // 4. API tools
 builder.Services.AddEndpointsApiExplorer();
@@ -154,21 +156,3 @@ app.UseRateLimiter();
 app.MapControllers().RequireRateLimiting("concurrency");
 
 app.Run();
-
-static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
-{
-    return HttpPolicyExtensions
-        .HandleTransientHttpError()
-        .WaitAndRetryAsync(
-            3,
-            retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
-            (outcome, timespan, retryAttempt, context) =>
-            {
-                Log.Warning(
-                    "Retry {RetryAttempt} after {Delay}s due to {Reason}",
-                    retryAttempt,
-                    timespan.TotalSeconds,
-                    outcome.Exception?.Message ?? outcome.Result.StatusCode.ToString()
-                );
-            });
-}

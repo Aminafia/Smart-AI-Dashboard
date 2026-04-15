@@ -8,6 +8,8 @@ using Infrastructure.AI;
 using Infrastructure.AI.Providers;
 using Application.Interfaces;
 using Infrastructure.Services;
+using Infrastructure.Resilience;
+using Polly;
 
 namespace Infrastructure;
 
@@ -33,6 +35,12 @@ public static class DependencyInjection
 
         // Caching
         services.AddScoped<ICacheService, CacheService>();
+
+        // Resilience
+        services.AddHttpClient("AIClient")
+            .AddPolicyHandler(AIResiliencePolicy.GetRetryPolicy())
+            .AddPolicyHandler(AIResiliencePolicy.GetCircuitBreakerPolicy())
+            .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(10));
 
         return services;
     }
