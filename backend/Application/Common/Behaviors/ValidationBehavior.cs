@@ -1,6 +1,6 @@
 using FluentValidation;
-using MediatR;
 using FluentValidation.Results;
+using MediatR;
 namespace Application.Common.Behaviors;
 
 public class ValidationBehavior<TRequest, TResponse>

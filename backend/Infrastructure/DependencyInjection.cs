@@ -1,14 +1,16 @@
+using Application.Interfaces;
+using Infrastructure.AI;
+using Infrastructure.AI.Providers;
+using Infrastructure.Auth;
+using Infrastructure.BackgroundServices;
+using Infrastructure.Data;
+using Infrastructure.Repositories;
+using Infrastructure.Resilience;
+using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Infrastructure.Data;
-using Infrastructure.Repositories;
-using Infrastructure.Auth;
-using Infrastructure.AI;
-using Infrastructure.AI.Providers;
-using Application.Interfaces;
-using Infrastructure.Services;
-using Infrastructure.Resilience;
+using Microsoft.Extensions.Hosting;
 using Polly;
 
 namespace Infrastructure;
@@ -22,14 +24,14 @@ public static class DependencyInjection
         // Database
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
-        
+
         // Repositories
         services.AddScoped<IUserRepository, UserRepository>();
-        
+
         // AI Services 
         services.AddScoped<IAIProvider, OpenAIProvider>();
         services.AddScoped<IAIService, AiService>();
-        
+
         // Authentication
         services.AddScoped<IJwtTokenService, JwtTokenService>();
 
@@ -41,6 +43,13 @@ public static class DependencyInjection
             .AddPolicyHandler(AIResiliencePolicy.GetRetryPolicy())
             .AddPolicyHandler(AIResiliencePolicy.GetCircuitBreakerPolicy())
             .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(10));
+
+        // Queue + Job Store
+        _ = services.AddSingleton<IAIQueue, AIQueue>();
+        services.AddSingleton<IAIJobStore, AIJobStore>();
+
+        // Background Worker
+        services.AddHostedService<AIWorker>();
 
         return services;
     }

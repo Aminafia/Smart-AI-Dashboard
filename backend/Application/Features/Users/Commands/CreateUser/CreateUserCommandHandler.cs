@@ -1,9 +1,9 @@
-using MediatR;
-using Core.Entities;
-using Application.Interfaces;
-using Core.Constants;
-using BCrypt.Net;
 using Application.Common.Exceptions;
+using Application.Interfaces;
+using BCrypt.Net;
+using Core.Constants;
+using Core.Entities;
+using MediatR;
 
 namespace Application.Features.Users.Commands.CreateUser;
 

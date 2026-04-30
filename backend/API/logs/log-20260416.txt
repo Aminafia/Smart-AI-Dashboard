@@ -1,0 +1,178 @@
+2026-04-16 02:58:14.126 +05:30 [INF] User profile is available. Using 'C:\Users\amina\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-04-16 02:58:14.324 +05:30 [INF] Now listening on: http://localhost:5260
+2026-04-16 02:58:14.328 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-16 02:58:14.329 +05:30 [INF] Hosting environment: Development
+2026-04-16 02:58:14.331 +05:30 [INF] Content root path: D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API
+2026-04-16 03:01:04.802 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/index.html - null null
+2026-04-16 03:01:05.296 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/index.html - 200 null text/html;charset=utf-8 495.5264ms
+2026-04-16 03:01:05.700 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/v1/swagger.json - null null
+2026-04-16 03:01:05.801 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/index.html - null null
+2026-04-16 03:01:05.806 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/index.html - 200 null text/html;charset=utf-8 5.0918ms
+2026-04-16 03:01:05.828 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 128.4541ms
+2026-04-16 03:01:27.774 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5260/api/auth/login - application/json 61
+2026-04-16 03:01:27.788 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-04-16 03:01:29.455 +05:30 [INF] Executing endpoint 'API.Controllers.AuthController.Login (API)'
+2026-04-16 03:01:29.488 +05:30 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(Application.DTOs.Auth.LoginRequest) on controller API.Controllers.AuthController (API).
+2026-04-16 03:01:32.074 +05:30 [INF] Executed DbCommand (46ms) [Parameters=[@__email_0='?'], CommandType='"Text"', CommandTimeout='30']
+SELECT u."Id", u."CreatedAt", u."Email", u."FullName", u."PasswordHash", u."Role"
+FROM "Users" AS u
+WHERE u."Email" = @__email_0
+LIMIT 1
+2026-04-16 03:01:32.657 +05:30 [INF] Executing OkObjectResult, writing value of type 'Application.Common.Models.ApiResponse`1[[Application.Features.Auth.Commands.Login.LoginResponse, Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-04-16 03:01:32.677 +05:30 [INF] Executed action API.Controllers.AuthController.Login (API) in 3182.6952ms
+2026-04-16 03:01:32.679 +05:30 [INF] Executed endpoint 'API.Controllers.AuthController.Login (API)'
+2026-04-16 03:01:32.682 +05:30 [INF] HTTP POST /api/auth/login responded 200 in 4896 ms | CorrelationId: cd2c9e63-b96c-4263-8ea2-c011c993ad0a
+2026-04-16 03:01:32.692 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5260/api/auth/login - 200 null application/json; charset=utf-8 4918.3053ms
+2026-04-16 03:01:54.892 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5260/api/AI/generate - application/json 23
+2026-04-16 03:01:54.950 +05:30 [INF] Executing endpoint 'API.Controllers.AIController.Generate (API)'
+2026-04-16 03:01:54.954 +05:30 [INF] Route matched with {action = "Generate", controller = "AI"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Generate(Application.DTOs.AI.AIRequest) on controller API.Controllers.AIController (API).
+2026-04-16 03:01:54.961 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType0`2[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-04-16 03:01:54.973 +05:30 [INF] Executed action API.Controllers.AIController.Generate (API) in 15.4716ms
+2026-04-16 03:01:54.975 +05:30 [INF] Executed endpoint 'API.Controllers.AIController.Generate (API)'
+2026-04-16 03:01:54.977 +05:30 [INF] HTTP POST /api/AI/generate responded 200 in 79 ms | CorrelationId: 00a00360-5824-472d-b12c-9468fdca3f04
+2026-04-16 03:01:54.980 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5260/api/AI/generate - 200 null application/json; charset=utf-8 87.4746ms
+2026-04-16 03:01:55.472 +05:30 [INF] Cache MISS for key ai:hello
+2026-04-16 03:01:55.487 +05:30 [INF] Start processing HTTP request POST https://postman-echo.com/post
+2026-04-16 03:01:55.532 +05:30 [INF] Sending HTTP request POST https://postman-echo.com/post
+2026-04-16 03:01:56.036 +05:30 [INF] Received HTTP response headers after 500.8757ms - 200
+2026-04-16 03:01:56.041 +05:30 [INF] End processing HTTP request after 555.7154ms - 200
+2026-04-16 03:01:56.067 +05:30 [INF] Cache SET for key ai:hello
+2026-04-16 03:02:20.566 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/api/AI/status/343a018e-38ad-4d15-9a8d-a94c20101616 - null null
+2026-04-16 03:02:20.575 +05:30 [INF] Executing endpoint 'API.Controllers.AIController.GetStatus (API)'
+2026-04-16 03:02:20.588 +05:30 [INF] Route matched with {action = "GetStatus", controller = "AI"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetStatus(System.Guid) on controller API.Controllers.AIController (API).
+2026-04-16 03:02:20.596 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType1`4[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-04-16 03:02:20.601 +05:30 [INF] Executed action API.Controllers.AIController.GetStatus (API) in 8.781ms
+2026-04-16 03:02:20.603 +05:30 [INF] Executed endpoint 'API.Controllers.AIController.GetStatus (API)'
+2026-04-16 03:02:20.604 +05:30 [INF] HTTP GET /api/AI/status/343a018e-38ad-4d15-9a8d-a94c20101616 responded 200 in 33 ms | CorrelationId: f70af30f-32ef-4af7-a78a-8b6e739ec613
+2026-04-16 03:02:20.607 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/api/AI/status/343a018e-38ad-4d15-9a8d-a94c20101616 - 200 null application/json; charset=utf-8 41.3563ms
+2026-04-16 03:11:33.480 +05:30 [INF] Application is shutting down...
+2026-04-16 03:11:52.306 +05:30 [INF] User profile is available. Using 'C:\Users\amina\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-04-16 03:11:52.420 +05:30 [INF] Now listening on: http://localhost:5260
+2026-04-16 03:11:52.424 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-16 03:11:52.426 +05:30 [INF] Hosting environment: Development
+2026-04-16 03:11:52.428 +05:30 [INF] Content root path: D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API
+2026-04-16 03:11:59.971 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/index.html - null null
+2026-04-16 03:12:00.137 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/index.html - 200 null text/html;charset=utf-8 168.9149ms
+2026-04-16 03:12:00.373 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/v1/swagger.json - null null
+2026-04-16 03:12:00.449 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/index.html - null null
+2026-04-16 03:12:00.457 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/index.html - 200 null text/html;charset=utf-8 7.6789ms
+2026-04-16 03:12:00.584 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 211.4299ms
+2026-04-16 03:12:22.418 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5260/api/auth/login - application/json 61
+2026-04-16 03:12:22.432 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-04-16 03:12:23.940 +05:30 [INF] Executing endpoint 'API.Controllers.AuthController.Login (API)'
+2026-04-16 03:12:23.959 +05:30 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(Application.DTOs.Auth.LoginRequest) on controller API.Controllers.AuthController (API).
+2026-04-16 03:12:26.090 +05:30 [INF] Executed DbCommand (43ms) [Parameters=[@__email_0='?'], CommandType='"Text"', CommandTimeout='30']
+SELECT u."Id", u."CreatedAt", u."Email", u."FullName", u."PasswordHash", u."Role"
+FROM "Users" AS u
+WHERE u."Email" = @__email_0
+LIMIT 1
+2026-04-16 03:12:26.560 +05:30 [INF] Executing OkObjectResult, writing value of type 'Application.Common.Models.ApiResponse`1[[Application.Features.Auth.Commands.Login.LoginResponse, Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-04-16 03:12:26.578 +05:30 [INF] Executed action API.Controllers.AuthController.Login (API) in 2612.7781ms
+2026-04-16 03:12:26.580 +05:30 [INF] Executed endpoint 'API.Controllers.AuthController.Login (API)'
+2026-04-16 03:12:26.582 +05:30 [INF] HTTP POST /api/auth/login responded 200 in 4153 ms | CorrelationId: a3ac3255-c001-4e87-8fc9-278e18b6112a
+2026-04-16 03:12:26.594 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5260/api/auth/login - 200 null application/json; charset=utf-8 4176.0256ms
+2026-04-16 03:12:45.197 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5260/api/AI/generate - application/json 23
+2026-04-16 03:12:45.254 +05:30 [INF] Executing endpoint 'API.Controllers.AIController.Generate (API)'
+2026-04-16 03:12:45.258 +05:30 [INF] Route matched with {action = "Generate", controller = "AI"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Generate(Application.DTOs.AI.AIRequest) on controller API.Controllers.AIController (API).
+2026-04-16 03:12:45.264 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType0`2[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-04-16 03:12:45.277 +05:30 [INF] Executed action API.Controllers.AIController.Generate (API) in 16.5321ms
+2026-04-16 03:12:45.279 +05:30 [INF] Executed endpoint 'API.Controllers.AIController.Generate (API)'
+2026-04-16 03:12:45.281 +05:30 [INF] HTTP POST /api/AI/generate responded 200 in 78 ms | CorrelationId: 9d9c8e3f-2e23-439a-9e7a-e892e575f196
+2026-04-16 03:12:45.283 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5260/api/AI/generate - 200 null application/json; charset=utf-8 86.9457ms
+2026-04-16 03:12:45.673 +05:30 [INF] Cache MISS for key ai:hello
+2026-04-16 03:12:45.682 +05:30 [INF] Start processing HTTP request POST https://postman-echo.com/post
+2026-04-16 03:12:45.711 +05:30 [INF] Sending HTTP request POST https://postman-echo.com/post
+2026-04-16 03:12:46.477 +05:30 [INF] Received HTTP response headers after 761.3441ms - 200
+2026-04-16 03:12:46.482 +05:30 [INF] End processing HTTP request after 802.6121ms - 200
+2026-04-16 03:12:46.503 +05:30 [INF] Cache SET for key ai:hello
+2026-04-16 03:13:05.732 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/api/AI/status/71fa09b4-fd06-471d-a934-1b67283f9963 - null null
+2026-04-16 03:13:05.753 +05:30 [INF] Executing endpoint 'API.Controllers.AIController.GetStatus (API)'
+2026-04-16 03:13:05.756 +05:30 [INF] Route matched with {action = "GetStatus", controller = "AI"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetStatus(System.Guid) on controller API.Controllers.AIController (API).
+2026-04-16 03:13:05.760 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType1`4[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-04-16 03:13:05.766 +05:30 [INF] Executed action API.Controllers.AIController.GetStatus (API) in 7.1248ms
+2026-04-16 03:13:05.769 +05:30 [INF] Executed endpoint 'API.Controllers.AIController.GetStatus (API)'
+2026-04-16 03:13:05.770 +05:30 [INF] HTTP GET /api/AI/status/71fa09b4-fd06-471d-a934-1b67283f9963 responded 200 in 24 ms | CorrelationId: 0f7c1065-0687-4d17-aff8-12403e45cc86
+2026-04-16 03:13:05.773 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/api/AI/status/71fa09b4-fd06-471d-a934-1b67283f9963 - 200 null application/json; charset=utf-8 40.9744ms
+2026-04-16 03:16:25.069 +05:30 [INF] Application is shutting down...
+2026-04-16 03:16:43.241 +05:30 [INF] User profile is available. Using 'C:\Users\amina\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-04-16 03:16:43.346 +05:30 [INF] Now listening on: http://localhost:5260
+2026-04-16 03:16:43.350 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-04-16 03:16:43.351 +05:30 [INF] Hosting environment: Development
+2026-04-16 03:16:43.352 +05:30 [INF] Content root path: D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API
+2026-04-16 03:17:02.343 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/index.html - null null
+2026-04-16 03:17:02.441 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/index.html - 200 null text/html;charset=utf-8 99.3601ms
+2026-04-16 03:17:02.641 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/v1/swagger.json - null null
+2026-04-16 03:17:02.720 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/index.html - null null
+2026-04-16 03:17:02.732 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/index.html - 200 null text/html;charset=utf-8 11.7566ms
+2026-04-16 03:17:02.740 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 99.3075ms
+2026-04-16 03:17:22.322 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5260/api/auth/login - application/json 61
+2026-04-16 03:17:22.333 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-04-16 03:17:23.877 +05:30 [INF] Executing endpoint 'API.Controllers.AuthController.Login (API)'
+2026-04-16 03:17:23.897 +05:30 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(Application.DTOs.Auth.LoginRequest) on controller API.Controllers.AuthController (API).
+2026-04-16 03:17:26.006 +05:30 [INF] Executed DbCommand (42ms) [Parameters=[@__email_0='?'], CommandType='"Text"', CommandTimeout='30']
+SELECT u."Id", u."CreatedAt", u."Email", u."FullName", u."PasswordHash", u."Role"
+FROM "Users" AS u
+WHERE u."Email" = @__email_0
+LIMIT 1
+2026-04-16 03:17:26.503 +05:30 [INF] Executing OkObjectResult, writing value of type 'Application.Common.Models.ApiResponse`1[[Application.Features.Auth.Commands.Login.LoginResponse, Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-04-16 03:17:26.521 +05:30 [INF] Executed action API.Controllers.AuthController.Login (API) in 2618.5231ms
+2026-04-16 03:17:26.524 +05:30 [INF] Executed endpoint 'API.Controllers.AuthController.Login (API)'
+2026-04-16 03:17:26.527 +05:30 [INF] HTTP POST /api/auth/login responded 200 in 4195 ms | CorrelationId: 5dc0b3ae-450f-40ba-a7c4-056fdd4474e1
+2026-04-16 03:17:26.536 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5260/api/auth/login - 200 null application/json; charset=utf-8 4214.0096ms
+2026-04-16 03:17:46.091 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5260/api/AI/generate - application/json 23
+2026-04-16 03:17:46.190 +05:30 [INF] Executing endpoint 'API.Controllers.AIController.Generate (API)'
+2026-04-16 03:17:46.193 +05:30 [INF] Route matched with {action = "Generate", controller = "AI"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Generate(Application.DTOs.AI.AIRequest) on controller API.Controllers.AIController (API).
+2026-04-16 03:17:46.199 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType0`2[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-04-16 03:17:46.211 +05:30 [INF] Executed action API.Controllers.AIController.Generate (API) in 15.3375ms
+2026-04-16 03:17:46.212 +05:30 [INF] Executed endpoint 'API.Controllers.AIController.Generate (API)'
+2026-04-16 03:17:46.214 +05:30 [INF] HTTP POST /api/AI/generate responded 200 in 106 ms | CorrelationId: 79fdf4fa-778e-4859-82b0-3118f2a9cbec
+2026-04-16 03:17:46.216 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5260/api/AI/generate - 200 null application/json; charset=utf-8 125.2815ms
+2026-04-16 03:17:46.928 +05:30 [INF] Cache HIT for key ai:hello
+2026-04-16 03:18:02.926 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/api/AI/status/5669c521-fdb3-49a3-9301-d8080c78bb8d - null null
+2026-04-16 03:18:02.934 +05:30 [INF] Executing endpoint 'API.Controllers.AIController.GetStatus (API)'
+2026-04-16 03:18:02.938 +05:30 [INF] Route matched with {action = "GetStatus", controller = "AI"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetStatus(System.Guid) on controller API.Controllers.AIController (API).
+2026-04-16 03:18:02.943 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType1`4[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-04-16 03:18:02.948 +05:30 [INF] Executed action API.Controllers.AIController.GetStatus (API) in 7.2165ms
+2026-04-16 03:18:02.950 +05:30 [INF] Executed endpoint 'API.Controllers.AIController.GetStatus (API)'
+2026-04-16 03:18:02.951 +05:30 [INF] HTTP GET /api/AI/status/5669c521-fdb3-49a3-9301-d8080c78bb8d responded 200 in 20 ms | CorrelationId: 56a55abd-39ae-47dd-bb0f-a32c7d3796ce
+2026-04-16 03:18:02.954 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/api/AI/status/5669c521-fdb3-49a3-9301-d8080c78bb8d - 200 null application/json; charset=utf-8 28.2219ms
+2026-04-16 03:20:23.192 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5260/api/AI/generate - application/json 26
+2026-04-16 03:20:23.212 +05:30 [INF] Executing endpoint 'API.Controllers.AIController.Generate (API)'
+2026-04-16 03:20:23.215 +05:30 [INF] Route matched with {action = "Generate", controller = "AI"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Generate(Application.DTOs.AI.AIRequest) on controller API.Controllers.AIController (API).
+2026-04-16 03:20:23.219 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType0`2[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-04-16 03:20:23.221 +05:30 [INF] Executed action API.Controllers.AIController.Generate (API) in 3.4259ms
+2026-04-16 03:20:23.223 +05:30 [INF] Executed endpoint 'API.Controllers.AIController.Generate (API)'
+2026-04-16 03:20:23.226 +05:30 [INF] HTTP POST /api/AI/generate responded 200 in 20 ms | CorrelationId: 154d487f-be27-485f-85d5-4bd6ca76f355
+2026-04-16 03:20:23.229 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5260/api/AI/generate - 200 null application/json; charset=utf-8 36.9782ms
+2026-04-16 03:20:23.707 +05:30 [INF] Cache MISS for key ai:hello123
+2026-04-16 03:20:23.711 +05:30 [WRN] Job "4a282d1c-f095-433c-8c29-d81311f721ca" failed. Retry 1/3
+System.Exception: Simulated AI failure
+   at Infrastructure.AI.Providers.OpenAIProvider.GenerateAsync(String prompt) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\AI\Providers\OpenAIProvider.cs:line 22
+   at Infrastructure.AI.AiService.GenerateAsync(AIRequest request) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\AI\AiService.cs:line 50
+   at Infrastructure.BackgroundServices.AIWorker.ExecuteAsync(CancellationToken stoppingToken) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\BackgroundServices\AIWorker.cs:line 54
+2026-04-16 03:20:24.139 +05:30 [INF] Cache MISS for key ai:hello123
+2026-04-16 03:20:24.140 +05:30 [WRN] Job "4a282d1c-f095-433c-8c29-d81311f721ca" failed. Retry 2/3
+System.Exception: Simulated AI failure
+   at Infrastructure.AI.Providers.OpenAIProvider.GenerateAsync(String prompt) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\AI\Providers\OpenAIProvider.cs:line 22
+   at Infrastructure.AI.AiService.GenerateAsync(AIRequest request) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\AI\AiService.cs:line 50
+   at Infrastructure.BackgroundServices.AIWorker.ExecuteAsync(CancellationToken stoppingToken) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\BackgroundServices\AIWorker.cs:line 54
+2026-04-16 03:20:24.145 +05:30 [INF] Cache MISS for key ai:hello123
+2026-04-16 03:20:24.147 +05:30 [WRN] Job "4a282d1c-f095-433c-8c29-d81311f721ca" failed. Retry 3/3
+System.Exception: Simulated AI failure
+   at Infrastructure.AI.Providers.OpenAIProvider.GenerateAsync(String prompt) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\AI\Providers\OpenAIProvider.cs:line 22
+   at Infrastructure.AI.AiService.GenerateAsync(AIRequest request) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\AI\AiService.cs:line 50
+   at Infrastructure.BackgroundServices.AIWorker.ExecuteAsync(CancellationToken stoppingToken) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\BackgroundServices\AIWorker.cs:line 54
+2026-04-16 03:20:24.151 +05:30 [ERR] Job "4a282d1c-f095-433c-8c29-d81311f721ca" failed after max retries
+System.Exception: Simulated AI failure
+   at Infrastructure.AI.Providers.OpenAIProvider.GenerateAsync(String prompt) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\AI\Providers\OpenAIProvider.cs:line 22
+   at Infrastructure.AI.AiService.GenerateAsync(AIRequest request) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\AI\AiService.cs:line 50
+   at Infrastructure.BackgroundServices.AIWorker.ExecuteAsync(CancellationToken stoppingToken) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\BackgroundServices\AIWorker.cs:line 54
+2026-04-16 03:21:09.481 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/api/AI/status/4a282d1c-f095-433c-8c29-d81311f721ca - null null
+2026-04-16 03:21:09.495 +05:30 [INF] Executing endpoint 'API.Controllers.AIController.GetStatus (API)'
+2026-04-16 03:21:09.499 +05:30 [INF] Route matched with {action = "GetStatus", controller = "AI"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult GetStatus(System.Guid) on controller API.Controllers.AIController (API).
+2026-04-16 03:21:09.503 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType1`4[[System.Guid, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-04-16 03:21:09.506 +05:30 [INF] Executed action API.Controllers.AIController.GetStatus (API) in 3.7988ms
+2026-04-16 03:21:09.508 +05:30 [INF] Executed endpoint 'API.Controllers.AIController.GetStatus (API)'
+2026-04-16 03:21:09.509 +05:30 [INF] HTTP GET /api/AI/status/4a282d1c-f095-433c-8c29-d81311f721ca responded 200 in 14 ms | CorrelationId: c635a8eb-b4a0-4317-99cf-36cd0aeb1d6c
+2026-04-16 03:21:09.512 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/api/AI/status/4a282d1c-f095-433c-8c29-d81311f721ca - 200 null application/json; charset=utf-8 31.7061ms
+2026-04-16 03:30:26.708 +05:30 [INF] Application is shutting down...

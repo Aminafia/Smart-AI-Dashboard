@@ -1,6 +1,6 @@
+using System.Net;
 using Polly;
 using Polly.Extensions.Http;
-using System.Net;
 
 namespace Infrastructure.Resilience;
 
