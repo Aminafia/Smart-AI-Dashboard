@@ -24,7 +24,7 @@ public class RequestLoggingMiddleware
     {
         _next = next;
     }
-    
+
     /// <summary>
     /// Invoked for each HTTP request. Logs request details, measures execution time, and logs response status.
     /// </summary>

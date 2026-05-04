@@ -11,7 +11,7 @@ public class AiService : IAIService
     private readonly ILogger<AiService> _logger;
 
     public AiService(
-        IAIProvider provider, 
+        IAIProvider provider,
         ICacheService cache,
         ILogger<AiService> logger)
     {
@@ -23,7 +23,7 @@ public class AiService : IAIService
     public async Task<AIResponse> GenerateAsync(AIRequest request)
     {
         var cacheKey = $"ai:{request.Prompt}";
-        
+
         // 1. Try cache (Fault-tolerant)
         string? cachedResult = null;
         try
@@ -45,10 +45,10 @@ public class AiService : IAIService
         }
 
         _logger.LogInformation("Cache MISS for key {Key}", cacheKey);
-        
+
         // 2. Call actual AI provider
         var aiResult = await _provider.GenerateAsync(request.Prompt);
-        
+
         // 3. Store in cache (Fault-tolerant + no fallback caching)
         if (!aiResult.StartsWith("⚠️"))
         {

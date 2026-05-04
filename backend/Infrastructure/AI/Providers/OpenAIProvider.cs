@@ -22,23 +22,23 @@ public class OpenAIProvider : IAIProvider
         try
         {
             // Temporary test endpoint (no API key needed)
-        var url = "https://postman-echo.com/post";
+            var url = "https://postman-echo.com/post";
 
-        var requestBody = new
-        {
-            input = prompt
-        };
+            var requestBody = new
+            {
+                input = prompt
+            };
 
-        var response = await _httpClient.PostAsJsonAsync(url, requestBody);
-        response.EnsureSuccessStatusCode();
+            var response = await _httpClient.PostAsJsonAsync(url, requestBody);
+            response.EnsureSuccessStatusCode();
 
-        var json = await response.Content.ReadAsStringAsync();
+            var json = await response.Content.ReadAsStringAsync();
 
-        return $"Processed Response: {json}";
+            return $"Processed Response: {json}";
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "AI provider failed");            
+            _logger.LogError(ex, "AI provider failed");
             return "⚠️ AI service temporarily unavailable. Please retry";  //fallback response          
         }
     }

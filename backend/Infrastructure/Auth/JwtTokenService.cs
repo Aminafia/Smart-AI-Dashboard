@@ -35,7 +35,7 @@ namespace Infrastructure.Auth;
 /// <summary>
 /// Generates JWT token using user data and configuration settings.
 /// </summary>
-public class JwtTokenService: IJwtTokenService
+public class JwtTokenService : IJwtTokenService
 {
     private readonly JwtSettings _jwtSettings;
 

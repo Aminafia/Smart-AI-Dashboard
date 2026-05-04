@@ -32,7 +32,7 @@ public class AIController : ControllerBase
 
         if (request == null || string.IsNullOrWhiteSpace(request.Prompt))
             throw new BadRequestException("Prompt cannot be empty");
-        
+
         var job = new AIJob
         {
             ProjectId = Guid.NewGuid(),

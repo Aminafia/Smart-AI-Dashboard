@@ -42,7 +42,7 @@ public class UsersController : ControllerBase
         var result = await _mediator.Send(new GetUsersQuery());
 
         _logger.LogInformation("[Controller] Users fetched");
-        
+
         return Ok(ApiResponse<List<UserDto>>.SuccessResponse(result, "Users fetched successfully"));
     }
 }

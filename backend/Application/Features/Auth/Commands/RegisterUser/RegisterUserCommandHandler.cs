@@ -1,6 +1,7 @@
 using MediatR;
 
 namespace Application.Features.Auth.Commands.RegisterUser;
+
 using MediatR;
 
 public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, string>

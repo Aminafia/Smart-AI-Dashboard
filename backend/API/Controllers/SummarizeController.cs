@@ -25,7 +25,7 @@ namespace API.Controllers
 
             if (string.IsNullOrWhiteSpace(request.Text))
                 return BadRequest("Text cannot be empty");
-            
+
             var aiRequest = new AIRequest
             {
                 Prompt = request.Text,
@@ -34,7 +34,7 @@ namespace API.Controllers
             var result = await _aiService.GenerateAsync(aiRequest);
 
             _logger.LogInformation("[Controller] Summarization completed");
- 
+
             return Ok(result);
         }
     }
