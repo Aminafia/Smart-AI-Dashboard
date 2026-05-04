@@ -1,4 +1,3 @@
-using System.Text;
 using API.Middlewares;
 using API.Extensions;
 using Application;
@@ -13,9 +12,17 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.IdentityModel.Tokens;
 using Polly;
 using Serilog;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+
+var connectionString = configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrEmpty(connectionString))
+{
+    throw new InvalidOperationException("Database connection string is not configured.");
+}
 
 // ----------------------
 // Logging (Serilog)
@@ -67,6 +74,11 @@ builder.Services.AddSwaggerGen(options =>
 // ----------------------
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(configuration);
+
+// ----------------------
+// Health Checks
+// ----------------------
+builder.Services.AddCustomHealthChecks(connectionString);
 
 // ----------------------
 // External Services (AI + Polly)
@@ -143,5 +155,7 @@ app.UseRateLimiter();
 // ----------------------
 app.MapControllers()
    .RequireRateLimiting("concurrency");
+
+app.MapCustomHealthChecks();
 
 app.Run();

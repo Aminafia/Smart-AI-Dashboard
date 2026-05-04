@@ -309,3 +309,372 @@ StackExchange.Redis.RedisConnectionException: The message timed out in the backl
    at Infrastructure.Services.CacheService.SetAsync(String key, String value, TimeSpan expiry) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\Services\CacheService.cs:line 27
    at Infrastructure.AI.AiService.GenerateAsync(AIRequest request) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\AI\AiService.cs:line 57
 2026-05-05 01:40:59.482 +05:30 [INF] Application is shutting down...
+2026-05-05 01:41:17.102 +05:30 [INF] User profile is available. Using 'C:\Users\amina\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-05 01:41:17.195 +05:30 [INF] Now listening on: http://localhost:5260
+2026-05-05 01:41:17.198 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-05 01:41:17.199 +05:30 [INF] Hosting environment: Development
+2026-05-05 01:41:17.200 +05:30 [INF] Content root path: D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API
+2026-05-05 01:41:22.395 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/index.html - null null
+2026-05-05 01:41:22.697 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/index.html - 200 null text/html;charset=utf-8 303.0064ms
+2026-05-05 01:41:22.902 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/v1/swagger.json - null null
+2026-05-05 01:41:22.973 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/index.html - null null
+2026-05-05 01:41:22.982 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/index.html - 200 null text/html;charset=utf-8 8.7829ms
+2026-05-05 01:41:23.068 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 166.2106ms
+2026-05-05 01:41:47.770 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5260/api/auth/login - application/json 61
+2026-05-05 01:41:47.778 +05:30 [INF] [Correlation] Assigned CorrelationId: 3b71f52b-56a3-40b5-9777-60e801afe66d
+2026-05-05 01:41:47.782 +05:30 [INF] [Middleware] Incoming Request: POST /api/auth/login | CorrelationId: 3b71f52b-56a3-40b5-9777-60e801afe66d
+2026-05-05 01:41:47.789 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-05-05 01:41:49.127 +05:30 [INF] Executing endpoint 'API.Controllers.AuthController.Login (API)'
+2026-05-05 01:41:49.148 +05:30 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(Application.DTOs.Auth.LoginRequest) on controller API.Controllers.AuthController (API).
+2026-05-05 01:41:49.231 +05:30 [INF] [Controller] Login endpoint hit
+2026-05-05 01:41:50.232 +05:30 [INF] [MediatR] Handling LoginCommand
+2026-05-05 01:41:50.233 +05:30 [INF] [Handler] Fetching user from DB
+2026-05-05 01:41:51.063 +05:30 [INF] Executed DbCommand (39ms) [Parameters=[@__email_0='?'], CommandType='"Text"', CommandTimeout='30']
+SELECT u."Id", u."CreatedAt", u."Email", u."FullName", u."PasswordHash", u."Role"
+FROM "Users" AS u
+WHERE u."Email" = @__email_0
+LIMIT 1
+2026-05-05 01:41:51.125 +05:30 [INF] [Handler] Verifying password
+2026-05-05 01:41:51.451 +05:30 [INF] [Handler] Generating JWT token
+2026-05-05 01:41:51.496 +05:30 [INF] [Controller] Login successful, returning response
+2026-05-05 01:41:51.503 +05:30 [INF] Executing OkObjectResult, writing value of type 'Application.Common.Models.ApiResponse`1[[Application.Features.Auth.Commands.Login.LoginResponse, Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-05-05 01:41:51.521 +05:30 [INF] Executed action API.Controllers.AuthController.Login (API) in 2369.4575ms
+2026-05-05 01:41:51.523 +05:30 [INF] Executed endpoint 'API.Controllers.AuthController.Login (API)'
+2026-05-05 01:41:51.525 +05:30 [INF] [Middleware] Response: 200 in 3743 ms | CorrelationId: 3b71f52b-56a3-40b5-9777-60e801afe66d
+2026-05-05 01:41:51.535 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5260/api/auth/login - 200 null application/json; charset=utf-8 3764.9082ms
+2026-05-05 01:42:11.077 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5260/api/AI/generate - application/json 20
+2026-05-05 01:42:11.082 +05:30 [INF] [Correlation] Assigned CorrelationId: e6f0079b-455b-43db-ac0e-b4022cbe356b
+2026-05-05 01:42:11.083 +05:30 [INF] [Middleware] Incoming Request: POST /api/AI/generate | CorrelationId: e6f0079b-455b-43db-ac0e-b4022cbe356b
+2026-05-05 01:42:11.122 +05:30 [INF] Executing endpoint 'API.Controllers.AIController.Generate (API)'
+2026-05-05 01:42:11.128 +05:30 [INF] Route matched with {action = "Generate", controller = "AI"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Generate(Application.DTOs.AI.AIRequest) on controller API.Controllers.AIController (API).
+2026-05-05 01:42:11.138 +05:30 [INF] Executed action API.Controllers.AIController.Generate (API) in 8.031ms
+2026-05-05 01:42:11.140 +05:30 [INF] Executed endpoint 'API.Controllers.AIController.Generate (API)'
+2026-05-05 01:42:11.141 +05:30 [ERR] [Middleware] FAILED: POST /api/AI/generate in 57 ms | CorrelationId: e6f0079b-455b-43db-ac0e-b4022cbe356b
+FluentValidation.ValidationException: Validation failed: 
+ -- Prompt: Prompt must be at least 5 characters Severity: Error
+   at Application.Common.Behaviors.ValidationBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Application\Common\Behaviors\ValidationBehavior.cs:line 45
+   at API.Controllers.AIController.Generate(AIRequest request) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API\Controllers\AIController.cs:line 36
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware.InvokeInternal(HttpContext context, EnableRateLimitingAttribute enableRateLimitingAttribute)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at API.Middlewares.RequestLoggingMiddleware.Invoke(HttpContext context) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API\Middlewares\RequestLoggingMiddleware.cs:line 53
+2026-05-05 01:42:11.174 +05:30 [WRN] Validation error | CorrelationId: e6f0079b-455b-43db-ac0e-b4022cbe356b
+FluentValidation.ValidationException: Validation failed: 
+ -- Prompt: Prompt must be at least 5 characters Severity: Error
+   at Application.Common.Behaviors.ValidationBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Application\Common\Behaviors\ValidationBehavior.cs:line 45
+   at API.Controllers.AIController.Generate(AIRequest request) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API\Controllers\AIController.cs:line 36
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware.InvokeInternal(HttpContext context, EnableRateLimitingAttribute enableRateLimitingAttribute)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at API.Middlewares.RequestLoggingMiddleware.Invoke(HttpContext context) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API\Middlewares\RequestLoggingMiddleware.cs:line 53
+   at API.Middlewares.CorrelationIdMiddleware.Invoke(HttpContext context) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API\Middlewares\CorrelationIdMiddleware.cs:line 54
+   at API.Middlewares.ExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API\Middlewares\ExceptionHandlingMiddleware.cs:line 53
+2026-05-05 01:42:11.184 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5260/api/AI/generate - 400 null application/json 107.3688ms
+2026-05-05 01:42:26.926 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5260/api/AI/generate - application/json 35
+2026-05-05 01:42:26.929 +05:30 [INF] [Correlation] Assigned CorrelationId: 84c94951-2cd4-4ff7-bcaf-75ff3bceef6e
+2026-05-05 01:42:26.930 +05:30 [INF] [Middleware] Incoming Request: POST /api/AI/generate | CorrelationId: 84c94951-2cd4-4ff7-bcaf-75ff3bceef6e
+2026-05-05 01:42:26.937 +05:30 [INF] Executing endpoint 'API.Controllers.AIController.Generate (API)'
+2026-05-05 01:42:26.939 +05:30 [INF] Route matched with {action = "Generate", controller = "AI"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Generate(Application.DTOs.AI.AIRequest) on controller API.Controllers.AIController (API).
+2026-05-05 01:42:26.945 +05:30 [INF] [Handler] AI job created: "6f1a4180-ddbe-48ad-9cb4-94ce02c5ffd1"
+2026-05-05 01:42:26.947 +05:30 [INF] Executing OkObjectResult, writing value of type 'Application.Features.AI.Commands.GenerateAI.GenerateAIResponse'.
+2026-05-05 01:42:26.952 +05:30 [INF] Executed action API.Controllers.AIController.Generate (API) in 11.293ms
+2026-05-05 01:42:26.953 +05:30 [INF] Executed endpoint 'API.Controllers.AIController.Generate (API)'
+2026-05-05 01:42:26.955 +05:30 [INF] [Middleware] Response: 200 in 24 ms | CorrelationId: 84c94951-2cd4-4ff7-bcaf-75ff3bceef6e
+2026-05-05 01:42:26.957 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5260/api/AI/generate - 200 null application/json; charset=utf-8 30.7437ms
+2026-05-05 01:42:41.833 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/api/AI/status/6f1a4180-ddbe-48ad-9cb4-94ce02c5ffd1 - null null
+2026-05-05 01:42:41.836 +05:30 [INF] [Correlation] Assigned CorrelationId: 932cb89a-0fb3-4745-8fed-99be228dbc64
+2026-05-05 01:42:41.837 +05:30 [INF] [Middleware] Incoming Request: GET /api/AI/status/6f1a4180-ddbe-48ad-9cb4-94ce02c5ffd1 | CorrelationId: 932cb89a-0fb3-4745-8fed-99be228dbc64
+2026-05-05 01:42:41.839 +05:30 [INF] Executing endpoint 'API.Controllers.AIController.GetStatus (API)'
+2026-05-05 01:42:41.843 +05:30 [INF] Route matched with {action = "GetStatus", controller = "AI"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetStatus(System.Guid) on controller API.Controllers.AIController (API).
+2026-05-05 01:42:41.847 +05:30 [INF] Executing OkObjectResult, writing value of type 'Application.Features.AI.Queries.GetAIStatus.AIStatusResponse'.
+2026-05-05 01:42:41.849 +05:30 [INF] Executed action API.Controllers.AIController.GetStatus (API) in 5.001ms
+2026-05-05 01:42:41.851 +05:30 [INF] Executed endpoint 'API.Controllers.AIController.GetStatus (API)'
+2026-05-05 01:42:41.852 +05:30 [INF] [Middleware] Response: 200 in 15 ms | CorrelationId: 932cb89a-0fb3-4745-8fed-99be228dbc64
+2026-05-05 01:42:41.853 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/api/AI/status/6f1a4180-ddbe-48ad-9cb4-94ce02c5ffd1 - 200 null application/json; charset=utf-8 19.7717ms
+2026-05-05 01:42:41.884 +05:30 [ERR] Cache GET failed for key ai:hello how are you
+StackExchange.Redis.RedisConnectionException: The message timed out in the backlog attempting to send because no connection became available (5000ms) - Last Connection Exception: It was not possible to connect to the redis server(s). ConnectTimeout, command=HMGET, timeout: 5000, inst: 0, qu: 0, qs: 0, aw: False, bw: CheckingForTimeout, rs: NotStarted, ws: Idle, in: 0, last-in: 0, cur-in: 0, sync-ops: 0, async-ops: 1, serverEndpoint: localhost:6379, conn-sec: n/a, aoc: 0, mc: 1/1/0, mgr: 10 of 10 available, clientName: AMINAFIA(SE.Redis-v2.7.27.49176), IOCP: (Busy=0,Free=1000,Min=1,Max=1000), WORKER: (Busy=0,Free=32767,Min=8,Max=32767), POOL: (Threads=7,QueuedItems=0,CompletedItems=1302,Timers=6), v: 2.7.27.49176 (Please take a look at this article for some common client-side issues that can cause timeouts: https://stackexchange.github.io/StackExchange.Redis/Timeouts)
+ ---> StackExchange.Redis.RedisConnectionException: It was not possible to connect to the redis server(s). ConnectTimeout
+   --- End of inner exception stack trace ---
+   at Microsoft.Extensions.Caching.StackExchangeRedis.RedisCache.GetAndRefreshAsync(String key, Boolean getData, CancellationToken token)
+   at Microsoft.Extensions.Caching.StackExchangeRedis.RedisCache.GetAsync(String key, CancellationToken token)
+   at Microsoft.Extensions.Caching.Distributed.DistributedCacheExtensions.GetStringAsync(IDistributedCache cache, String key, CancellationToken token)
+   at Infrastructure.Services.CacheService.GetAsync(String key) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\Services\CacheService.cs:line 17
+   at Infrastructure.AI.AiService.GenerateAsync(AIRequest request) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\AI\AiService.cs:line 31
+2026-05-05 01:42:41.894 +05:30 [INF] Cache MISS for key ai:hello how are you
+2026-05-05 01:42:41.906 +05:30 [INF] Start processing HTTP request POST https://postman-echo.com/post
+2026-05-05 01:42:41.929 +05:30 [INF] Sending HTTP request POST https://postman-echo.com/post
+2026-05-05 01:42:42.508 +05:30 [INF] Received HTTP response headers after 574.4326ms - 200
+2026-05-05 01:42:42.515 +05:30 [INF] End processing HTTP request after 610.9505ms - 200
+2026-05-05 01:42:47.882 +05:30 [ERR] Cache SET failed for key ai:hello how are you
+StackExchange.Redis.RedisConnectionException: The message timed out in the backlog attempting to send because no connection became available (5000ms) - Last Connection Exception: It was not possible to connect to the redis server(s). ConnectTimeout, command=HMSET, timeout: 5000, inst: 0, qu: 1, qs: 0, aw: False, bw: CheckingForTimeout, rs: NotStarted, ws: Idle, in: 0, last-in: 0, cur-in: 0, sync-ops: 0, async-ops: 3, serverEndpoint: localhost:6379, conn-sec: n/a, aoc: 0, mc: 1/1/0, mgr: 10 of 10 available, clientName: AMINAFIA(SE.Redis-v2.7.27.49176), IOCP: (Busy=0,Free=1000,Min=1,Max=1000), WORKER: (Busy=0,Free=32767,Min=8,Max=32767), POOL: (Threads=7,QueuedItems=0,CompletedItems=1412,Timers=7), v: 2.7.27.49176 (Please take a look at this article for some common client-side issues that can cause timeouts: https://stackexchange.github.io/StackExchange.Redis/Timeouts)
+ ---> StackExchange.Redis.RedisConnectionException: It was not possible to connect to the redis server(s). ConnectTimeout
+   --- End of inner exception stack trace ---
+   at Microsoft.Extensions.Caching.StackExchangeRedis.RedisCache.SetImplAsync(String key, ReadOnlySequence`1 value, DistributedCacheEntryOptions options, CancellationToken token)
+   at Infrastructure.Services.CacheService.SetAsync(String key, String value, TimeSpan expiry) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\Services\CacheService.cs:line 27
+   at Infrastructure.AI.AiService.GenerateAsync(AIRequest request) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\AI\AiService.cs:line 57
+2026-05-05 01:42:49.470 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5260/api/AI/generate - application/json 35
+2026-05-05 01:42:49.473 +05:30 [INF] [Correlation] Assigned CorrelationId: 253f2bf4-0725-4bf9-b9d4-240dbee5c04e
+2026-05-05 01:42:49.483 +05:30 [INF] [Middleware] Incoming Request: POST /api/AI/generate | CorrelationId: 253f2bf4-0725-4bf9-b9d4-240dbee5c04e
+2026-05-05 01:42:49.487 +05:30 [INF] Executing endpoint 'API.Controllers.AIController.Generate (API)'
+2026-05-05 01:42:49.492 +05:30 [INF] Route matched with {action = "Generate", controller = "AI"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Generate(Application.DTOs.AI.AIRequest) on controller API.Controllers.AIController (API).
+2026-05-05 01:42:49.497 +05:30 [INF] [Handler] AI job created: "166092ea-0a6a-4d1b-9d50-760dabb81d2a"
+2026-05-05 01:42:49.498 +05:30 [INF] Executing OkObjectResult, writing value of type 'Application.Features.AI.Commands.GenerateAI.GenerateAIResponse'.
+2026-05-05 01:42:49.499 +05:30 [INF] Executed action API.Controllers.AIController.Generate (API) in 4.7224ms
+2026-05-05 01:42:49.501 +05:30 [INF] Executed endpoint 'API.Controllers.AIController.Generate (API)'
+2026-05-05 01:42:49.502 +05:30 [INF] [Middleware] Response: 200 in 18 ms | CorrelationId: 253f2bf4-0725-4bf9-b9d4-240dbee5c04e
+2026-05-05 01:42:49.503 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5260/api/AI/generate - 200 null application/json; charset=utf-8 33.7519ms
+2026-05-05 01:42:54.111 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/api/AI/status/6f1a4180-ddbe-48ad-9cb4-94ce02c5ffd1 - null null
+2026-05-05 01:42:54.114 +05:30 [INF] [Correlation] Assigned CorrelationId: 73d91ec9-8656-492c-a01c-be0f971f99af
+2026-05-05 01:42:54.115 +05:30 [INF] [Middleware] Incoming Request: GET /api/AI/status/6f1a4180-ddbe-48ad-9cb4-94ce02c5ffd1 | CorrelationId: 73d91ec9-8656-492c-a01c-be0f971f99af
+2026-05-05 01:42:54.117 +05:30 [INF] Executing endpoint 'API.Controllers.AIController.GetStatus (API)'
+2026-05-05 01:42:54.119 +05:30 [INF] Route matched with {action = "GetStatus", controller = "AI"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetStatus(System.Guid) on controller API.Controllers.AIController (API).
+2026-05-05 01:42:54.124 +05:30 [INF] Executing OkObjectResult, writing value of type 'Application.Features.AI.Queries.GetAIStatus.AIStatusResponse'.
+2026-05-05 01:42:54.126 +05:30 [INF] Executed action API.Controllers.AIController.GetStatus (API) in 3.9428ms
+2026-05-05 01:42:54.128 +05:30 [INF] Executed endpoint 'API.Controllers.AIController.GetStatus (API)'
+2026-05-05 01:42:54.129 +05:30 [INF] [Middleware] Response: 200 in 14 ms | CorrelationId: 73d91ec9-8656-492c-a01c-be0f971f99af
+2026-05-05 01:42:54.130 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/api/AI/status/6f1a4180-ddbe-48ad-9cb4-94ce02c5ffd1 - 200 null application/json; charset=utf-8 19.4229ms
+2026-05-05 01:42:55.876 +05:30 [ERR] Cache GET failed for key ai:hello how are you
+StackExchange.Redis.RedisConnectionException: The message timed out in the backlog attempting to send because no connection became available (5000ms) - Last Connection Exception: It was not possible to connect to the redis server(s). ConnectTimeout, command=HMGET, timeout: 5000, inst: 0, qu: 0, qs: 0, aw: False, bw: CheckingForTimeout, last-in: 0, cur-in: 0, sync-ops: 0, async-ops: 4, serverEndpoint: localhost:6379, conn-sec: n/a, aoc: 0, mc: 1/1/0, mgr: 10 of 10 available, clientName: AMINAFIA(SE.Redis-v2.7.27.49176), IOCP: (Busy=0,Free=1000,Min=1,Max=1000), WORKER: (Busy=1,Free=32766,Min=8,Max=32767), POOL: (Threads=5,QueuedItems=0,CompletedItems=1560,Timers=7), v: 2.7.27.49176 (Please take a look at this article for some common client-side issues that can cause timeouts: https://stackexchange.github.io/StackExchange.Redis/Timeouts)
+ ---> StackExchange.Redis.RedisConnectionException: It was not possible to connect to the redis server(s). ConnectTimeout
+   --- End of inner exception stack trace ---
+   at Microsoft.Extensions.Caching.StackExchangeRedis.RedisCache.GetAndRefreshAsync(String key, Boolean getData, CancellationToken token)
+   at Microsoft.Extensions.Caching.StackExchangeRedis.RedisCache.GetAsync(String key, CancellationToken token)
+   at Microsoft.Extensions.Caching.Distributed.DistributedCacheExtensions.GetStringAsync(IDistributedCache cache, String key, CancellationToken token)
+   at Infrastructure.Services.CacheService.GetAsync(String key) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\Services\CacheService.cs:line 17
+   at Infrastructure.AI.AiService.GenerateAsync(AIRequest request) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\AI\AiService.cs:line 31
+2026-05-05 01:42:55.883 +05:30 [INF] Cache MISS for key ai:hello how are you
+2026-05-05 01:42:55.885 +05:30 [INF] Start processing HTTP request POST https://postman-echo.com/post
+2026-05-05 01:42:55.888 +05:30 [INF] Sending HTTP request POST https://postman-echo.com/post
+2026-05-05 01:42:56.253 +05:30 [INF] Received HTTP response headers after 361.4189ms - 200
+2026-05-05 01:42:56.258 +05:30 [INF] End processing HTTP request after 372.6601ms - 200
+2026-05-05 01:43:01.881 +05:30 [ERR] Cache SET failed for key ai:hello how are you
+StackExchange.Redis.RedisConnectionException: The message timed out in the backlog attempting to send because no connection became available (5000ms) - Last Connection Exception: It was not possible to connect to the redis server(s). ConnectTimeout, command=HMSET, timeout: 5000, inst: 0, qu: 1, qs: 0, aw: False, bw: CheckingForTimeout, rs: NotStarted, ws: Idle, in: 0, last-in: 0, cur-in: 0, sync-ops: 0, async-ops: 6, serverEndpoint: localhost:6379, conn-sec: n/a, aoc: 0, mc: 1/1/0, mgr: 10 of 10 available, clientName: AMINAFIA(SE.Redis-v2.7.27.49176), IOCP: (Busy=0,Free=1000,Min=1,Max=1000), WORKER: (Busy=0,Free=32767,Min=8,Max=32767), POOL: (Threads=5,QueuedItems=0,CompletedItems=1667,Timers=7), v: 2.7.27.49176 (Please take a look at this article for some common client-side issues that can cause timeouts: https://stackexchange.github.io/StackExchange.Redis/Timeouts)
+ ---> StackExchange.Redis.RedisConnectionException: It was not possible to connect to the redis server(s). ConnectTimeout
+   --- End of inner exception stack trace ---
+   at Microsoft.Extensions.Caching.StackExchangeRedis.RedisCache.SetImplAsync(String key, ReadOnlySequence`1 value, DistributedCacheEntryOptions options, CancellationToken token)
+   at Infrastructure.Services.CacheService.SetAsync(String key, String value, TimeSpan expiry) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\Services\CacheService.cs:line 27
+   at Infrastructure.AI.AiService.GenerateAsync(AIRequest request) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\AI\AiService.cs:line 57
+2026-05-05 01:45:02.463 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5260/api/summarize - application/json 33
+2026-05-05 01:45:02.466 +05:30 [INF] [Correlation] Assigned CorrelationId: acbef821-bcb8-49fa-9d77-b9860ac9ec00
+2026-05-05 01:45:02.467 +05:30 [INF] [Middleware] Incoming Request: POST /api/summarize | CorrelationId: acbef821-bcb8-49fa-9d77-b9860ac9ec00
+2026-05-05 01:45:02.470 +05:30 [INF] Executing endpoint 'API.Controllers.SummarizeController.Summarize (API)'
+2026-05-05 01:45:02.475 +05:30 [INF] Route matched with {action = "Summarize", controller = "Summarize"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Summarize(Application.DTOs.AI.SummarizeRequest) on controller API.Controllers.SummarizeController (API).
+2026-05-05 01:45:07.876 +05:30 [ERR] Cache GET failed for key ai:hello how are you
+StackExchange.Redis.RedisConnectionException: The message timed out in the backlog attempting to send because no connection became available (5000ms) - Last Connection Exception: It was not possible to connect to the redis server(s). ConnectTimeout, command=HMGET, timeout: 5000, inst: 0, qu: 0, qs: 0, aw: False, bw: CheckingForTimeout, rs: NotStarted, ws: Initializing, in: 0, last-in: 0, cur-in: 0, sync-ops: 0, async-ops: 7, serverEndpoint: localhost:6379, conn-sec: n/a, aoc: 0, mc: 1/1/0, mgr: 10 of 10 available, clientName: AMINAFIA(SE.Redis-v2.7.27.49176), IOCP: (Busy=0,Free=1000,Min=1,Max=1000), WORKER: (Busy=2,Free=32765,Min=8,Max=32767), POOL: (Threads=4,QueuedItems=0,CompletedItems=4075,Timers=9), v: 2.7.27.49176 (Please take a look at this article for some common client-side issues that can cause timeouts: https://stackexchange.github.io/StackExchange.Redis/Timeouts)
+ ---> StackExchange.Redis.RedisConnectionException: It was not possible to connect to the redis server(s). ConnectTimeout
+   --- End of inner exception stack trace ---
+   at Microsoft.Extensions.Caching.StackExchangeRedis.RedisCache.GetAndRefreshAsync(String key, Boolean getData, CancellationToken token)
+   at Microsoft.Extensions.Caching.StackExchangeRedis.RedisCache.GetAsync(String key, CancellationToken token)
+   at Microsoft.Extensions.Caching.Distributed.DistributedCacheExtensions.GetStringAsync(IDistributedCache cache, String key, CancellationToken token)
+   at Infrastructure.Services.CacheService.GetAsync(String key) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\Services\CacheService.cs:line 17
+   at Infrastructure.AI.AiService.GenerateAsync(AIRequest request) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\AI\AiService.cs:line 31
+2026-05-05 01:45:07.887 +05:30 [INF] Cache MISS for key ai:hello how are you
+2026-05-05 01:45:07.891 +05:30 [INF] Start processing HTTP request POST https://postman-echo.com/post
+2026-05-05 01:45:07.894 +05:30 [INF] Sending HTTP request POST https://postman-echo.com/post
+2026-05-05 01:45:08.432 +05:30 [INF] Received HTTP response headers after 534.8474ms - 200
+2026-05-05 01:45:08.433 +05:30 [INF] End processing HTTP request after 542.0353ms - 200
+2026-05-05 01:45:13.877 +05:30 [ERR] Cache SET failed for key ai:hello how are you
+StackExchange.Redis.RedisConnectionException: The message timed out in the backlog attempting to send because no connection became available (5000ms) - Last Connection Exception: It was not possible to connect to the redis server(s). ConnectTimeout, command=HMSET, timeout: 5000, inst: 0, qu: 1, qs: 0, aw: False, bw: CheckingForTimeout, last-in: 0, cur-in: 0, sync-ops: 0, async-ops: 9, serverEndpoint: localhost:6379, conn-sec: n/a, aoc: 0, mc: 1/1/0, mgr: 10 of 10 available, clientName: AMINAFIA(SE.Redis-v2.7.27.49176), IOCP: (Busy=0,Free=1000,Min=1,Max=1000), WORKER: (Busy=1,Free=32766,Min=8,Max=32767), POOL: (Threads=4,QueuedItems=0,CompletedItems=4203,Timers=9), v: 2.7.27.49176 (Please take a look at this article for some common client-side issues that can cause timeouts: https://stackexchange.github.io/StackExchange.Redis/Timeouts)
+ ---> StackExchange.Redis.RedisConnectionException: It was not possible to connect to the redis server(s). ConnectTimeout
+   --- End of inner exception stack trace ---
+   at Microsoft.Extensions.Caching.StackExchangeRedis.RedisCache.SetImplAsync(String key, ReadOnlySequence`1 value, DistributedCacheEntryOptions options, CancellationToken token)
+   at Infrastructure.Services.CacheService.SetAsync(String key, String value, TimeSpan expiry) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\Services\CacheService.cs:line 27
+   at Infrastructure.AI.AiService.GenerateAsync(AIRequest request) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Infrastructure\AI\AiService.cs:line 57
+2026-05-05 01:45:13.886 +05:30 [INF] Executing OkObjectResult, writing value of type 'Application.DTOs.AI.AIResponse'.
+2026-05-05 01:45:13.889 +05:30 [INF] Executed action API.Controllers.SummarizeController.Summarize (API) in 11412.0406ms
+2026-05-05 01:45:13.891 +05:30 [INF] Executed endpoint 'API.Controllers.SummarizeController.Summarize (API)'
+2026-05-05 01:45:13.893 +05:30 [INF] [Middleware] Response: 200 in 11425 ms | CorrelationId: acbef821-bcb8-49fa-9d77-b9860ac9ec00
+2026-05-05 01:45:13.894 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5260/api/summarize - 200 null application/json; charset=utf-8 11430.9481ms
+2026-05-05 01:46:05.120 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5260/api/summarize - application/json 16
+2026-05-05 01:46:05.122 +05:30 [INF] [Correlation] Assigned CorrelationId: 608bbd27-4433-44f0-a19b-3a3ad3199a2a
+2026-05-05 01:46:05.123 +05:30 [INF] [Middleware] Incoming Request: POST /api/summarize | CorrelationId: 608bbd27-4433-44f0-a19b-3a3ad3199a2a
+2026-05-05 01:46:05.125 +05:30 [INF] Executing endpoint 'API.Controllers.SummarizeController.Summarize (API)'
+2026-05-05 01:46:05.126 +05:30 [INF] Route matched with {action = "Summarize", controller = "Summarize"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Summarize(Application.DTOs.AI.SummarizeRequest) on controller API.Controllers.SummarizeController (API).
+2026-05-05 01:46:05.130 +05:30 [INF] Executed action API.Controllers.SummarizeController.Summarize (API) in 1.6092ms
+2026-05-05 01:46:05.131 +05:30 [INF] Executed endpoint 'API.Controllers.SummarizeController.Summarize (API)'
+2026-05-05 01:46:05.132 +05:30 [ERR] [Middleware] FAILED: POST /api/summarize in 9 ms | CorrelationId: 608bbd27-4433-44f0-a19b-3a3ad3199a2a
+FluentValidation.ValidationException: Validation failed: 
+ -- Text: Text cannot be empty Severity: Error
+ -- Text: Text must be at least 5 characters Severity: Error
+   at Application.Common.Behaviors.ValidationBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Application\Common\Behaviors\ValidationBehavior.cs:line 45
+   at API.Controllers.SummarizeController.Summarize(SummarizeRequest request) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API\Controllers\SummarizeController.cs:line 28
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware.InvokeInternal(HttpContext context, EnableRateLimitingAttribute enableRateLimitingAttribute)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at API.Middlewares.RequestLoggingMiddleware.Invoke(HttpContext context) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API\Middlewares\RequestLoggingMiddleware.cs:line 53
+2026-05-05 01:46:05.140 +05:30 [WRN] Validation error | CorrelationId: 608bbd27-4433-44f0-a19b-3a3ad3199a2a
+FluentValidation.ValidationException: Validation failed: 
+ -- Text: Text cannot be empty Severity: Error
+ -- Text: Text must be at least 5 characters Severity: Error
+   at Application.Common.Behaviors.ValidationBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Application\Common\Behaviors\ValidationBehavior.cs:line 45
+   at API.Controllers.SummarizeController.Summarize(SummarizeRequest request) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API\Controllers\SummarizeController.cs:line 28
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware.InvokeInternal(HttpContext context, EnableRateLimitingAttribute enableRateLimitingAttribute)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at API.Middlewares.RequestLoggingMiddleware.Invoke(HttpContext context) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API\Middlewares\RequestLoggingMiddleware.cs:line 53
+   at API.Middlewares.CorrelationIdMiddleware.Invoke(HttpContext context) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API\Middlewares\CorrelationIdMiddleware.cs:line 54
+   at API.Middlewares.ExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API\Middlewares\ExceptionHandlingMiddleware.cs:line 53
+2026-05-05 01:46:05.146 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5260/api/summarize - 400 null application/json 26.0034ms
+2026-05-05 02:22:47.239 +05:30 [INF] Application is shutting down...
+2026-05-05 02:35:44.603 +05:30 [INF] User profile is available. Using 'C:\Users\amina\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-05 02:35:44.746 +05:30 [INF] Now listening on: http://localhost:5260
+2026-05-05 02:35:44.749 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-05 02:35:44.750 +05:30 [INF] Hosting environment: Development
+2026-05-05 02:35:44.751 +05:30 [INF] Content root path: D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API
+2026-05-05 02:36:17.400 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/index.html - null null
+2026-05-05 02:36:17.594 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/index.html - 200 null text/html;charset=utf-8 197.0148ms
+2026-05-05 02:36:18.082 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/v1/swagger.json - null null
+2026-05-05 02:36:18.183 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 101.8124ms
+2026-05-05 02:36:18.211 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/index.html - null null
+2026-05-05 02:36:18.214 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/index.html - 200 null text/html;charset=utf-8 3.348ms
+2026-05-05 02:36:23.999 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/api/health/live - null null
+2026-05-05 02:36:24.017 +05:30 [INF] [Correlation] Assigned CorrelationId: 8cd65386-94bf-41f1-ac68-a2fe30e8f7d6
+2026-05-05 02:36:24.021 +05:30 [INF] [Middleware] Incoming Request: GET /api/health/live | CorrelationId: 8cd65386-94bf-41f1-ac68-a2fe30e8f7d6
+2026-05-05 02:36:24.026 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-05-05 02:36:25.876 +05:30 [INF] Executing endpoint 'API.Controllers.HealthController.Live (API)'
+2026-05-05 02:36:25.902 +05:30 [INF] Route matched with {action = "Live", controller = "Health"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Live() on controller API.Controllers.HealthController (API).
+2026-05-05 02:36:25.912 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-05-05 02:36:25.972 +05:30 [INF] Executed action API.Controllers.HealthController.Live (API) in 65.2714ms
+2026-05-05 02:36:25.973 +05:30 [INF] Executed endpoint 'API.Controllers.HealthController.Live (API)'
+2026-05-05 02:36:25.974 +05:30 [INF] [Middleware] Response: 200 in 1954 ms | CorrelationId: 8cd65386-94bf-41f1-ac68-a2fe30e8f7d6
+2026-05-05 02:36:25.976 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/api/health/live - 200 null application/json; charset=utf-8 1976.6126ms
+2026-05-05 02:36:32.642 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/api/health/ready - null null
+2026-05-05 02:36:32.646 +05:30 [INF] [Correlation] Assigned CorrelationId: 3351db3b-da39-428b-a115-d096e98f2cd0
+2026-05-05 02:36:32.647 +05:30 [INF] [Middleware] Incoming Request: GET /api/health/ready | CorrelationId: 3351db3b-da39-428b-a115-d096e98f2cd0
+2026-05-05 02:36:32.650 +05:30 [INF] Executing endpoint 'API.Controllers.HealthController.Ready (API)'
+2026-05-05 02:36:32.668 +05:30 [INF] Route matched with {action = "Ready", controller = "Health"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Ready() on controller API.Controllers.HealthController (API).
+2026-05-05 02:36:33.246 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType0`1[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-05-05 02:36:33.248 +05:30 [INF] Executed action API.Controllers.HealthController.Ready (API) in 577.778ms
+2026-05-05 02:36:33.249 +05:30 [INF] Executed endpoint 'API.Controllers.HealthController.Ready (API)'
+2026-05-05 02:36:33.251 +05:30 [INF] [Middleware] Response: 200 in 603 ms | CorrelationId: 3351db3b-da39-428b-a115-d096e98f2cd0
+2026-05-05 02:36:33.253 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/api/health/ready - 200 null application/json; charset=utf-8 611.4058ms
+2026-05-05 02:36:40.349 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/api/health/details - null null
+2026-05-05 02:36:40.352 +05:30 [INF] [Correlation] Assigned CorrelationId: bb56097a-fd29-4470-9b18-e3a70b00ff56
+2026-05-05 02:36:40.353 +05:30 [INF] [Middleware] Incoming Request: GET /api/health/details | CorrelationId: bb56097a-fd29-4470-9b18-e3a70b00ff56
+2026-05-05 02:36:40.357 +05:30 [INF] Executing endpoint 'API.Controllers.HealthController.Details (API)'
+2026-05-05 02:36:40.361 +05:30 [INF] Route matched with {action = "Details", controller = "Health"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Details() on controller API.Controllers.HealthController (API).
+2026-05-05 02:36:40.379 +05:30 [INF] Executing OkObjectResult, writing value of type '<>f__AnonymousType1`2[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.Collections.Generic.IEnumerable`1[[<>f__AnonymousType2`3[[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e],[System.String, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]], API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]'.
+2026-05-05 02:36:40.391 +05:30 [INF] Executed action API.Controllers.HealthController.Details (API) in 27.6241ms
+2026-05-05 02:36:40.393 +05:30 [INF] Executed endpoint 'API.Controllers.HealthController.Details (API)'
+2026-05-05 02:36:40.394 +05:30 [INF] [Middleware] Response: 200 in 40 ms | CorrelationId: bb56097a-fd29-4470-9b18-e3a70b00ff56
+2026-05-05 02:36:40.396 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/api/health/details - 200 null application/json; charset=utf-8 46.2887ms
+2026-05-05 02:40:01.821 +05:30 [INF] Application is shutting down...
+2026-05-05 02:40:45.350 +05:30 [INF] User profile is available. Using 'C:\Users\amina\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-05 02:40:45.455 +05:30 [INF] Now listening on: http://localhost:5260
+2026-05-05 02:40:45.459 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-05 02:40:45.460 +05:30 [INF] Hosting environment: Development
+2026-05-05 02:40:45.461 +05:30 [INF] Content root path: D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API
+2026-05-05 02:41:28.742 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/index.html - null null
+2026-05-05 02:41:28.876 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/index.html - 200 null text/html;charset=utf-8 134.0292ms
+2026-05-05 02:41:29.127 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/v1/swagger.json - null null
+2026-05-05 02:41:29.225 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/index.html - null null
+2026-05-05 02:41:29.230 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/index.html - 200 null text/html;charset=utf-8 4.1411ms
+2026-05-05 02:41:29.265 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 137.7031ms
+2026-05-05 02:41:58.874 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/health/live - null null
+2026-05-05 02:41:58.883 +05:30 [INF] [Correlation] Assigned CorrelationId: 42af985c-97cb-424d-9990-05bb4d15bfa7
+2026-05-05 02:41:58.895 +05:30 [INF] [Middleware] Incoming Request: GET /health/live | CorrelationId: 42af985c-97cb-424d-9990-05bb4d15bfa7
+2026-05-05 02:41:58.902 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-05-05 02:42:00.660 +05:30 [INF] Executing endpoint 'Health checks'
+2026-05-05 02:42:00.667 +05:30 [INF] Executed endpoint 'Health checks'
+2026-05-05 02:42:00.669 +05:30 [INF] [Middleware] Response: 200 in 1776 ms | CorrelationId: 42af985c-97cb-424d-9990-05bb4d15bfa7
+2026-05-05 02:42:00.670 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/health/live - 200 null text/plain 1796.395ms
+2026-05-05 02:42:00.869 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/favicon.ico - null null
+2026-05-05 02:42:00.873 +05:30 [INF] [Correlation] Assigned CorrelationId: c35c5f63-41dc-4959-9786-370b38cb46d0
+2026-05-05 02:42:00.875 +05:30 [INF] [Middleware] Incoming Request: GET /favicon.ico | CorrelationId: c35c5f63-41dc-4959-9786-370b38cb46d0
+2026-05-05 02:42:00.878 +05:30 [INF] [Middleware] Response: 404 in 3 ms | CorrelationId: c35c5f63-41dc-4959-9786-370b38cb46d0
+2026-05-05 02:42:00.880 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/favicon.ico - 404 0 null 10.6661ms
+2026-05-05 02:42:00.884 +05:30 [INF] Request reached the end of the middleware pipeline without being handled by application code. Request path: GET http://localhost:5260/favicon.ico, Response status code: 404
+2026-05-05 02:42:00.991 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/health/live - null null
+2026-05-05 02:42:00.995 +05:30 [INF] [Correlation] Assigned CorrelationId: 204c0acd-ac34-4dfa-ae01-908ca773d7cf
+2026-05-05 02:42:01.001 +05:30 [INF] [Middleware] Incoming Request: GET /health/live | CorrelationId: 204c0acd-ac34-4dfa-ae01-908ca773d7cf
+2026-05-05 02:42:01.007 +05:30 [INF] Executing endpoint 'Health checks'
+2026-05-05 02:42:01.013 +05:30 [INF] Executed endpoint 'Health checks'
+2026-05-05 02:42:01.015 +05:30 [INF] [Middleware] Response: 200 in 14 ms | CorrelationId: 204c0acd-ac34-4dfa-ae01-908ca773d7cf
+2026-05-05 02:42:01.017 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/health/live - 200 null text/plain 25.4457ms
+2026-05-05 02:42:07.292 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/health/ready - null null
+2026-05-05 02:42:07.295 +05:30 [INF] [Correlation] Assigned CorrelationId: 1a8d65b7-dc96-4336-adc7-d94283105f91
+2026-05-05 02:42:07.296 +05:30 [INF] [Middleware] Incoming Request: GET /health/ready | CorrelationId: 1a8d65b7-dc96-4336-adc7-d94283105f91
+2026-05-05 02:42:07.298 +05:30 [INF] Executing endpoint 'Health checks'
+2026-05-05 02:42:07.755 +05:30 [INF] Executed endpoint 'Health checks'
+2026-05-05 02:42:07.757 +05:30 [INF] [Middleware] Response: 200 in 460 ms | CorrelationId: 1a8d65b7-dc96-4336-adc7-d94283105f91
+2026-05-05 02:42:07.759 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/health/ready - 200 null text/plain 466.9939ms
+2026-05-05 02:42:07.974 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/health/ready - null null
+2026-05-05 02:42:07.976 +05:30 [INF] [Correlation] Assigned CorrelationId: a04a4bd6-a2b7-4987-ad54-f39c5a466c81
+2026-05-05 02:42:07.977 +05:30 [INF] [Middleware] Incoming Request: GET /health/ready | CorrelationId: a04a4bd6-a2b7-4987-ad54-f39c5a466c81
+2026-05-05 02:42:07.978 +05:30 [INF] Executing endpoint 'Health checks'
+2026-05-05 02:42:07.984 +05:30 [INF] Executed endpoint 'Health checks'
+2026-05-05 02:42:07.985 +05:30 [INF] [Middleware] Response: 200 in 8 ms | CorrelationId: a04a4bd6-a2b7-4987-ad54-f39c5a466c81
+2026-05-05 02:42:07.987 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/health/ready - 200 null text/plain 13.2042ms
+2026-05-05 02:43:11.125 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/health/details - null null
+2026-05-05 02:43:11.131 +05:30 [INF] [Correlation] Assigned CorrelationId: 1003a4e1-521d-4521-aa10-59611b945af5
+2026-05-05 02:43:11.132 +05:30 [INF] [Middleware] Incoming Request: GET /health/details | CorrelationId: 1003a4e1-521d-4521-aa10-59611b945af5
+2026-05-05 02:43:11.136 +05:30 [INF] Executing endpoint 'Health checks'
+2026-05-05 02:43:11.228 +05:30 [INF] Executed endpoint 'Health checks'
+2026-05-05 02:43:11.229 +05:30 [INF] [Middleware] Response: 200 in 97 ms | CorrelationId: 1003a4e1-521d-4521-aa10-59611b945af5
+2026-05-05 02:43:11.231 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/health/details - 200 null application/json; charset=utf-8 106.0847ms
+2026-05-05 02:43:11.400 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/health/details - null null
+2026-05-05 02:43:11.403 +05:30 [INF] [Correlation] Assigned CorrelationId: 085a78fc-f519-4b4e-ac02-0b30335e5e2d
+2026-05-05 02:43:11.404 +05:30 [INF] [Middleware] Incoming Request: GET /health/details | CorrelationId: 085a78fc-f519-4b4e-ac02-0b30335e5e2d
+2026-05-05 02:43:11.406 +05:30 [INF] Executing endpoint 'Health checks'
+2026-05-05 02:43:11.408 +05:30 [INF] Executed endpoint 'Health checks'
+2026-05-05 02:43:11.409 +05:30 [INF] [Middleware] Response: 200 in 4 ms | CorrelationId: 085a78fc-f519-4b4e-ac02-0b30335e5e2d
+2026-05-05 02:43:11.411 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/health/details - 200 null application/json; charset=utf-8 10.6484ms
+2026-05-05 02:45:40.382 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/health/ready - null null
+2026-05-05 02:45:40.385 +05:30 [INF] [Correlation] Assigned CorrelationId: 4052a4c6-4c05-4816-b182-bfb999c6e891
+2026-05-05 02:45:40.387 +05:30 [INF] [Middleware] Incoming Request: GET /health/ready | CorrelationId: 4052a4c6-4c05-4816-b182-bfb999c6e891
+2026-05-05 02:45:40.389 +05:30 [INF] Executing endpoint 'Health checks'
+2026-05-05 02:45:40.391 +05:30 [INF] Executed endpoint 'Health checks'
+2026-05-05 02:45:40.392 +05:30 [INF] [Middleware] Response: 200 in 5 ms | CorrelationId: 4052a4c6-4c05-4816-b182-bfb999c6e891
+2026-05-05 02:45:40.393 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/health/ready - 200 null text/plain 11.3182ms
+2026-05-05 02:45:40.584 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/health/ready - null null
+2026-05-05 02:45:40.587 +05:30 [INF] [Correlation] Assigned CorrelationId: 393feecc-4642-4b40-add1-c11559e7b9a3
+2026-05-05 02:45:40.587 +05:30 [INF] [Middleware] Incoming Request: GET /health/ready | CorrelationId: 393feecc-4642-4b40-add1-c11559e7b9a3
+2026-05-05 02:45:40.589 +05:30 [INF] Executing endpoint 'Health checks'
+2026-05-05 02:45:40.590 +05:30 [INF] Executed endpoint 'Health checks'
+2026-05-05 02:45:40.591 +05:30 [INF] [Middleware] Response: 200 in 3 ms | CorrelationId: 393feecc-4642-4b40-add1-c11559e7b9a3
+2026-05-05 02:45:40.593 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/health/ready - 200 null text/plain 8.7559ms
+2026-05-05 02:48:21.736 +05:30 [INF] Application is shutting down...
