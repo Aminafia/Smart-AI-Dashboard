@@ -1,0 +1,92 @@
+2026-05-04 23:48:37.213 +05:30 [INF] User profile is available. Using 'C:\Users\amina\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-04 23:48:37.859 +05:30 [INF] Now listening on: http://localhost:5260
+2026-05-04 23:48:37.863 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-04 23:48:37.864 +05:30 [INF] Hosting environment: Development
+2026-05-04 23:48:37.865 +05:30 [INF] Content root path: D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API
+2026-05-04 23:51:26.796 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/index.html - null null
+2026-05-04 23:51:26.902 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/index.html - 200 null text/html;charset=utf-8 107.3368ms
+2026-05-04 23:51:27.397 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/v1/swagger.json - null null
+2026-05-04 23:51:27.513 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 116.7843ms
+2026-05-04 23:51:27.677 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/index.html - null null
+2026-05-04 23:51:27.680 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/index.html - 200 null text/html;charset=utf-8 2.945ms
+2026-05-04 23:52:05.965 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5260/api/users - application/json 72
+2026-05-04 23:52:05.973 +05:30 [INF] [Correlation] Assigned CorrelationId: 5ca8d772-15d8-4798-bc5a-086d6bb525ff
+2026-05-04 23:52:05.976 +05:30 [INF] [Middleware] Incoming Request: POST /api/users | CorrelationId: 5ca8d772-15d8-4798-bc5a-086d6bb525ff
+2026-05-04 23:52:05.983 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-05-04 23:52:08.291 +05:30 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin)
+2026-05-04 23:52:08.295 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-05-04 23:52:08.296 +05:30 [INF] [Middleware] Response: 401 in 2320 ms | CorrelationId: 5ca8d772-15d8-4798-bc5a-086d6bb525ff
+2026-05-04 23:52:08.299 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5260/api/users - 401 0 null 2333.7774ms
+2026-05-04 23:53:03.216 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5260/api/auth/login - application/json 61
+2026-05-04 23:53:03.221 +05:30 [INF] [Correlation] Assigned CorrelationId: f48173c0-b3a1-4431-b386-21cc33e8a5bd
+2026-05-04 23:53:03.222 +05:30 [INF] [Middleware] Incoming Request: POST /api/auth/login | CorrelationId: f48173c0-b3a1-4431-b386-21cc33e8a5bd
+2026-05-04 23:53:03.232 +05:30 [INF] Executing endpoint 'API.Controllers.AuthController.Login (API)'
+2026-05-04 23:53:03.272 +05:30 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(Application.DTOs.Auth.LoginRequest) on controller API.Controllers.AuthController (API).
+2026-05-04 23:53:03.322 +05:30 [INF] [Controller] Login endpoint hit
+2026-05-04 23:53:04.489 +05:30 [INF] [MediatR] Handling LoginCommand
+2026-05-04 23:53:04.490 +05:30 [INF] [Handler] Fetching user from DB
+2026-05-04 23:53:05.691 +05:30 [INF] Executed DbCommand (76ms) [Parameters=[@__email_0='?'], CommandType='"Text"', CommandTimeout='30']
+SELECT u."Id", u."CreatedAt", u."Email", u."FullName", u."PasswordHash", u."Role"
+FROM "Users" AS u
+WHERE u."Email" = @__email_0
+LIMIT 1
+2026-05-04 23:53:05.748 +05:30 [INF] [Handler] Verifying password
+2026-05-04 23:53:06.069 +05:30 [INF] [Handler] Generating JWT token
+2026-05-04 23:53:06.113 +05:30 [INF] [Controller] Login successful, returning response
+2026-05-04 23:53:06.119 +05:30 [INF] Executing OkObjectResult, writing value of type 'Application.Common.Models.ApiResponse`1[[Application.Features.Auth.Commands.Login.LoginResponse, Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-05-04 23:53:06.137 +05:30 [INF] Executed action API.Controllers.AuthController.Login (API) in 2861.8083ms
+2026-05-04 23:53:06.139 +05:30 [INF] Executed endpoint 'API.Controllers.AuthController.Login (API)'
+2026-05-04 23:53:06.141 +05:30 [INF] [Middleware] Response: 200 in 2918 ms | CorrelationId: f48173c0-b3a1-4431-b386-21cc33e8a5bd
+2026-05-04 23:53:06.149 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5260/api/auth/login - 200 null application/json; charset=utf-8 2932.3726ms
+2026-05-04 23:53:24.686 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5260/api/users - application/json 72
+2026-05-04 23:53:24.690 +05:30 [INF] [Correlation] Assigned CorrelationId: f4e4ad59-96b6-44b8-ae7c-d4d56580c458
+2026-05-04 23:53:24.690 +05:30 [INF] [Middleware] Incoming Request: POST /api/users | CorrelationId: f4e4ad59-96b6-44b8-ae7c-d4d56580c458
+2026-05-04 23:53:24.743 +05:30 [INF] Executing endpoint 'API.Controllers.UsersController.CreateUser (API)'
+2026-05-04 23:53:24.749 +05:30 [INF] Route matched with {action = "CreateUser", controller = "Users"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] CreateUser(Application.Features.Users.Commands.CreateUser.CreateUserCommand) on controller API.Controllers.UsersController (API).
+2026-05-04 23:53:24.764 +05:30 [INF] [Controller] CreateUser endpoint hit
+2026-05-04 23:53:24.778 +05:30 [INF] Executed action API.Controllers.UsersController.CreateUser (API) in 26.9736ms
+2026-05-04 23:53:24.780 +05:30 [INF] Executed endpoint 'API.Controllers.UsersController.CreateUser (API)'
+2026-05-04 23:53:24.781 +05:30 [ERR] [Middleware] FAILED: POST /api/users in 90 ms | CorrelationId: f4e4ad59-96b6-44b8-ae7c-d4d56580c458
+FluentValidation.ValidationException: Validation failed: 
+ -- Password: Password must be at least 6 characters Severity: Error
+   at Application.Common.Behaviors.ValidationBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Application\Common\Behaviors\ValidationBehavior.cs:line 45
+   at API.Controllers.UsersController.CreateUser(CreateUserCommand command) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API\Controllers\UsersController.cs:line 30
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware.InvokeInternal(HttpContext context, EnableRateLimitingAttribute enableRateLimitingAttribute)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at API.Middlewares.RequestLoggingMiddleware.Invoke(HttpContext context) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API\Middlewares\RequestLoggingMiddleware.cs:line 53
+2026-05-04 23:53:24.853 +05:30 [WRN] Validation error | CorrelationId: f4e4ad59-96b6-44b8-ae7c-d4d56580c458
+FluentValidation.ValidationException: Validation failed: 
+ -- Password: Password must be at least 6 characters Severity: Error
+   at Application.Common.Behaviors.ValidationBehavior`2.Handle(TRequest request, RequestHandlerDelegate`1 next, CancellationToken cancellationToken) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\Application\Common\Behaviors\ValidationBehavior.cs:line 45
+   at API.Controllers.UsersController.CreateUser(CreateUserCommand command) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API\Controllers\UsersController.cs:line 30
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.TaskOfIActionResultExecutor.Execute(ActionContext actionContext, IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Logged|17_1(ResourceInvoker invoker)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|7_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.RateLimiting.RateLimitingMiddleware.InvokeInternal(HttpContext context, EnableRateLimitingAttribute enableRateLimitingAttribute)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at API.Middlewares.RequestLoggingMiddleware.Invoke(HttpContext context) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API\Middlewares\RequestLoggingMiddleware.cs:line 53
+   at API.Middlewares.CorrelationIdMiddleware.Invoke(HttpContext context) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API\Middlewares\CorrelationIdMiddleware.cs:line 54
+   at API.Middlewares.ExceptionHandlingMiddleware.InvokeAsync(HttpContext context) in D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API\Middlewares\ExceptionHandlingMiddleware.cs:line 53
+2026-05-04 23:53:24.865 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5260/api/users - 400 null application/json 178.541ms

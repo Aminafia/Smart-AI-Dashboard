@@ -1,12 +1,21 @@
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
+
 namespace Application.Common.Behaviors;
 
+/// <summary>
+///  This class intercepts every request going through MediatR
+/// - TRequest- LoginCommand, CreateUserCommand, etc.
+/// - TResponse- LoginResponse, etc.
+/// </summary>
 public class ValidationBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
+    /// <summary>
+    /// DI injects all validators for the given TRequest. For example, if TRequest is LoginCommand, it will inject LoginCommandValidator.
+    /// </summary>
     private readonly IEnumerable<IValidator<TRequest>> _validators;
 
     public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)

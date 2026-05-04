@@ -2,6 +2,8 @@ using Application.DTOs.AI;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MediatR;
+using Application.Features.AI.Commands.Summarize;
 
 namespace API.Controllers
 {
@@ -10,30 +12,19 @@ namespace API.Controllers
     [Authorize]
     public class SummarizeController : ControllerBase
     {
-        private readonly IAIService _aiService;
-        private readonly ILogger<SummarizeController> _logger;
-        public SummarizeController(IAIService aiService, ILogger<SummarizeController> logger)
+        private readonly IMediator _mediator;
+        public SummarizeController(IMediator mediator)
         {
-            _aiService = aiService;
-            _logger = logger;
+            _mediator = mediator;
         }
 
         [HttpPost]
         public async Task<IActionResult> Summarize([FromBody] SummarizeRequest request)
         {
-            _logger.LogInformation("[Controller] Summarize endpoint hit");
-
-            if (string.IsNullOrWhiteSpace(request.Text))
-                return BadRequest("Text cannot be empty");
-
-            var aiRequest = new AIRequest
+            var result = await _mediator.Send(new SummarizeCommand
             {
-                Prompt = request.Text,
-            };
-
-            var result = await _aiService.GenerateAsync(aiRequest);
-
-            _logger.LogInformation("[Controller] Summarization completed");
+                Text = request.Text
+            });
 
             return Ok(result);
         }

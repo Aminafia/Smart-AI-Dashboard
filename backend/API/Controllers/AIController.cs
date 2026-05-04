@@ -5,6 +5,10 @@ using Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+using MediatR;
+using Application.Features.AI.Commands.GenerateAI;
+using System.Threading.Tasks;
+using Application.Features.AI.Queries.GetAIStatus;
 
 namespace API.Controllers;
 
@@ -15,57 +19,37 @@ public class AIController : ControllerBase
     private readonly IAIQueue _queue;
     private readonly IAIJobStore _jobStore;
     private readonly ILogger<AIController> _logger;
-
-    public AIController(IAIQueue queue, IAIJobStore jobStore, ILogger<AIController> logger)
+    private readonly IMediator _mediator;
+    public AIController(IAIQueue queue, IAIJobStore jobStore, ILogger<AIController> logger, IMediator mediator)
     {
         _queue = queue;
         _jobStore = jobStore;
         _logger = logger;
+        _mediator = mediator;
     }
 
-    [Authorize]
-    [EnableRateLimiting("fixed")]
-    [HttpPost("generate")]
-    public IActionResult Generate(AIRequest request)
+[Authorize]
+[EnableRateLimiting("fixed")]
+[HttpPost("generate")]
+public async Task<IActionResult> Generate(AIRequest request)
+{
+    var result = await _mediator.Send(new GenerateAICommand
     {
-        _logger.LogInformation("[Controller] AI Generate endpoint hit");
+        Prompt = request.Prompt
+    });
 
-        if (request == null || string.IsNullOrWhiteSpace(request.Prompt))
-            throw new BadRequestException("Prompt cannot be empty");
-
-        var job = new AIJob
-        {
-            ProjectId = Guid.NewGuid(),
-            JobType = "Generate",
-            Prompt = request.Prompt
-        };
-
-        _jobStore.Add(job);
-        _queue.Enqueue(job);
-        _logger.LogInformation("[Controller] AI job created with ID: {JobId}", job.Id);
-
-        return Ok(new
-        {
-            jobId = job.Id,
-            status = job.Status
-        });
-    }
+    return Ok(result);
+}
 
     [Authorize]
     [HttpGet("status/{jobId}")]
-    public IActionResult GetStatus(Guid jobId)
+    public async Task<IActionResult> GetStatus(Guid jobId)
     {
-        var job = _jobStore.Get(jobId);
-
-        if (job is null)
-            throw new NotFoundException("Job not found");
-
-        return Ok(new
+        var result = await _mediator.Send(new GetAIStatusQuery
         {
-            job.Id,
-            job.Status,
-            job.Result,
-            job.Error
+            JobId = jobId 
         });
+
+        return Ok(result);
     }
 }
