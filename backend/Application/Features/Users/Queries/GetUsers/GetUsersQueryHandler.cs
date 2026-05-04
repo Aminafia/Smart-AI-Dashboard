@@ -18,7 +18,7 @@ public class GetUsersQueryHandler
         GetUsersQuery request,
         CancellationToken cancellationToken)
     {
-        var users = await _userRepository.GetAllAsync(cancellationToken);
+        var users = await _userRepository.GetAllUsersAsync(cancellationToken);
 
         return users.Select(user => new UserDto
         {

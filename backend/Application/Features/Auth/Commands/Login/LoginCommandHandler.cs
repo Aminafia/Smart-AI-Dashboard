@@ -58,7 +58,7 @@ public class LoginCommandHandler
         _logger.LogInformation("[MediatR] Handling LoginCommand");
 
         _logger.LogInformation("[Handler] Fetching user from DB");
-        var user = await _userRepository.GetByEmailAsync(request.Email, cancellationToken);
+        var user = await _userRepository.GetUserByEmailAsync(request.Email, cancellationToken);
         if (user is null)
         {
             _logger.LogWarning("[Handler] User not found");

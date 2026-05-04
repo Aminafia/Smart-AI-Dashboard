@@ -52,7 +52,7 @@ public static class AuthExtensions
                 ValidateLifetime = true,
                 ValidateIssuerSigningKey = true,
 
-                ValidIssuer = jwtSettings.Issuer,
+                ValidIssuer = jwtSettings!.Issuer,
                 ValidAudience = jwtSettings.Audience,
 
                 IssuerSigningKey = new SymmetricSecurityKey(

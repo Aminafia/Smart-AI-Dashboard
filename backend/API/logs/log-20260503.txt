@@ -1,0 +1,6 @@
+2026-05-03 20:56:26.029 +05:30 [INF] User profile is available. Using 'C:\Users\amina\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-03 20:56:26.256 +05:30 [INF] Now listening on: http://localhost:5260
+2026-05-03 20:56:26.259 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-03 20:56:26.260 +05:30 [INF] Hosting environment: Development
+2026-05-03 20:56:26.260 +05:30 [INF] Content root path: D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API
+2026-05-03 20:57:14.823 +05:30 [INF] Application is shutting down...

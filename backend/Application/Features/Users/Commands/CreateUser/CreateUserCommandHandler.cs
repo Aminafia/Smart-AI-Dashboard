@@ -44,7 +44,7 @@ public class CreateUserCommandHandler
         };
 
         // 4. Persist to DB
-        await _userRepository.AddAsync(user, cancellationToken);
+        await _userRepository.AddUserAsync(user, cancellationToken);
 
         // 5. Return actual ID
         return user.Id;
