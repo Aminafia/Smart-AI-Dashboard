@@ -678,3 +678,44 @@ FluentValidation.ValidationException: Validation failed:
 2026-05-05 02:45:40.591 +05:30 [INF] [Middleware] Response: 200 in 3 ms | CorrelationId: 393feecc-4642-4b40-add1-c11559e7b9a3
 2026-05-05 02:45:40.593 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/health/ready - 200 null text/plain 8.7559ms
 2026-05-05 02:48:21.736 +05:30 [INF] Application is shutting down...
+2026-05-05 02:48:35.241 +05:30 [INF] User profile is available. Using 'C:\Users\amina\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-05-05 02:48:35.338 +05:30 [INF] Now listening on: http://localhost:5260
+2026-05-05 02:48:35.341 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-05-05 02:48:35.342 +05:30 [INF] Hosting environment: Development
+2026-05-05 02:48:35.343 +05:30 [INF] Content root path: D:\Roadmap to Practicality\Smart-AI-Dashboard\backend\API
+2026-05-05 02:48:39.400 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/index.html - null null
+2026-05-05 02:48:39.496 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/index.html - 200 null text/html;charset=utf-8 97.1335ms
+2026-05-05 02:48:39.681 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/v1/swagger.json - null null
+2026-05-05 02:48:39.750 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/swagger/index.html - null null
+2026-05-05 02:48:39.756 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/index.html - 200 null text/html;charset=utf-8 5.4958ms
+2026-05-05 02:48:39.786 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 105.4875ms
+2026-05-05 02:48:46.183 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/health/ready - null null
+2026-05-05 02:48:46.191 +05:30 [INF] [Correlation] Assigned CorrelationId: c40a93f1-2782-4ea7-a467-45b9a1072737
+2026-05-05 02:48:46.194 +05:30 [INF] [Middleware] Incoming Request: GET /health/ready | CorrelationId: c40a93f1-2782-4ea7-a467-45b9a1072737
+2026-05-05 02:48:46.201 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-05-05 02:48:47.823 +05:30 [INF] Executing endpoint 'Health checks'
+2026-05-05 02:48:48.129 +05:30 [INF] Executed endpoint 'Health checks'
+2026-05-05 02:48:48.131 +05:30 [INF] [Middleware] Response: 200 in 1937 ms | CorrelationId: c40a93f1-2782-4ea7-a467-45b9a1072737
+2026-05-05 02:48:48.133 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/health/ready - 200 null text/plain 1950.1498ms
+2026-05-05 02:48:48.344 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/health/ready - null null
+2026-05-05 02:48:48.347 +05:30 [INF] [Correlation] Assigned CorrelationId: 25f35d7c-f344-4144-ae91-e1354843237d
+2026-05-05 02:48:48.348 +05:30 [INF] [Middleware] Incoming Request: GET /health/ready | CorrelationId: 25f35d7c-f344-4144-ae91-e1354843237d
+2026-05-05 02:48:48.350 +05:30 [INF] Executing endpoint 'Health checks'
+2026-05-05 02:48:48.356 +05:30 [INF] Executed endpoint 'Health checks'
+2026-05-05 02:48:48.359 +05:30 [INF] [Middleware] Response: 200 in 10 ms | CorrelationId: 25f35d7c-f344-4144-ae91-e1354843237d
+2026-05-05 02:48:48.361 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/health/ready - 200 null text/plain 16.5379ms
+2026-05-05 02:48:50.701 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/health/details - null null
+2026-05-05 02:48:50.704 +05:30 [INF] [Correlation] Assigned CorrelationId: 05ad57d8-a065-41a7-b0e1-93edb6b5079f
+2026-05-05 02:48:50.705 +05:30 [INF] [Middleware] Incoming Request: GET /health/details | CorrelationId: 05ad57d8-a065-41a7-b0e1-93edb6b5079f
+2026-05-05 02:48:50.709 +05:30 [INF] Executing endpoint 'Health checks'
+2026-05-05 02:48:50.783 +05:30 [INF] Executed endpoint 'Health checks'
+2026-05-05 02:48:50.784 +05:30 [INF] [Middleware] Response: 200 in 79 ms | CorrelationId: 05ad57d8-a065-41a7-b0e1-93edb6b5079f
+2026-05-05 02:48:50.786 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/health/details - 200 null application/json; charset=utf-8 84.7679ms
+2026-05-05 02:48:50.979 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5260/health/details - null null
+2026-05-05 02:48:50.981 +05:30 [INF] [Correlation] Assigned CorrelationId: 19849ebb-8a4e-48c9-ac15-91cc72a82218
+2026-05-05 02:48:50.982 +05:30 [INF] [Middleware] Incoming Request: GET /health/details | CorrelationId: 19849ebb-8a4e-48c9-ac15-91cc72a82218
+2026-05-05 02:48:50.984 +05:30 [INF] Executing endpoint 'Health checks'
+2026-05-05 02:48:50.986 +05:30 [INF] Executed endpoint 'Health checks'
+2026-05-05 02:48:50.987 +05:30 [INF] [Middleware] Response: 200 in 4 ms | CorrelationId: 19849ebb-8a4e-48c9-ac15-91cc72a82218
+2026-05-05 02:48:50.989 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5260/health/details - 200 null application/json; charset=utf-8 10.7919ms
+2026-05-05 02:49:34.267 +05:30 [INF] Application is shutting down...
