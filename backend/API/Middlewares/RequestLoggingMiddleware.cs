@@ -38,14 +38,12 @@ public class RequestLoggingMiddleware
     /// 6. If any exception occurs during processing, catch it, log the error with correlation ID and execution time, and rethrow the exception to be handled by global error handling middleware.
     public async Task Invoke(HttpContext context)
     {
-        var correlationId = context.Items["X-Correlation-ID"]?.ToString();
         var stopwatch = Stopwatch.StartNew();
 
         Log.Information(
-            "[Middleware] Incoming Request: {Method} {Path} | CorrelationId: {CorrelationId}",
+            "[Middleware] Incoming Request: {Method} {Path}",
             context.Request.Method,
-            context.Request.Path,
-            correlationId
+            context.Request.Path
         );
 
         try
@@ -54,10 +52,9 @@ public class RequestLoggingMiddleware
             stopwatch.Stop();
 
             Log.Information(
-                "[Middleware] Response: {StatusCode} in {Duration} ms | CorrelationId: {CorrelationId}",
+                "[Middleware] Response: {StatusCode} in {Duration} ms",
                 context.Response.StatusCode,
-                stopwatch.ElapsedMilliseconds,
-                correlationId
+                stopwatch.ElapsedMilliseconds
             );
         }
 
@@ -66,11 +63,10 @@ public class RequestLoggingMiddleware
             stopwatch.Stop();
 
             Log.Error(ex,
-                "[Middleware] FAILED: {Method} {Path} in {Duration} ms | CorrelationId: {CorrelationId}",
+                "[Middleware] FAILED: {Method} {Path} in {Duration} ms",
                 context.Request.Method,
                 context.Request.Path,
-                stopwatch.ElapsedMilliseconds,
-                correlationId
+                stopwatch.ElapsedMilliseconds
             );
 
             throw; // Thrown to be caught by ExceptionHandlingMiddleware, which will return standardized error response to client. 

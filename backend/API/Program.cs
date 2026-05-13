@@ -12,6 +12,8 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.IdentityModel.Tokens;
 using Polly;
 using Serilog;
+using Serilog.Formatting.Compact;
+using Serilog.Enrichers;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
@@ -27,11 +29,24 @@ if (string.IsNullOrEmpty(connectionString))
 // ----------------------
 // Logging (Serilog)
 // ----------------------
+
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+    .Enrich.WithMachineName()
+    .Enrich.WithThreadId()
+    .WriteTo.Console(
+        outputTemplate:
+        "[{Timestamp:HH:mm:ss} {Level:u3}] " +
+        "[CorrelationId: {CorrelationId}] " +
+        "[Machine: {MachineName}] " +
+        "{Message:lj}{NewLine}{Exception}")
+    
+    .WriteTo.File(
+        formatter: new Serilog.Formatting.Compact.RenderedCompactJsonFormatter(),
+        path: "logs/log-.json",
+        rollingInterval: RollingInterval.Day)
+    
     .CreateLogger();
 
 builder.Host.UseSerilog();
@@ -91,7 +106,7 @@ builder.Services.AddHttpClient("AIClient")
 // ----------------------
 // Authentication & Authorization
 // ----------------------
-builder.Services.AddAuth(configuration);
+builder.Services.AddAuth(configuration); //customized
 
 
 // ----------------------

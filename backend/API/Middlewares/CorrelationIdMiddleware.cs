@@ -14,6 +14,7 @@
 */
 
 using Microsoft.Extensions.Logging; // Provides ILogger for structured logging
+using Serilog.Context;
 
 namespace API.Middlewares;
 
@@ -49,8 +50,13 @@ public class CorrelationIdMiddleware
 
         context.Response.Headers[HeaderName] = correlationId;
 
-        _logger.LogInformation("[Correlation] Assigned CorrelationId: {CorrelationId}", correlationId);
+        using (LogContext.PushProperty("CorrelationId", correlationId))
+        {
+            _logger.LogInformation(
+                "[Correlation] Assigned CorrelationId: {CorrelationId}",
+                correlationId);
 
-        await _next(context);
+            await _next(context);
+        }
     }
 }
