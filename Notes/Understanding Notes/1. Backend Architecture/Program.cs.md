@@ -1,26 +1,38 @@
-# Program.cs — Runtime + Pipeline Understanding
+# What is Program.cs?
 
-## Program.cs Role
+`Program.cs` is the:
 
-```text
-Composition Root of the application
+```text id="6igjlwm"
+Application Composition Root
 ```
 
-Responsibilities:
+## What is a Composition Root?
 
-* Register services
-* Configure DI container
-* Configure middleware pipeline
-* Configure infrastructure
-* Configure authentication
-* Configure observability
-* Build application runtime
+A Composition Root is the central place where:
+
+* all layers
+* services
+* middleware
+* infrastructure
+* dependencies
+
+are connected together to build the final running application.
+
+It is responsible for:
+
+* configuring the application
+* registering services
+* configuring middleware pipeline
+* wiring all architectural layers together
+* building the runtime host
+
+It is the startup engine of the ASP.NET Core application.
 
 ---
 
-# Application Layers
+# Clean Architecture Layer Connection
 
-```text
+```text id="ljh4u7"
 API
 ↓
 Application
@@ -30,39 +42,182 @@ Core
 Infrastructure
 ```
 
+## What are these layers?
+
+### API Layer
+
+Handles:
+
+* HTTP requests
+* controllers
+* middleware
+* API responses
+
+Acts as entry point to the application.
+
+---
+
+### Application Layer
+
+Contains:
+
+* business workflows
+* CQRS handlers
+* validators
+* application logic
+
+Defines how the application behaves.
+
+---
+
+### Core Layer
+
+Contains:
+
+* entities
+* interfaces
+* business abstractions
+* domain models
+
+Represents pure business/domain definitions.
+
+---
+
+### Infrastructure Layer
+
+Contains:
+
+* database access
+* repositories
+* JWT implementation
+* AI integrations
+* Redis
+* external services
+
+Implements external technical concerns.
+
+---
+
 Only API layer knows all layers.
 
-`Program.cs` wires everything together.
+`Program.cs` is where:
+
+* Application layer
+* Infrastructure layer
+* Middleware
+* Authentication
+* Logging
+* Caching
+* Observability
+
+are composed together.
 
 ---
 
-# Startup Flow
+# High-Level Startup Lifecycle
 
-```text
-builder = Configure Services
-app = Configure Request Pipeline
+```text id="jwvbwl"
+Application Start
+↓
+Create Builder
+↓
+Load Configuration
+↓
+Register Services
+↓
+Configure Logging
+↓
+Configure Middleware
+↓
+Build App
+↓
+Start Web Server
+↓
+Listen for Requests
 ```
 
+## What is Startup Lifecycle?
+
+The startup lifecycle is the sequence ASP.NET Core follows to prepare the application before handling requests.
+
 ---
 
-# WebApplication.CreateBuilder(args)
+# CreateBuilder()
+
+```csharp id="o1q7x9"
+var builder = WebApplication.CreateBuilder(args);
+```
+
+## What is CreateBuilder()?
+
+Creates the foundational ASP.NET Core application infrastructure.
 
 Creates:
 
 * DI container
 * Configuration system
 * Logging system
-* Routing system
 * Kestrel web server
+* Routing system
 * Middleware builder
+* Hosting environment
+
+---
+
+# builder vs app
+
+## builder
+
+Used for:
+
+```text id="t4h9s0"
+Service registration phase
+```
+
+## What is Service Registration?
+
+The process of registering dependencies into the DI container so ASP.NET can inject them automatically later.
+
+Examples:
+
+* AddControllers()
+* AddAuthentication()
+* AddDbContext()
+* AddMediatR()
+
+---
+
+## app
+
+Used for:
+
+```text id="r9m5c7"
+Request pipeline configuration phase
+```
+
+## What is Request Pipeline?
+
+A chain of middleware components that process every incoming HTTP request.
+
+Examples:
+
+* UseAuthentication()
+* UseAuthorization()
+* UseMiddleware()
 
 ---
 
 # Configuration System
 
-```csharp
+```csharp id="3d9skh"
 var configuration = builder.Configuration;
 ```
+
+## What is Configuration System?
+
+A centralized system for loading application settings from multiple sources.
+
+Provides centralized configuration access.
 
 Reads:
 
@@ -70,156 +225,258 @@ Reads:
 * appsettings.Development.json
 * environment variables
 * secrets
-* command-line args
+* command-line arguments
 
 ---
 
 # Connection String
 
-```csharp
+```csharp id="r1knvy"
 var connectionString =
     configuration.GetConnectionString("DefaultConnection");
 ```
 
+## What is a Connection String?
+
+A configuration value containing database connection details:
+
+* server
+* database name
+* username
+* password
+* port
+
 Purpose:
 
-* Centralized infrastructure configuration
-* Avoid hardcoded DB values
+* externalize infrastructure configuration
+* avoid hardcoded DB values
+
+Supports:
+
+* Docker
+* Kubernetes
+* cloud deployments
+* multiple environments
 
 ---
 
 # Fail Fast Principle
 
-```csharp
+```csharp id="42l2ut"
 if (string.IsNullOrEmpty(connectionString))
 {
     throw new InvalidOperationException(...);
 }
 ```
 
+## What is Fail Fast?
+
+A design principle where the application crashes immediately when critical configuration is invalid instead of failing unpredictably later.
+
 Purpose:
 
-* Crash immediately on invalid startup configuration
-* Prevent partial/broken application startup
+* crash immediately on invalid startup configuration
+* avoid partially working application
+
+Production engineering principle:
+
+* detect infrastructure failure early
 
 ---
 
-# Serilog Setup
+# Serilog Logging System
 
-```csharp
+```csharp id="50pt4x"
 Log.Logger = new LoggerConfiguration()
 ```
 
-Purpose:
+## What is Serilog?
 
-* Structured logging system
+A structured logging library for .NET applications.
 
-Features:
+Used for:
 
-* Console logging
-* File logging
-* Context enrichment
-* Centralized observability
+* structured logs
+* centralized observability
+* production diagnostics
+
+Replaces default ASP.NET logging.
 
 ---
 
 # Structured Logging
 
-Instead of:
+## What is Structured Logging?
 
-```text
-Console.WriteLine()
+Logging data in structured key-value format instead of plain text.
+
+Bad:
+
+```text id="l9r1wi"
+Console.WriteLine("Error")
 ```
 
-Use:
+Good:
 
-```json
+```json id="7ovls9"
 {
-  "Timestamp": "...",
-  "RequestId": "...",
-  "Message": "..."
+  "Timestamp":"...",
+  "Level":"Error",
+  "CorrelationId":"...",
+  "Message":"..."
 }
 ```
 
 Benefits:
 
-* Tracing
-* Monitoring
-* Kibana/Grafana support
-* Distributed observability
+* searchable logs
+* distributed tracing
+* centralized monitoring
+* Grafana/Kibana support
 
 ---
 
-# Log Context Enrichment
+# Log Enrichment
 
-```csharp
+```csharp id="w8x9ph"
 .Enrich.FromLogContext()
 ```
 
-Enables:
+## What is Log Enrichment?
 
-* Correlation IDs
+Adding extra metadata automatically to every log entry.
+
+Allows middleware to inject:
+
+* CorrelationId
+* UserId
 * Request metadata
-* Shared request logging context
+
+into all downstream logs.
 
 ---
 
-# Log Sinks
+# Machine Enrichment
 
-```csharp
+```csharp id="4ngvh7"
+.Enrich.WithMachineName()
+```
+
+## What is Machine Enrichment?
+
+Adds server/machine identity into logs.
+
+Useful for:
+
+* multi-server deployments
+* Kubernetes
+* cloud infrastructure
+
+---
+
+# Thread Enrichment
+
+```csharp id="kzyw1v"
+.Enrich.WithThreadId()
+```
+
+## What is Thread Enrichment?
+
+Adds execution thread information into logs.
+
+Useful for:
+
+* async debugging
+* concurrency tracing
+
+---
+
+# Console Sink
+
+```csharp id="w3e4s6"
 .WriteTo.Console()
 ```
 
-Used for:
+## What is a Sink?
 
-* Docker logs
+A destination where logs are written.
+
+Outputs logs to terminal.
+
+Useful for:
+
+* local development
+* Docker containers
 * Kubernetes logs
-* local debugging
 
-```csharp
+---
+
+# File Sink
+
+```csharp id="5xw0nr"
 .WriteTo.File(...)
 ```
 
-Used for:
+## What is File Logging?
 
-* persistent logs
+Persisting logs into physical files.
+
+Creates persistent structured logs.
+
+Features:
+
 * rolling log files
+* JSON structured output
+* long-term diagnostics
 
 ---
 
 # UseSerilog()
 
-```csharp
+```csharp id="1k4qv8"
 builder.Host.UseSerilog();
 ```
 
-Replaces default ASP.NET logging pipeline.
+## What does UseSerilog() do?
+
+Replaces the default ASP.NET logging engine with Serilog.
 
 ---
 
 # Cross-Cutting Concerns
 
-Infrastructure concerns applied globally:
+## What are Cross-Cutting Concerns?
+
+Features that affect the entire application instead of one specific business feature.
+
+Program.cs configures:
 
 * Logging
 * Authentication
 * Authorization
-* Caching
-* Rate limiting
 * Exception handling
+* Rate limiting
+* Caching
 * Observability
+* Health monitoring
+
+These affect the entire application.
 
 ---
 
 # AddControllers()
 
-```csharp
+```csharp id="awjpp4"
 builder.Services.AddControllers();
 ```
 
+## What are Controllers?
+
+Classes that receive HTTP requests and return HTTP responses.
+
 Registers:
 
-* MVC pipeline
+* MVC framework
 * routing
 * model binding
 * JSON serialization
@@ -229,228 +486,565 @@ Registers:
 
 # Dependency Injection Container
 
-```csharp
+```csharp id="upztg0"
 builder.Services
 ```
 
 Represents:
 
-```text
+```text id="rzb7po"
 IServiceCollection
 ```
 
+## What is Dependency Injection?
+
+A design pattern where dependencies are automatically provided to classes instead of classes creating them manually.
+
 Purpose:
 
-* Dependency registry
+* centralized dependency registry
 
-Example:
+---
 
-```csharp
+# DI Example
+
+```csharp id="gqzc7q"
 services.AddScoped<IUserRepository, UserRepository>();
 ```
 
 Meaning:
 
-```text
-Inject UserRepository whenever IUserRepository is requested
+```text id="mzwq0y"
+Whenever IUserRepository is requested,
+inject UserRepository.
 ```
 
 ---
 
-# Swagger Configuration
+# Dependency Injection Benefits
+
+* loose coupling
+* testability
+* centralized configuration
+* abstraction-based architecture
+
+---
+
+# Swagger/OpenAPI
+
+```csharp id="f1m82s"
+builder.Services.AddSwaggerGen(...)
+```
+
+## What is Swagger/OpenAPI?
+
+A standardized API documentation system.
 
 Purpose:
 
-* OpenAPI documentation
+* API documentation
 * API discoverability
-* JWT testing support
+* testing endpoints
 
 ---
 
 # JWT Swagger Integration
 
-```csharp
-options.AddSecurityDefinition("Bearer", ...)
+```csharp id="jlwm4h"
+AddSecurityDefinition("Bearer", ...)
 ```
+
+## What is JWT Integration in Swagger?
+
+Allows authenticated API testing directly inside Swagger UI.
+
+Adds JWT authentication support inside Swagger UI.
+
+Allows:
+
+* entering JWT token
+* authenticated endpoint testing
+
+---
+
+# AddApplication()
+
+```csharp id="5qjlwm"
+builder.Services.AddApplication();
+```
+
+## What is AddApplication()?
+
+A custom extension method that registers all Application-layer services.
+
+Registers:
+
+* MediatR
+* Validators
+* Pipeline behaviors
+* Application services
+
+---
+
+# MediatR
+
+## What is MediatR?
+
+A .NET library implementing the Mediator pattern.
+
+Used for:
+
+* CQRS
+* decoupled request handling
+
+Runtime flow:
+
+```text id="m38jye"
+Controller
+↓
+Mediator.Send()
+↓
+Handler
+```
+
+---
+
+# Validators
+
+```csharp id="kxjlwm"
+AddValidatorsFromAssembly(...)
+```
+
+## What are Validators?
+
+Classes that validate incoming requests before business logic executes.
+
+Automatically registers:
+
+* LoginValidator
+* RegisterValidator
+* AI validators
+
+---
+
+# Pipeline Behaviors
+
+Example:
+
+```csharp id="4nn8by"
+ValidationBehavior<TRequest,TResponse>
+```
+
+## What are Pipeline Behaviors?
+
+Middleware-like components inside MediatR pipeline.
+
+Acts like middleware for MediatR.
+
+Runtime:
+
+```text id="3krspn"
+Controller
+↓
+Mediator
+↓
+ValidationBehavior
+↓
+Handler
+```
+
+---
+
+# AddInfrastructure()
+
+```csharp id="wzn3vc"
+builder.Services.AddInfrastructure(configuration);
+```
+
+## What is AddInfrastructure()?
+
+Registers infrastructure implementations and external technical services.
+
+Registers:
+
+* DbContext
+* repositories
+* JWT services
+* AI services
+* Redis services
+* background workers
+* external providers
+
+Infrastructure layer contains implementations.
+
+---
+
+# Health Checks
+
+```csharp id="3z7vjr"
+builder.Services.AddCustomHealthChecks(...)
+```
+
+## What are Health Checks?
+
+Endpoints that verify whether infrastructure dependencies are functioning correctly.
+
+Purpose:
+
+* infrastructure monitoring
+* uptime monitoring
+* dependency validation
+
+Checks:
+
+* PostgreSQL
+* Redis
+* external APIs
+
+---
+
+# HttpClient Factory
+
+```csharp id="0sz80f"
+builder.Services.AddHttpClient("AIClient")
+```
+
+## What is HttpClient Factory?
+
+A managed system for creating optimized HttpClient instances.
+
+Benefits:
+
+* connection pooling
+* DNS refresh handling
+* resiliency integration
+
+---
+
+# Polly Resilience
+
+```csharp id="cbg6e6"
+.AddPolicyHandler(...)
+```
+
+## What is Polly?
+
+A .NET resilience library for handling transient failures.
 
 Adds:
 
-* Authorization header support
-* JWT token input inside Swagger UI
+* retry policies
+* circuit breaker
+* timeout policies
+
+Purpose:
+
+* resilient external API communication
 
 ---
 
-# Clean Architecture Observation
+# Retry Policy
 
-Program.cs contains:
+## What is Retry Policy?
 
-* configuration
-* orchestration
-* infrastructure wiring
+Automatically retries temporarily failed requests.
 
-Program.cs does NOT contain:
+Example:
 
-* business logic
-* DB queries
-* application rules
+* temporary network failure
+* temporary OpenAI outage
 
 ---
 
-# Middleware Pipeline Runtime Model
+# Circuit Breaker
 
-Middleware execution is nested.
+## What is Circuit Breaker?
 
-Actual execution:
+Stops repeated failing external calls temporarily.
 
-```text
-ExceptionMiddleware
-{
-    CorrelationMiddleware
-    {
-        LoggingMiddleware
-        {
-            Authentication
-            {
-                Authorization
-                {
-                    Controller
-                    {
-                        MediatR
-                        {
-                            Handler
-                            {
-                                Repository
-                                {
-                                    DbContext
-                                    {
-                                        PostgreSQL
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-```
+Prevents:
+
+* cascading failures
+* API overload
 
 ---
 
-# _next(context)
+# Timeout Policy
 
-```csharp
-await _next(context);
+```csharp id="8d7j1o"
+Policy.TimeoutAsync<HttpResponseMessage>(5)
 ```
 
-Meaning:
+## What is Timeout Policy?
 
-```text
-Continue pipeline execution
+Cancels long-running requests after specified duration.
+
+Prevents:
+
+* hanging requests
+* thread exhaustion
+
+---
+
+# Authentication
+
+```csharp id="m0jlwm"
+builder.Services.AddAuth(configuration);
 ```
 
-Without `_next()`:
-pipeline stops.
+## What is Authentication?
+
+The process of verifying user identity.
+
+Determines:
+
+```text id="bzrpk4"
+WHO is the user?
+```
+
+Processes:
+
+* JWT validation
+* token parsing
+* claims creation
+
+---
+
+# Authorization
+
+## What is Authorization?
+
+The process of determining user permissions.
+
+Determines:
+
+```text id="jlwmow"
+WHAT can the user access?
+```
+
+Uses:
+
+* roles
+* policies
+* permissions
+
+---
+
+# ApiBehaviorOptions
+
+```csharp id="kjlwm1"
+SuppressModelStateInvalidFilter = true;
+```
+
+## What are ApiBehaviorOptions?
+
+ASP.NET API behavior customization settings.
+
+Disables automatic ASP.NET validation response.
+
+Allows:
+
+* custom validation pipeline
+* FluentValidation handling
+* standardized API responses
+
+---
+
+# Redis Cache
+
+```csharp id="ovjlwm"
+AddStackExchangeRedisCache(...)
+```
+
+## What is Redis?
+
+An in-memory distributed cache database.
+
+Used for:
+
+* caching
+* session storage
+* performance optimization
+
+---
+
+# Rate Limiting
+
+```csharp id="ljlwm2"
+AddRateLimiter(...)
+```
+
+## What is Rate Limiting?
+
+Restricting how many requests clients can make within a period.
+
+Protects APIs from abuse.
+
+---
+
+# Concurrency Limiter
+
+```csharp id="jlwm3m"
+PermitLimit = 2
+```
+
+## What is Concurrency Limiting?
+
+Restricts simultaneous active requests.
+
+Allows only 2 concurrent requests.
+
+---
+
+# Fixed Window Limiter
+
+```csharp id="jlwm4n"
+PermitLimit = 5
+Window = 10 seconds
+```
+
+## What is Fixed Window Rate Limiting?
+
+Allows limited requests within a fixed time window.
+
+Allows:
+
+* 5 requests every 10 seconds
+
+---
+
+# Build()
+
+```csharp id="jlwm5o"
+var app = builder.Build();
+```
+
+## What does Build() do?
+
+Creates finalized application runtime instance.
+
+At this point:
+
+* DI container finalized
+* middleware builder finalized
+* app ready to start
+
+---
+
+# Middleware Pipeline
+
+## What is Middleware Pipeline?
+
+A sequential chain of components that process every HTTP request and response.
+
+Middleware executes in order.
+
+---
+
+# Swagger Middleware
+
+```csharp id="jlwm6p"
+app.UseSwagger();
+app.UseSwaggerUI();
+```
+
+## What is Swagger Middleware?
+
+Middleware that exposes Swagger documentation endpoints.
+
+Enables:
+
+* Swagger JSON endpoint
+* Swagger UI
+
+Development environment only.
 
 ---
 
 # ExceptionHandlingMiddleware
 
-Purpose:
+## What is Exception Middleware?
 
-* Global exception handling
-
-Behavior:
-
-```csharp
-try
-{
-    await _next(context);
-}
-catch(Exception ex)
-{
-}
-```
+A global error handling middleware.
 
 Wraps entire downstream pipeline.
+
+Purpose:
+
+* centralized error handling
+* standardized error responses
 
 ---
 
 # CorrelationIdMiddleware
 
+## What is Correlation ID?
+
+A unique identifier attached to one request across the entire system.
+
 Purpose:
 
-* Request tracing
-
-Stores request ID in:
-
-```csharp
-HttpContext.Items
-```
-
-Accessible by:
-
-* middleware
-* controllers
-* logging
-* services
-
----
-
-# HttpContext
-
-Represents:
-
-* request state container
-
-Contains:
-
-* headers
-* user claims
-* response
-* route data
-* request-scoped storage
+* generate request correlation ID
+* inject into Serilog context
+* distributed request tracing
 
 ---
 
 # RequestLoggingMiddleware
 
-Logs:
+## What is Request Logging Middleware?
 
-* incoming request
-* outgoing response
-* execution time
-* failures
+Middleware responsible for request lifecycle observability.
 
-Measures total downstream execution time.
+Purpose:
+
+* log request start/end
+* measure execution duration
+* log failures
 
 ---
 
-# Authentication Flow
+# HTTPS Redirection
 
-Header:
-
-```http
-Authorization: Bearer <token>
+```csharp id="jlwm7q"
+app.UseHttpsRedirection();
 ```
 
-Authentication middleware:
+## What is HTTPS Redirection?
 
-* validates token
-* validates expiry
-* validates signature
-* extracts claims
+Automatically redirects insecure HTTP requests to secure HTTPS.
+
+Security feature.
+
+---
+
+# Authentication Middleware
+
+```csharp id="jlwm8r"
+app.UseAuthentication();
+```
+
+## What does Authentication Middleware do?
+
+Validates incoming JWT tokens and creates authenticated user context.
 
 Creates:
 
-```csharp
+```csharp id="jlwm9s"
 HttpContext.User
 ```
 
 ---
 
-# Authorization Flow
+# Authorization Middleware
+
+```csharp id="jlwm0t"
+app.UseAuthorization();
+```
+
+## What does Authorization Middleware do?
+
+Checks whether authenticated users can access requested resources.
 
 Checks:
 
@@ -458,98 +1052,128 @@ Checks:
 * policies
 * permissions
 
-Examples:
-
-* AdminOnly
-* UserOnly
+Requires authenticated user.
 
 ---
 
 # Middleware Order Importance
 
-Correct:
+Correct order:
 
-```csharp
-app.UseAuthentication();
-app.UseAuthorization();
+```text id="jlwm1u"
+Authentication
+↓
+Authorization
 ```
 
-Why:
-
-* Authorization requires authenticated user
+Authorization depends on authenticated user.
 
 ---
 
-# Controller Responsibility
+# Rate Limiter Middleware
 
-Controllers should:
+```csharp id="jlwm2v"
+app.UseRateLimiter();
+```
 
-* receive HTTP request
-* validate transport layer input
-* call MediatR
-* return response
+## What does Rate Limiter Middleware do?
 
-Controllers should NOT contain:
-
-* business logic
-* DB logic
-* infrastructure logic
+Enforces configured request rate restrictions.
 
 ---
 
-# CQRS Runtime Flow
+# Endpoint Mapping
 
-```text
+```csharp id="jlwm3w"
+app.MapControllers()
+```
+
+## What is Endpoint Mapping?
+
+Connecting controller routes into ASP.NET routing system.
+
+Maps controller routes into endpoint system.
+
+---
+
+# RequireRateLimiting()
+
+```csharp id="jlwm4x"
+.RequireRateLimiting("concurrency");
+```
+
+## What does RequireRateLimiting() do?
+
+Applies selected rate limit policy to mapped endpoints.
+
+Applies rate limiting policy to all controllers.
+
+---
+
+# Health Check Endpoint
+
+```csharp id="jlwm5y"
+app.MapCustomHealthChecks();
+```
+
+## What is Health Check Endpoint?
+
+An HTTP endpoint exposing application health status.
+
+Used by:
+
+* Kubernetes
+* Docker
+* monitoring systems
+
+---
+
+# Run()
+
+```csharp id="jlwm6z"
+app.Run();
+```
+
+## What does Run() do?
+
+Starts the web server and begins listening for incoming HTTP requests.
+
+---
+
+# Full Runtime Request Flow
+
+```text id="jlwm7a"
+Client Request
+↓
+Kestrel Server
+↓
+ExceptionMiddleware
+↓
+CorrelationMiddleware
+↓
+RequestLoggingMiddleware
+↓
+Authentication
+↓
+Authorization
+↓
 Controller
 ↓
 MediatR
 ↓
-Command/Query
+ValidationBehavior
 ↓
 Handler
 ↓
-Repository/Service
-↓
-DbContext / Infrastructure
-↓
-Response
-```
-
----
-
-# Login Flow
-
-```text
-Client
-↓
-AuthController
-↓
-LoginCommand
-↓
-LoginHandler
-↓
 Repository
 ↓
-BCrypt Verify
+DbContext
 ↓
-JwtTokenService
-↓
-Generate Token
+PostgreSQL
 ↓
 Response
-```
-
----
-
-# Runtime Thinking Model
-
-For every component ask:
-
-```text
-Who calls this?
-When does it execute?
-What middleware already ran?
-What exists in HttpContext?
-What services are injected?
-What happens after _next()?
+↓
+RequestLoggingMiddleware
+↓
+Client Response
 ```
