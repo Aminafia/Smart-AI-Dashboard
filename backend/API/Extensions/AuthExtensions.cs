@@ -27,7 +27,7 @@ public static class AuthExtensions
             .GetSection("JwtSettings")
             .Get<JwtSettings>();
 
-        // 🔹 Bind for DI (correct way)
+        // Bind for DI
         services.Configure<JwtSettings>(
             configuration.GetSection("JwtSettings")
         );

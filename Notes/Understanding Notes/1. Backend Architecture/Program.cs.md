@@ -424,10 +424,9 @@ Persisting logs into physical files.
 Creates persistent structured logs.
 
 Features:
-
-* rolling log files
-* JSON structured output
-* long-term diagnostics
+   * rolling log files
+   * JSON structured output
+   * long-term diagnostics
 
 ---
 
@@ -470,6 +469,17 @@ These affect the entire application.
 builder.Services.AddControllers();
 ```
 
+- `AddControllers()` registers ASP>NET COre MVC Controller infrastructure into the DI Container.
+- Without it all controllers, routing and endpoints will not work.
+- IT internally registers
+    * controller discovery
+    * routing system
+    * model binding
+    * JSON serialization
+    * action execution pipeline
+    * controller activation
+    * filters
+
 ## What are Controllers?
 
 Classes that receive HTTP requests and return HTTP responses.
@@ -482,6 +492,150 @@ Registers:
 * JSON serialization
 * controller activation
 
+## Runtime Flow
+```text
+HTTP Request
+↓
+Routing System
+↓
+Controller
+↓
+Action Method
+↓
+Response
+```
+
+## Model Binding
+
+Example:
+
+Incoming JSON:
+
+```json
+{
+  "email": "amina@test.com",
+  "password": "123"
+}
+```
+
+Automatically becomes
+
+```csharp
+LoginRequest request
+``` 
+inside controller.
+
+## JSON Serialization
+- Serialization is converting C# objects to JSON 
+Example:
+```csharp
+return Ok(user);
+```
+becomes
+```json
+{
+  "id": 1,
+  "name": "Amina"
+}
+```
+---
+# AddEndpointsApiExplorer()
+```csharp
+builder.Services.AddEndpointsApiExplorer();
+```
+## What is Endpoint API Explorer?
+- A metadata discovery system that scans application endpoints.
+- Used mainly by Swagger/OpenAPI
+- It scans
+    * controllers
+    * routes
+    * HTTP methods
+    * request models
+    * response models
+    * attributes
+Example:
+```csharp
+[HttpPost("login")]
+```
+Swagger discovers:
+
+   * POST endpoint
+   * route path
+   * request body type
+   * response type
+
+---
+
+# AddSwaggerGen()
+```csharp
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "Enter: Bearer {your token}"
+    });
+
+    // 
+    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
+```
+## What is Swagger?
+- Swagger is an API Documentation + API testing system (modern name is OpenAPI)
+- It provides:
+    * API documentation
+    * interactive API testing
+    * endpoint discovery
+    * frontend/backend integration support
+- It automatically generates OpenAPI Specification at /swagger/v1/swagger.json
+- This JSON describes
+    * endpoints
+    * request schemas
+    * response schemas
+    * authentication
+    * headers
+- Swagger UI can be found at http://localhost/swagger that allows for 
+    * testing APIs
+    * viewing endpoints
+    * entering JWT tokens
+    * seeing request/response models
+
+### AddSecurityDefinition()
+```csharp
+options.AddSecurityDefinition("Bearer", ...)
+```
+- Security definition defines authentication scheme for Swagger/OpenAPI.
+- You are telling Swagger "This API uses JWT Bearer Authentication."
+- `Bearer` is the authentication scheme name, i.e. the internal Swagger reference ID
+
+### OpenApiSecurityScheme
+- defines 
+    * how authentication works
+    * what type of auth system API uses
+
+- `Name = "Authorization"` - tells swagger JWT token goes inside Authorization header
+- `Type = SecuritySchemeType.Http` - means Authentication uses HTTP authentication scheme (other types can be API Key, OAuth2, OpenID Connect)
+- `Scheme = "bearer"` - 
+        BearerFormat = "JWT", 
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "Enter: Bearer {your token}"
 ---
 
 # Dependency Injection Container

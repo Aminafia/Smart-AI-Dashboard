@@ -18,10 +18,15 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configuration means external values the application needs to run. Such as database connection string, JWT secret key, Redis URL, API keys, OpenAI key, ports, environment settings.
+// We use COnfiguration because these values change between environments, should NOT be hardcoded, may contain sensitive data.
+// Example: Development → localhost DB, Production → cloud PostgreSQL DB
+// appsettings.json is the main application configuration file. 
 var configuration = builder.Configuration;
 
-var connectionString = configuration.GetConnectionString("DefaultConnection");
-if (string.IsNullOrEmpty(connectionString))
+var dbconnectionString = configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrEmpty(dbconnectionString))
 {
     throw new InvalidOperationException("Database connection string is not configured.");
 }
@@ -41,21 +46,18 @@ Log.Logger = new LoggerConfiguration()
         "[CorrelationId: {CorrelationId}] " +
         "[Machine: {MachineName}] " +
         "{Message:lj}{NewLine}{Exception}")
-    
     .WriteTo.File(
         formatter: new Serilog.Formatting.Compact.RenderedCompactJsonFormatter(),
         path: "logs/log-.json",
         rollingInterval: RollingInterval.Day)
-    
     .CreateLogger();
-
 builder.Host.UseSerilog();
 
 // ----------------------
 // Core Services
 // ----------------------
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddEndpointsApiExplorer(); // for enabling Swagger to discover endpoints
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
@@ -68,6 +70,7 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Enter: Bearer {your token}"
     });
 
+    // 
     options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
     {
         {
@@ -93,7 +96,7 @@ builder.Services.AddInfrastructure(configuration);
 // ----------------------
 // Health Checks
 // ----------------------
-builder.Services.AddCustomHealthChecks(connectionString);
+builder.Services.AddCustomHealthChecks(dbconnectionString);
 
 // ----------------------
 // External Services (AI + Polly)
