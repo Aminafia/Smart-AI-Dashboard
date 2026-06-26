@@ -13,21 +13,21 @@ public class GetAIStatusQueryHandler
         _jobStore = jobStore;
     }
 
-    public Task<AIStatusResponse> Handle(
+    public async Task<AIStatusResponse> Handle(
         GetAIStatusQuery request,
         CancellationToken cancellationToken)
     {
-        var job = _jobStore.Get(request.JobId);
+        var job = await _jobStore.GetJobAsync(request.JobId);
 
         if (job is null)
             throw new NotFoundException("Job not found");
 
-        return Task.FromResult(new AIStatusResponse
+        return new AIStatusResponse
         {
             Id = job.Id,
             Status = job.Status,
             Result = job.Result,
             Error = job.Error
-        });
+        };
     }
 }

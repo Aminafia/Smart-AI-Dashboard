@@ -1,0 +1,16 @@
+.container {
+  height: calc(100vh - 64px);
+}
+
+mat-sidenav {
+  width: 250px;
+}
+
+.content {
+  padding: 24px;
+}
+
+.active-link {
+  background-color: rgba(25, 118, 210, 0.12);
+  border-radius: 8px;
+}

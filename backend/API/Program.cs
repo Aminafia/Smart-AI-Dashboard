@@ -99,18 +99,19 @@ builder.Services.AddInfrastructure(configuration);
 builder.Services.AddCustomHealthChecks(dbconnectionString);
 
 // ----------------------
-// External Services (AI + Polly)
-// ----------------------
-builder.Services.AddHttpClient("AIClient")
-    .AddPolicyHandler(AIResiliencePolicy.GetRetryPolicy())
-    .AddPolicyHandler(AIResiliencePolicy.GetCircuitBreakerPolicy())
-    .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(5));
-
-// ----------------------
 // Authentication & Authorization
 // ----------------------
 builder.Services.AddAuth(configuration); //customized
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularPolicy", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 // ----------------------
 //  API Behavior
@@ -162,6 +163,7 @@ app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.UseHttpsRedirection();
+app.UseCors("AngularPolicy");
 
 app.UseAuthentication();
 app.UseAuthorization();

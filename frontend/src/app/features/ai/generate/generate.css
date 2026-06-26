@@ -1,0 +1,23 @@
+.max-w-4xl {
+  max-width: 900px;
+}
+
+mat-card {
+  margin-bottom: 24px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: inherit;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.result-content {
+  margin-top: 16px;
+}

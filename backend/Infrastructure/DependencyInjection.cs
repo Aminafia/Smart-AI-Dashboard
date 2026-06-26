@@ -29,7 +29,7 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
 
         // AI Services 
-        services.AddScoped<IAIProvider, OpenAIProvider>();
+        services.AddScoped<IAIProvider, GeminiProvider>();
         services.AddScoped<IAIService, AiService>();
 
         // Authentication
@@ -42,11 +42,11 @@ public static class DependencyInjection
         services.AddHttpClient("AIClient")
             .AddPolicyHandler(AIResiliencePolicy.GetRetryPolicy())
             .AddPolicyHandler(AIResiliencePolicy.GetCircuitBreakerPolicy())
-            .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(10));
+            .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(60));
 
         // Queue + Job Store
-        _ = services.AddSingleton<IAIQueue, AIQueue>();
-        services.AddSingleton<IAIJobStore, AIJobStore>();
+        services.AddSingleton<IAIQueue, AIQueue>();
+        services.AddScoped<IAIJobStore, AIJobStore>();
 
         // Background Worker
         services.AddHostedService<AIWorker>();

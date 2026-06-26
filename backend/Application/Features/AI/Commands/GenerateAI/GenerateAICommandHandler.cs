@@ -1,5 +1,6 @@
 using Application.Interfaces;
 using Core.Entities;
+using Core.Enums;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Application.Features.AI.Commands.GenerateAI;
@@ -20,26 +21,26 @@ public class GenerateAICommandHandler
         _logger = logger;
     }
 
-    public Task<GenerateAIResponse> Handle(
+    public async Task<GenerateAIResponse> Handle(
         GenerateAICommand request,
         CancellationToken cancellationToken)
     {
         var job = new AIJob
         {
             ProjectId = Guid.NewGuid(),
-            JobType = "Generate",
+            JobType = AIJobType.Generate,
             Prompt = request.Prompt
         };
 
-        _jobStore.Add(job);
+        await _jobStore.AddJobAsync(job);
         _queue.Enqueue(job);
 
         _logger.LogInformation("[Handler] AI job created: {JobId}", job.Id);
 
-        return Task.FromResult(new GenerateAIResponse
+        return new GenerateAIResponse
         {
             JobId = job.Id,
             Status = job.Status
-        });
+        };
     }
 }

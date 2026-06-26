@@ -1,0 +1,26 @@
+<mat-toolbar color="primary">
+    <span class="font-semibold text">
+        Smart AI Dashboard</span>
+</mat-toolbar>
+
+<mat-sidenav-container class="container">
+  <mat-sidenav mode="side" opened>
+
+    <mat-nav-list>
+      <a mat-list-item routerLink="/dashboard" routerLinkActive="active-link">
+        <mat-icon>dashboard</mat-icon>
+        Dashboard</a>
+      <a mat-list-item routerLink="/ai/generate" routerLinkActive="active-link">
+        <mat-icon>auto_awesome</mat-icon>
+        Generate</a>
+    </mat-nav-list>
+
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

@@ -4,7 +4,12 @@ namespace Application.Interfaces;
 
 public interface IAIJobStore
 {
-    void Add(AIJob job);
-    AIJob? Get(Guid id);
-    void Update(AIJob job);
+    Task AddJobAsync(AIJob job);
+
+    Task<AIJob?> GetJobAsync(Guid id);
+
+    Task<List<AIJob>> GetJobsAsync(
+        int page,
+        int pageSize);
+    Task UpdateJobAsync(AIJob job);
 }

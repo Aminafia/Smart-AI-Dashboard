@@ -1,18 +1,19 @@
 namespace Core.Entities;
 
+using Core.Enums;
 public class AIJob
 {
     public Guid Id { get; set; } = Guid.NewGuid();
 
     public Guid ProjectId { get; set; }
 
-    public string JobType { get; set; } = default!;
+    public AIJobType JobType { get; set; }
 
     public string Prompt { get; set; } = string.Empty;
 
     public string? Result { get; set; }
 
-    public string Status { get; set; } = "Pending";
+    public string Status { get; set; } = "Pending"; // Initially a new AIJob has Pending status
 
     public string? Error { get; set; }
 

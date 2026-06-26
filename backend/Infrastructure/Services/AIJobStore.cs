@@ -1,26 +1,45 @@
-using System.Collections.Concurrent;
-using Core.Entities;
 using Application.Interfaces;
+using Core.Entities;
+using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services;
 
 public class AIJobStore : IAIJobStore
 {
-    private readonly ConcurrentDictionary<Guid, AIJob> _jobs = new();
+    private readonly AppDbContext _dbContext;
 
-    public void Add(AIJob job)
+    public AIJobStore(AppDbContext dbContext)
     {
-        _jobs[job.Id] = job;
+        _dbContext = dbContext;
     }
 
-    public AIJob? Get(Guid id)
+    public async Task AddJobAsync(AIJob job)
     {
-        _jobs.TryGetValue(id, out var job);
-        return job;
+        await _dbContext.AIJobs.AddAsync(job);
+
+        await _dbContext.SaveChangesAsync();
     }
 
-    public void Update(AIJob job)
+    public async Task<AIJob?> GetJobAsync(Guid id)
     {
-        _jobs[job.Id] = job;
+        return await _dbContext.AIJobs
+            .FirstOrDefaultAsync(x => x.Id == id);
+    }
+
+    public async Task<List<AIJob>> GetJobsAsync(int page, int pageSize)
+    {
+        return await _dbContext.AIJobs
+            .OrderByDescending(x => x.CreatedAt)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+    }
+
+    public async Task UpdateJobAsync(AIJob job)
+    {
+        _dbContext.AIJobs.Update(job);
+
+        await _dbContext.SaveChangesAsync();
     }
 }

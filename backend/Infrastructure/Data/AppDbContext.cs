@@ -11,5 +11,15 @@ namespace Infrastructure.Data
         }
 
         public DbSet<User> Users { get; set; } = null!;
+        public DbSet<AIJob> AIJobs { get; set; } = null!;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<AIJob>()
+                .Property(x => x.JobType)
+                .HasConversion<string>();
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
