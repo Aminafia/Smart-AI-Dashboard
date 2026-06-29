@@ -19,3 +19,6 @@ venv/
 # --- OS Junk ---
 .DS_Store
 Thumbs.db
+
+# --- Logs ---
+backend/API/logs/

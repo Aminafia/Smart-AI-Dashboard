@@ -18,7 +18,6 @@ import { GenerateResponse } from '../../../core/models/generate-response';
 import { JobStatusResponse } from '../../../core/models/job-status-response';
 
 import { AiService } from '../../../core/services/ai.service';
-import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-generate',
@@ -51,7 +50,6 @@ export class Generate {
 
   constructor(
     private aiService: AiService,
-    private authService: AuthService,
     private cdr: ChangeDetectorRef
   ) { }
 
@@ -62,20 +60,6 @@ export class Generate {
     this.jobId = '';
     this.isLoading = false;
     this.errorMessage = '';
-
-    // Temporary hard coding until login page is built
-    this.authService.login({
-      email: 'aminafia01@gmail.com',
-      password: 'Afia00'
-    })
-      .subscribe({
-        next: response => {
-          localStorage.setItem('token', response.data.token);
-        },
-        error: error => {
-          console.error(error);
-        }
-      });
 
     const request: GenerateRequest = {
       prompt: this.generateForm.controls.prompt.value
