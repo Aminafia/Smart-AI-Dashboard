@@ -30,11 +30,11 @@ import { AiService } from '../../../core/services/ai.service';
     MatInputModule,
     MatButtonModule
   ],
-  templateUrl: './generate.html',
-  styleUrl: './generate.css'
+  templateUrl: './generate.component.html',
+  styleUrl: './generate.component.css'
 })
 
-export class Generate {
+export class GenerateComponent {
 
   errorMessage = '';
 

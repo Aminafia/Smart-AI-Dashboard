@@ -25,10 +25,10 @@ import { MatCardModule } from '@angular/material/card';
     MatCardModule,
     MatProgressSpinnerModule
   ],
-  templateUrl: './login.html',
-  styleUrl: './login.css'
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.css'
 })
-export class Login {
+export class LoginComponent {
   hidePassword = true;
   loading = false;
   errorMessage = '';
@@ -45,40 +45,33 @@ export class Login {
     });
   }
 
- login(): void {
+  login(): void {
 
-  if (this.loginForm.invalid) {
-    this.loginForm.markAllAsTouched();
-    return;
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      return;
+    }
+
+    const request: LoginRequest = {
+      email: this.loginForm.value.email!,
+      password: this.loginForm.value.password!
+    };
+
+    this.loading = true;
+    this.errorMessage = '';
+
+    this.authService.login(request)
+      .pipe(
+        finalize(() => this.loading = false)
+      )
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/dashboard']);
+        },
+        error: (error) => {
+          this.errorMessage = error.error?.message ?? 'Login failed. Please try again.';
+        }
+      });
+
   }
-
-  const request: LoginRequest = {
-    email: this.loginForm.value.email!,
-    password: this.loginForm.value.password!
-  };
-
-  this.loading = true;
-  this.errorMessage = '';
-
-  this.authService.login(request)
-    .pipe(
-      finalize(() => this.loading = false)
-    )
-    .subscribe({
-
-      next: () => {
-        this.router.navigate(['/dashboard']);
-      },
-
-      error: (error) => {
-
-        this.errorMessage =
-          error.error?.message ??
-          'Login failed. Please try again.';
-
-      }
-
-    });
-
-}
 }

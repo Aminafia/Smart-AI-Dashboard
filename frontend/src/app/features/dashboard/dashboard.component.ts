@@ -5,9 +5,9 @@ import { MatCardModule } from '@angular/material/card';
   selector: 'app-dashboard',
   imports: [
     MatCardModule],
-  templateUrl: './dashboard.html',
-  styleUrl: './dashboard.css',
+  templateUrl: './dashboard.component.html',
+  styleUrl: './dashboard.component.css',
 })
-export class Dashboard {
+export class DashboardComponent {
 
 }

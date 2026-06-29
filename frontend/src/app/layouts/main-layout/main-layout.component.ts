@@ -20,10 +20,10 @@ import { MatButtonModule } from '@angular/material/button';
     MatIconModule,
     MatButtonModule
   ],
-  templateUrl: './main-layout.html',
-  styleUrl: './main-layout.css'
+  templateUrl: './main-layout.component.html',
+  styleUrl: './main-layout.component.css'
 })
-export class MainLayout {
+export class MainLayoutComponent {
   constructor(
     private authStateService: AuthStateService,
   ) {}
