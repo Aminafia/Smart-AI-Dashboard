@@ -62,16 +62,10 @@ export class LoginComponent {
 
     this.authService.login(request)
       .pipe(
-        finalize(() => this.loading = false)
-      )
+        finalize(() => this.loading = false))
       .subscribe({
-        next: () => {
-          this.router.navigate(['/dashboard']);
-        },
-        error: (error) => {
-          this.errorMessage = error.error?.message ?? 'Login failed. Please try again.';
-        }
-      });
+        next: () => { this.router.navigate(['/dashboard']); },
+        error: (error) => { this.errorMessage = error.error?.message ?? 'Login failed. Please try again.'; } });
 
   }
 }
