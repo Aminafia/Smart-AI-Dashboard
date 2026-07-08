@@ -57,12 +57,13 @@ public class JwtTokenService : IJwtTokenService
     /// <returns></returns>
     public string GenerateToken(User user)
     {
-        var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Role, user.Role)
-        };
+var claims = new List<Claim>
+{
+    new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+    new Claim(JwtRegisteredClaimNames.Email, user.Email),
+    new Claim("fullName", user.FullName),
+    new Claim(ClaimTypes.Role, user.Role)
+};
 
         var key = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(_jwtSettings.Secret)

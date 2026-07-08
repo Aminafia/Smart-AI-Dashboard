@@ -6,7 +6,6 @@ import { LoginRequest } from '../models/login-request';
 import { LoginResponse } from '../models/login-response';
 import { ApiResponse } from '../models/api-response';
 import { TokenService } from './token.service';
-import { AuthStateService } from './auth-state.service';
 import { tap } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
@@ -18,7 +17,6 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
-    private authStateService: AuthStateService
   ) {}
 
   login(request: LoginRequest): Observable<ApiResponse<LoginResponse>> {
