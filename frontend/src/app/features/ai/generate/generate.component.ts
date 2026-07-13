@@ -18,6 +18,8 @@ import { GenerateResponse } from '../../../core/models/generate-response';
 import { JobStatusResponse } from '../../../core/models/job-status-response';
 
 import { AiService } from '../../../core/services/ai.service';
+import { MarkdownService } from '../../../shared/services/markdown.service';
+import { SnackbarService } from '../../../shared/services/snackbar.service';
 
 @Component({
   selector: 'app-generate',
@@ -39,6 +41,7 @@ export class GenerateComponent {
   errorMessage = '';
 
   resultText = '';
+  renderedResult = '';
   currentStatus = '';
   jobId = '';
 
@@ -50,12 +53,15 @@ export class GenerateComponent {
 
   constructor(
     private aiService: AiService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private markdownService: MarkdownService,
+    private snackbarService: SnackbarService
   ) { }
 
   onGenerate(): void {
 
     this.resultText = '';
+    this.renderedResult = '';
     this.currentStatus = '';
     this.jobId = '';
     this.isLoading = false;
@@ -71,10 +77,12 @@ export class GenerateComponent {
           this.jobId = response.jobId;
           this.currentStatus = response.status;
           this.isLoading = true;
+          this.snackbarService.success('AI job submitted successfully');
           this.pollJobStatus();
         },
         error: (error) => {
           console.error(error);
+          this.snackbarService.error('Failed to submit AI job');
           this.errorMessage = 'Failed to submit AI job';
         }
       });
@@ -99,12 +107,14 @@ export class GenerateComponent {
 
           if (response.status === 'Completed') {
             this.resultText = response.result ?? '';
+            this.renderedResult = this.markdownService.render(this.resultText);
             this.isLoading = false;
             this.cdr.detectChanges();
           }
 
           if (response.status === 'Failed') {
             this.resultText = response.error ?? 'Unknown error';
+            this.renderedResult = this.markdownService.render(this.resultText);
             this.isLoading = false;
             this.cdr.detectChanges();
           }

@@ -26,9 +26,7 @@
             <div *ngIf="isLoading">
                 <p>Generating response...</p>
             </div>
-            <div *ngIf="resultText" class="result-content">
-                <pre> {{ resultText }} </pre>
-            </div>
+            <div *ngIf="resultText" class="result-content" [innerHTML]="renderedResult"></div>
             <div *ngIf="errorMessage">
                 <p class="text-red-600">{{ errorMessage }}</p>
             </div>
