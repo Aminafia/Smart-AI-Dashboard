@@ -1,9 +1,10 @@
+using Application.Common.Models;
 using Application.DTOs.AI;
+using Application.Features.AI.Commands.Summarize;
 using Application.Interfaces;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MediatR;
-using Application.Features.AI.Commands.Summarize;
 
 namespace API.Controllers
 {
@@ -25,8 +26,8 @@ namespace API.Controllers
             {
                 Text = request.Text
             });
-
-            return Ok(result);
+            return Ok(ApiResponse<AIResponse>
+                .SuccessResponse(result, "Summary generated successfully."));
         }
     }
 }

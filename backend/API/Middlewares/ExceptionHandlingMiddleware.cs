@@ -67,8 +67,8 @@ public class ExceptionHandlingMiddleware
             var correlationId = context.Items["X-Correlation-ID"];
 
             _logger.LogWarning(ex,
-                "Validation error | CorrelationId: {CorrelationId}",
-                correlationId);
+                "Validation error | Path: {Path} | CorrelationId: {CorrelationId}",
+                context.Request.Path, correlationId);
 
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
             context.Response.ContentType = "application/json";
@@ -123,33 +123,38 @@ public class ExceptionHandlingMiddleware
         /// <summary>
         /// Map specific exception types to HTTP status codes and response messages.
         /// </summary>
-        switch (ex)
+        (response.StatusCode, apiResponse) = ex switch
         {
-            case NotFoundException:
-                response.StatusCode = StatusCodes.Status404NotFound;
-                apiResponse = ApiResponse<string>.Failure(ex.Message);
-                break;
+            BadRequestException =>
+                (
+                    StatusCodes.Status400BadRequest,
+                    ApiResponse<string>.Failure(ex.Message)
+                ),
 
-            case UnauthorizedException:
-                response.StatusCode = StatusCodes.Status401Unauthorized;
-                apiResponse = ApiResponse<string>.Failure(ex.Message);
-                break;
+            UnauthorizedException =>
+                (
+                    StatusCodes.Status401Unauthorized,
+                    ApiResponse<string>.Failure(ex.Message)
+                ),
 
-            case BadRequestException:
-                response.StatusCode = StatusCodes.Status400BadRequest;
-                apiResponse = ApiResponse<string>.Failure(ex.Message);
-                break;
+            NotFoundException =>
+                (
+                    StatusCodes.Status404NotFound,
+                    ApiResponse<string>.Failure(ex.Message)
+                ),
 
-            case DuplicateEmailException:
-                response.StatusCode = StatusCodes.Status400BadRequest;
-                apiResponse = ApiResponse<string>.Failure(ex.Message);
-                break;
+            DuplicateEmailException =>
+                (
+                    StatusCodes.Status409Conflict,
+                    ApiResponse<string>.Failure(ex.Message)
+                ),
 
-            default:
-                response.StatusCode = StatusCodes.Status500InternalServerError;
-                apiResponse = ApiResponse<string>.Failure("Internal Server Error");
-                break;
-        }
+            _ =>
+                (
+                    StatusCodes.Status500InternalServerError,
+                    ApiResponse<string>.Failure("Internal Server Error")
+                )
+        };
 
         /// <summary>
         /// Final logging AFTER exception is processed.

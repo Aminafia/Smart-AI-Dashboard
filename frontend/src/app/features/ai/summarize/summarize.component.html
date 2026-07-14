@@ -1,28 +1,23 @@
 <div class="max-w-4xl">
-
-    <h1 class="text-3xl font-bold mb-6">AI Generate</h1>
+    <h1 class="text-3xl font-bold mb-6">AI Summarize</h1>
 
     <mat-card>
         <mat-card-content>
-            <form [formGroup]="generateForm">
+            <form [formGroup]="summarizeForm">
                 <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Prompt</mat-label>
-                    <textarea matInput rows="6" formControlName="prompt"></textarea>
+                    <mat-label>Text</mat-label>
+                    <textarea matInput rows="10" formControlName="text"></textarea>
                 </mat-form-field>
             </form>
             <div class="mt-4">
-                <button mat-raised-button color="primary" (click)="onGenerate()">Generate</button>
+                <button mat-raised-button color="primary" (click)="summarize()">Summarize</button>
             </div>
         </mat-card-content>
     </mat-card>
 
     <mat-card class="mt-6">
         <mat-card-content>
-            <h2 class="font-semibold mb-4">Result</h2>
-            <div *ngIf="jobId">
-                <p>Job Id: {{ jobId }} </p>
-                <p>Status: {{ currentStatus }} </p>
-            </div>
+            <h2 class="font-semibold mb-4">Summary</h2>
             <div *ngIf="resultText" class="result-content" [innerHTML]="renderedResult"></div>
             <div *ngIf="errorMessage">
                 <p class="text-red-600">{{ errorMessage }}</p>

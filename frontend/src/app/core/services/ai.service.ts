@@ -8,6 +8,9 @@ import { SKIP_LOADING } from '../constants/loading-context';
 import { GenerateRequest } from '../models/generate-request';
 import { GenerateResponse } from '../models/generate-response';
 import { JobStatusResponse } from '../models/job-status-response';
+import { ApiResponse } from '../models/api-response';
+import { SummarizeRequest } from '../models/summarize-request';
+import { SummarizeResponse } from '../models/summarize-response';
 
 @Injectable({
   providedIn: 'root'
@@ -15,23 +18,36 @@ import { JobStatusResponse } from '../models/job-status-response';
 
 export class AiService {
 
-  private apiUrl = 'http://localhost:5260/api/AI';
+  private apiUrl = 'http://localhost:5260/api';
 
   constructor(
     private http: HttpClient,
   ) { }
 
-  generate(request: GenerateRequest): Observable<GenerateResponse> {
-    return this.http.post<GenerateResponse>(
-      `${this.apiUrl}/generate`,
+  generate(request: GenerateRequest): Observable<ApiResponse<GenerateResponse>> 
+  {
+    return this.http.post<ApiResponse<GenerateResponse>>(
+      `${this.apiUrl}/AI/generate`,
       request
     );
   }
 
-  getStatus(jobId: string): Observable<JobStatusResponse> {
-    return this.http.get<JobStatusResponse>(
+  getStatus(jobId: string): Observable<ApiResponse<JobStatusResponse>> 
+  {
+    return this.http.get<ApiResponse<JobStatusResponse>>(
       `${this.apiUrl}/status/${jobId}`,
       { context: new HttpContext().set(SKIP_LOADING, true) }
     );
   }
+
+
+  summarize(request: SummarizeRequest): Observable<ApiResponse<SummarizeResponse>> 
+  {
+    return this.http.post<ApiResponse<SummarizeResponse>>(
+      `${this.apiUrl}/summarize`,
+      request
+    );
+  }
+
+  
 }

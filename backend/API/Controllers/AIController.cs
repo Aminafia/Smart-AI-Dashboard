@@ -95,48 +95,11 @@ AiService.GenerateAsync(AIRequest)       IAIProvider.GenerateAsync(Prompt)
 AIResponse(AIResult, IsFallback=false)   GeminiAIProvider.GenerateAsync(Prompt) - calls Gemini API to generate AI response based on prompt, returns AI result as string
                                             |
                                             | Gemini API key from configuration
-                                        GeminiRequest(Content{Parts{Text=prompt}})
-                                            |
-                                            ↓
-                                        HttpHttpClient.PostAsJsonAsync()
-                                            |
-                                            ↓
-                                        (--- Google Gemini API -------------------)
-                                            |
-                                            | GeminiResponse(Candidates{Content{Parts{Text=generatedContent}}})
-                                            ↓
-                                        (---Infrastructure-------------------)
-                                        GeminiAIProvider.GenerateAsync(Prompt)
-                                            |
-                                            | extracts generatedContent from GeminiResponse
-                                            ↓
-                                        AiService.GenerateAsync(AIRequest)
-                                            |
-                                            | AIResult (string output)
-                                            ↓   
-                                        AIResponse(AIResult, IsFallback=false)
-                                            |
-                                            ↓
-                                        AIWorker.ExecuteAsync(AIJob)
-                                            |
-                                            |
-                                        IAIJobStore.UpdateJobAsync(AIJob)
-                                            |
-                                            |                                            ↓
-                                        (---Infrastructure-------------------)
-                                        AIJobStore.UpdateJobAsync(AIJob)
-                                            |
-                                            | call AppDbContext.UpdateAsync(AIJob)
-                                            ↓
-                                        (---Database--------------------------)
-                                        AIJob table updated as AIJobs(Result=generatedContent, Status="Completed"|"Failed", CompletedAt)
-                                        
-
-
-
 
 
 -#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
+
 2. Get Status endpoint:
    Client
     |
@@ -189,6 +152,7 @@ using Application.Common.Exceptions;
 using Application.DTOs.AI;
 using Application.Interfaces;
 using Core.Entities;
+using Application.Common.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -227,7 +191,9 @@ public class AIController : ControllerBase
                 Prompt = request.Prompt
             });
 
-        return Ok(result); // returns GenerateAIResponse(JobId, Status) to client
+        // returns GenerateAIResponse(JobId, Status) to client
+        return Ok(ApiResponse<GenerateAIResponse>
+            .SuccessResponse(result, "AI generation job created successfully."));
     }
 
     [Authorize]
@@ -240,7 +206,9 @@ public class AIController : ControllerBase
                 JobId = jobId
             });
 
-        return Ok(result); // returns AIJobStatusResponse(JobId, Status) to client
+        // returns AIJobStatusResponse(JobId, Status) to client
+        return Ok(ApiResponse<AIStatusResponse>
+            .SuccessResponse(result, "AI job status retrieved successfully."));
     }
 
     [Authorize]
@@ -256,6 +224,7 @@ public class AIController : ControllerBase
                 PageSize = pageSize
             });
 
-        return Ok(result);
+        return Ok(ApiResponse<List<GetAIJobsResponse>>
+            .SuccessResponse(result, "AI jobs retrieved successfully."));
     }
 }

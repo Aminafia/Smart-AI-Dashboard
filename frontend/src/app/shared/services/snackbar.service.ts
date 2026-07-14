@@ -35,9 +35,13 @@ export class SnackbarService {
 
   }
 
-  warning(message: string): void {
+  warning(message: string | string[]): void {
 
-    this.snackBar.open(message, 'Close', {
+    const displayMessage = Array.isArray(message) 
+                            ? message.join('\n') 
+                            : message;
+
+    this.snackBar.open(displayMessage, 'Close', {
       duration: this.duration,
       horizontalPosition: 'right',
       verticalPosition: 'top',

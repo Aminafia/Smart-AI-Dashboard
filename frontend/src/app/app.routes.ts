@@ -6,6 +6,7 @@ import { LoginComponent } from './features/auth/login/login.component';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { GenerateComponent } from './features/ai/generate/generate.component';
+import { SummarizeComponent } from './features/ai/summarize/summarize.component';
 
 export const routes: Routes = [
   {
@@ -22,6 +23,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: DashboardComponent },
       { path: 'ai/generate', component: GenerateComponent },
+      { path: 'summarize', component: SummarizeComponent },
       { path: '**', redirectTo: 'dashboard' }
     ]
   }

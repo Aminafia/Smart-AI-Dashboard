@@ -6,6 +6,7 @@ import { routes } from './app.routes';
 
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { loadingInterceptor } from './core/interceptors/loading.interceptor';
+import { errorInterceptor } from './core/interceptors/error.interceptor';
 
 import { provideAnimations } from '@angular/platform-browser/animations';
 
@@ -14,6 +15,10 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideAnimations(),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([authInterceptor, loadingInterceptor]))
+    provideHttpClient(withInterceptors([
+      authInterceptor, 
+      loadingInterceptor,
+      errorInterceptor
+    ]))
   ]
 };

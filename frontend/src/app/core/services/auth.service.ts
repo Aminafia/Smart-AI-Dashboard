@@ -19,16 +19,13 @@ export class AuthService {
     private tokenService: TokenService,
   ) {}
 
-  login(request: LoginRequest): Observable<ApiResponse<LoginResponse>> {
-return this.http
-  .post<ApiResponse<LoginResponse>>(
-    `${this.apiUrl}/login`,
-    request
-  )
-  .pipe(
-    tap(response => {
-      this.tokenService.saveToken(response.data.token);
-    })
-  );
+  login(request: LoginRequest): Observable<ApiResponse<LoginResponse>> 
+  {
+    return this.http
+      .post<ApiResponse<LoginResponse>>(
+        `${this.apiUrl}/login`,
+        request)
+      .pipe(tap(response => 
+        { this.tokenService.saveToken(response.data.token); }));
   }
 }

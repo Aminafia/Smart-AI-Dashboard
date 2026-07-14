@@ -1,3 +1,45 @@
+/*
+=========================================================
+Execution Flow
+=========================================================
+User clicks Generate button on UI
+  |
+  ↓
+GenerateComponent.onGenerate() is called
+  |
+  |takes GenerateRequest(prompt) from form and calls AIService
+  ↓
+AIService.generate()
+  |
+  ↓
+HttpClient → sends GenerateRequest(prompt) to backend API
+  |
+  | GenerateRequest(prompt)
+  ↓
+(backend processing request, Status="Processing")
+  |          ↓
+  |   ↓ AuthInterceptor - adds JWT token to the request header
+  |   ↓ LoadingInterceptor - shows loading loading overlay through spinner while waiting for the response and hides when response is received
+  |     ErrorInterceptor - handles errors and displays snackbar messages through SnackbarService 
+  |          ↓
+  |   GenerateComponent.pollJobStatus() - polls the AI service for the status of the job until it is completed or failed.
+  |
+(backend processed request, Status="Completed" or "Failed")
+  |
+  |GenerateResponse(jobId, status) and returns to GenerateComponent while still passing through all interceptors  
+  | 
+  ↓ ErrorInterceptors - handles http errors if any
+  ↓ LoadingInterceptor - hides loading overlay through spinner
+  ↓
+GenerateComponent.pollJobStatus() - polls the AI service for the status of the job until it is completed or failed.
+  ↓
+MarkdownService.render() - renders the result or error message to the user in markdown format 
+  |
+  |DOMPurify - sanitizes the rendered HTML to prevent XSS attacks
+  ↓
+Displayed to UI through generated.component.html
+*/
+
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -14,7 +56,6 @@ import { ChangeDetectorRef } from '@angular/core';
 
 
 import { GenerateRequest } from '../../../core/models/generate-request';
-import { GenerateResponse } from '../../../core/models/generate-response';
 import { JobStatusResponse } from '../../../core/models/job-status-response';
 
 import { AiService } from '../../../core/services/ai.service';
@@ -45,8 +86,6 @@ export class GenerateComponent {
   currentStatus = '';
   jobId = '';
 
-  isLoading = false;
-
     generateForm = new FormGroup({
     prompt: new FormControl('', { nonNullable: true })
   });
@@ -64,7 +103,6 @@ export class GenerateComponent {
     this.renderedResult = '';
     this.currentStatus = '';
     this.jobId = '';
-    this.isLoading = false;
     this.errorMessage = '';
 
     const request: GenerateRequest = {
@@ -74,10 +112,10 @@ export class GenerateComponent {
     this.aiService.generate(request)
       .subscribe({
         next: (response) => {
-          this.jobId = response.jobId;
-          this.currentStatus = response.status;
-          this.isLoading = true;
-          this.snackbarService.success('AI job submitted successfully');
+          const responseData = response.data!;
+          this.jobId = responseData.jobId;
+          this.currentStatus = responseData.status;
+          this.snackbarService.success(response.message);
           this.pollJobStatus();
         },
         error: (error) => {
@@ -95,27 +133,27 @@ export class GenerateComponent {
     interval(2000)
       .pipe(
         switchMap(() => this.aiService.getStatus(this.jobId)),
-        takeWhile(response => 
-          response.status !== 'Completed' && response.status !== 'Failed',
-          true)
-      )
+        takeWhile(responseData => 
+          responseData.data.status !== 'Completed' && 
+          responseData.data.status !== 'Failed', 
+          true))
       .subscribe({
-        next: (response: JobStatusResponse) => {
+        next: (responseData) => {
 
-          this.currentStatus = response.status;
+          const job = responseData.data;
+
+          this.currentStatus = responseData.data.status;
           this.cdr.detectChanges();
 
-          if (response.status === 'Completed') {
-            this.resultText = response.result ?? '';
+          if (responseData.data.status === 'Completed') {
+            this.resultText = responseData.data.result ?? '';
             this.renderedResult = this.markdownService.render(this.resultText);
-            this.isLoading = false;
             this.cdr.detectChanges();
           }
 
-          if (response.status === 'Failed') {
-            this.resultText = response.error ?? 'Unknown error';
+          if (responseData.data.status === 'Failed') {
+            this.resultText = responseData.data.error ?? 'Unknown error';
             this.renderedResult = this.markdownService.render(this.resultText);
-            this.isLoading = false;
             this.cdr.detectChanges();
           }
         }
