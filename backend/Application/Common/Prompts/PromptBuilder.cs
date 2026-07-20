@@ -4,7 +4,7 @@ namespace Application.Common.Prompts;
 
 public static class PromptBuilder
 {
-    public static string Build(AIRequest request)
+    public static string Build(GenerateTextRequest request)
     {
         return request.Prompt;
     }

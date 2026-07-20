@@ -13,7 +13,7 @@ public class AIJob
 
     public string? Result { get; set; }
 
-    public string Status { get; set; } = "Pending"; // Initially a new AIJob has Pending status
+    public AIJobStatus Status { get; set; } = AIJobStatus.Pending; // Initially a new AIJob has Pending status
 
     public string? Error { get; set; }
 

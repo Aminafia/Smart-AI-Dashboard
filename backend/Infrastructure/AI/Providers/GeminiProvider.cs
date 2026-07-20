@@ -1,3 +1,16 @@
+/*
+GeminiProvider Working:
+1. Receive prompt from AiService through IAIProvider
+2. Read Gemini API key from configuration
+3. Create AIClient using IHttpClientFactory
+4. Build GeminiRequest with the prompt
+5. Send HTTP request to Gemini API
+6. Log response status and response body
+7. Extract generated text from GeminiResponse
+8. Return generated text
+9. If any exception occurs, log the error and return an error message
+*/
+
 using System.Net.Http.Json;
 using System.Linq;
 using Application.Interfaces;
@@ -37,8 +50,7 @@ public class GeminiProvider : IAIProvider
 
             var client = _httpClientFactory.CreateClient("AIClient");
 
-            var url =
-                $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}";
+            var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}";
 
             var request = new GeminiRequest
             {
@@ -67,8 +79,7 @@ public class GeminiProvider : IAIProvider
                 responseBody);
             response.EnsureSuccessStatusCode();
 
-            var result =
-                await response.Content.ReadFromJsonAsync<GeminiResponse>();
+            var result = await response.Content.ReadFromJsonAsync<GeminiResponse>();
 
             var text =
                 result?.Candidates

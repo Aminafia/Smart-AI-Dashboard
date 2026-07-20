@@ -4,23 +4,24 @@
    User
     |
     |
-AIRequest(Prompt)
+GenerateTextRequest(Prompt)
     |
     | 
     ↓ 
 (---API-----------------------------)
 AIController.Generate(AIRequest) - converts AIRequest to GenerateAICommand via MediatR
     |
-    | GenerateAICommand(Prompt)
+    | GenerateTextCommand(Prompt)
     ↓
-MediatR - routes GenerateAICommand to GenerateAICommandHandler
+MediatR - routes GenerateTextCommand to GenerateTextCommandHandler
     |
-    | GenerateAICommand(Prompt)
+    | GenerateTextCommand(Prompt)
     ↓
 (---Application---------------------)
-GenerateAICommandHandler.Handle(GenerateAICommand) - creates new AIJob with status "Pending",
+GenerateTextCommandHandler.Handle(GenerateTextCommand) - creates new AIJob with status "Pending",
     |            |                                              - adds this AIJob to IAIJobStore,
-    |            |                                              - enqueues job in IAIQueue for processing                                                   - enqueues job in IAIQueue for processing
+    |            |                                              - enqueues job in IAIQueue for processing     
+                 |                                              - return AIOperationResponse                                      - enqueues job in IAIQueue for processing
     |            | AIJob(Id, ProjectId, JobType, Prompt, Status="Pending", RetryCount=0, MaxRetries=3, CreatedAt)
     |            ↓
     |        IAIJobStore.AddJobAsync(AIJob)
@@ -44,15 +45,15 @@ AIQueue.Enqueue(AIJob) - implements IAIQueue, adds AIJob to in-memory queue for 
     |
     ↓ 
 In memory queue - AIJob waits until AIWorker picks it up for processing
-    |            |                                              -  returns GenerateAIResponse(JobId, Status) to controller
-    |            | GenerateAIResponse(JobId, Status="Pending")
+    |            |                                              -  returns AIOperationResponse(JObId, Status="Pending", Output="", isFallback=false) to controller
+    |            | AIOperationResponse(JObId, Status="Pending", Output="", isFallback=false) 
     |            ↓
     |        (--API-----------------------------)
     |        AIController.Generate(AIRequest) wraps GenerateAIResponse in ApiResponse
     |            |
-    |            | ApiResponse<GenerateAIResponse>(JobId, Status, "AI generation job created")
+    |            | ApiResponse<AIOperationResponse>
     |            ↓
-    |        Client - receives GenerateAIResponse(JobId, Status="Pending")
+    |        Client - receives AIOperationResponse(JobId, Status="Pending")
     ↓
 (--Infrastructure-------------------)
 AIWorker.ExecuteAsync() - background service that continuously checks the in-memory queue for new AIJobs to process
@@ -63,16 +64,12 @@ AIQueue.Dequeue() - removes AIJob from in-memory queue for processing
     |
     | AIJob(Id, ProjectId, JobType, Prompt, Status="Pending", RetryCount=0, MaxRetries=3, CreatedAt)
     ↓
-AIWorker.ExecuteAsync(AIJob) - create AIRequest from AIJob, calls IAIService.GenerateAsync(AIRequest) to process the job, updates AIJob status to "Processing", then updates status to "Completed" or "Failed" based on result
-    |
-    |
-    ↓
-IAIService.GenerateAsync(AIRequest) - 
+AIWorker.ExecuteAsync(AIJob) - create AIRequest from AIJob, calls IAIService.ProcessAsync(AIRequest) to process the job, updates AIJob status to "Processing", then updates status to "Completed" or "Failed" based on result
     |
     |
     ↓
 AiService.GenerateAsync(AIRequest) -     |
-    | cacheKey = $"ai:{request.Prompt}"
+    | cacheKey = $"ai:{request.JobType}:{request.Input}"
     ↓
 ICacheService.GetAsync(cacheKey) 
     |
@@ -80,21 +77,21 @@ ICacheService.GetAsync(cacheKey)
     ↓
 (---Redis-----------------------------)
       -------Redis GET cacheKey---------
-     /                                  \
-    /                                    \
-   /                                      \
-  /                                        \
-Cache Hit                               Cache Miss
-cachedResult                             AiService.GenerateAsync(AIRequest)
-   |                                        |
-   |                                        ↓                    
-AiService.GenerateAsync(AIRequest)       IAIProvider.GenerateAsync(Prompt)
-    |                                       |
-    | AIResult (string output)              ↓
-    ↓                                    (--Infrastructure-------------------)  
-AIResponse(AIResult, IsFallback=false)   GeminiAIProvider.GenerateAsync(Prompt) - calls Gemini API to generate AI response based on prompt, returns AI result as string
-                                            |
-                                            | Gemini API key from configuration
+     /                                         \
+    /                                           \
+   /                                             \
+  /                                               \
+Cache Hit                                      Cache Miss
+cachedResult                                    AiService.GenerateAsync(AIRequest)
+   |                                               |
+   |                                               ↓                    
+AiService.GenerateAsync(AIRequest)              IAIProvider.GenerateAsync(Prompt)
+    |                                              |
+    | AIResult (string output)                     ↓
+    ↓                                            (--Infrastructure-------------------)  
+AIProviderResponse(Output,IsFallback=false)      GeminiProvider.GenerateAsync(Prompt) - calls Gemini API to generate AI response based on prompt, returns AI result as string
+                                                  |
+                                                  | Gemini API key from configuration
 
 
 -#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
@@ -139,13 +136,82 @@ DbContext - executes query to get AIJob from database and maps result to AIJob e
     ↓
 --Application--------------------------
 GetAIStatusQueryHandler.Handle(GetAIStatusQuery) - receives AIJob entity, extracts status, returns AIJobStatusResponse to client
-    | AIJobStatusResponse(JobId, Status)
+    | AIStatusResponse(JobId, Status)
     ↓
-AIController wraps AIJobStatusResponse in ApiResponse
+AIController wraps AIStatusResponse in ApiResponse
     |
-    | ApiResponse<AIJobStatusResponse>(JobId, Status, "AI job status retrieved")
+    | ApiResponse<AIStatusResponse>(JobId, Status, "AI job status retrieved")
     ↓
 Client - receives current status of AI generation job (e.g. "Pending", "In Progress", "Completed", "Failed")
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Summarize Endpoint
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+User
+ |
+SummarizeRequest(Text)
+ |
+ ↓
+API
+ |
+AIController.Summarize()
+ |
+ ↓
+SummarizeCommand(Text)
+ |
+ ↓
+MediatR
+ |
+ ↓
+SummarizeCommandHandler
+ |
+ ↓
+AIRequest(Input, JobType = Summarize)
+ |
+ ↓
+IAIService.ProcessAsync()
+ |
+ ↓
+AiService.ProcessAsync()
+ |
+ ↓
+Redis Cache
+ |
+ |---- Cache Hit ----------------------|
+ |                                     |
+ |                                     ↓
+ |                           AIProviderResponse
+ |
+ |---- Cache Miss ---------------------|
+                                       |
+                                       ↓
+                             Build Prompt
+                             ("Summarize...")
+                                       |
+                                       ↓
+                             GeminiProvider
+                                       |
+                                       ↓
+                             AIProviderResponse
+                                       |
+                                       ↓
+SummarizeCommandHandler converts
+AIProviderResponse
+        ↓
+AIOperationResponse
+(
+Status=Completed,
+Output,
+IsFallback
+)
+        ↓
+Controller
+        ↓
+ApiResponse<AIOperationResponse>
+        ↓
+Client
 */
 
 using Application.Common.Exceptions;
@@ -157,11 +223,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using MediatR;
-using Application.Features.AI.Commands.GenerateAI;
+using Application.Features.AI.Commands.GenerateText;
 using System.Threading.Tasks;
 using Application.Features.AI.Queries.GetAIStatus;
 using Application.Features.AI.Queries.GetAIJobs;
-
+using Application.Features.AI.Commands.Summarize;
 namespace API.Controllers;
 
 [ApiController]
@@ -183,16 +249,16 @@ public class AIController : ControllerBase
     [Authorize]
     [EnableRateLimiting("fixed")]
     [HttpPost("generate")]
-    public async Task<IActionResult> Generate(AIRequest request)
+    public async Task<IActionResult> Generate(GenerateTextRequest request)
     {
         var result = await _mediator.Send(
-            new GenerateAICommand
+            new GenerateTextCommand
             {
                 Prompt = request.Prompt
             });
 
-        // returns GenerateAIResponse(JobId, Status) to client
-        return Ok(ApiResponse<GenerateAIResponse>
+        // returns GenerateTextResponse(JobId, Status) to client
+        return Ok(ApiResponse<AIOperationResponse>
             .SuccessResponse(result, "AI generation job created successfully."));
     }
 
@@ -226,5 +292,19 @@ public class AIController : ControllerBase
 
         return Ok(ApiResponse<List<GetAIJobsResponse>>
             .SuccessResponse(result, "AI jobs retrieved successfully."));
+    }
+
+
+    [Authorize]
+    [HttpPost("summarize")]
+    public async Task<IActionResult> Summarize([FromBody] SummarizeRequest request)
+    {
+        var result = await _mediator.Send(new SummarizeCommand
+        {
+            Text = request.Text
+        });
+
+        return Ok(ApiResponse<AIOperationResponse>
+            .SuccessResponse(result, "Summary generated successfully."));
     }
 }

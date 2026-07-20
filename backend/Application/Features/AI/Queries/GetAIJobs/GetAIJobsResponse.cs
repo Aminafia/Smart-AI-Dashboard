@@ -1,3 +1,5 @@
+using Core.Enums;
+
 namespace Application.Features.AI.Queries.GetAIJobs;
 
 public class GetAIJobsResponse
@@ -6,7 +8,7 @@ public class GetAIJobsResponse
 
     public string JobType { get; set; } = string.Empty;
 
-    public string Status { get; set; } = string.Empty;
+    public AIJobStatus Status { get; set; }
 
     public string Prompt { get; set; } = string.Empty;
 

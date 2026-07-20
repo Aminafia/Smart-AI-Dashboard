@@ -24,19 +24,14 @@ import { CurrentUserService } from '../../core/services/current-user.service';
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.css'
 })
-export class MainLayoutComponent implements OnInit {
+export class MainLayoutComponent {
 
   fullName = '';
 
   constructor(
     private authStateService: AuthStateService,
-    private currentUserService: CurrentUserService
+    public currentUserService: CurrentUserService
   ) { }
-
-  ngOnInit(): void {
-    this.fullName =
-      this.currentUserService.getFullName() ?? '';
-  }
 
   logout(): void {
     this.authStateService.logout();

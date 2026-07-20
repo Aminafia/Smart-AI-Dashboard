@@ -10,11 +10,18 @@ export class LoadingService {
 
   readonly loading$ = this.loadingSubject.asObservable();
 
+  private requestCount = 0;
+
   show(): void {
+    this.requestCount++;
     this.loadingSubject.next(true);
   }
 
   hide(): void {
-    this.loadingSubject.next(false);
+    if (this.requestCount > 0) {
+      this.requestCount--; }
+    if (this.requestCount === 0) {
+      this.loadingSubject.next(false);
+    }
   }
 }

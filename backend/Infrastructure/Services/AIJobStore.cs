@@ -1,3 +1,10 @@
+/*
+AIJobStore Purpose:
+- Responsible only for AIJob database operations.
+- Provides CRUD operations for AIJob entities.
+- Contains no AI processing or business logic.
+*/
+
 using Application.Interfaces;
 using Core.Entities;
 using Infrastructure.Data;

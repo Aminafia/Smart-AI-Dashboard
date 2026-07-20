@@ -1,3 +1,10 @@
+/*
+AIQueue Purpose: -
+- Temporary in-memory queue for AIJobs
+- Handler will enqueues jobs 
+- AIWorker dequeues and processes jobs in background  
+*/
+
 using System.Collections.Concurrent;
 using Core.Entities;
 using Application.Interfaces;

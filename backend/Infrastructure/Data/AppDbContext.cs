@@ -19,6 +19,10 @@ namespace Infrastructure.Data
                 .Property(x => x.JobType)
                 .HasConversion<string>();
 
+            modelBuilder.Entity<AIJob>()
+                .Property(x => x.Status)
+                .HasConversion<string>();
+
             base.OnModelCreating(modelBuilder);
         }
     }

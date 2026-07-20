@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import { environment } from '../../../environments/environment';
+
 import { HttpContext } from '@angular/common/http';
 import { SKIP_LOADING } from '../constants/loading-context';
 
@@ -18,22 +20,20 @@ import { SummarizeResponse } from '../models/summarize-response';
 
 export class AiService {
 
-  private apiUrl = 'http://localhost:5260/api';
+  private apiUrl = `${environment.apiUrl}/AI`;
 
   constructor(
     private http: HttpClient,
   ) { }
 
-  generate(request: GenerateRequest): Observable<ApiResponse<GenerateResponse>> 
-  {
+  generate(request: GenerateRequest): Observable<ApiResponse<GenerateResponse>> {
     return this.http.post<ApiResponse<GenerateResponse>>(
-      `${this.apiUrl}/AI/generate`,
+      `${this.apiUrl}/generate`,
       request
     );
   }
 
-  getStatus(jobId: string): Observable<ApiResponse<JobStatusResponse>> 
-  {
+  getStatus(jobId: string): Observable<ApiResponse<JobStatusResponse>> {
     return this.http.get<ApiResponse<JobStatusResponse>>(
       `${this.apiUrl}/status/${jobId}`,
       { context: new HttpContext().set(SKIP_LOADING, true) }
@@ -41,13 +41,12 @@ export class AiService {
   }
 
 
-  summarize(request: SummarizeRequest): Observable<ApiResponse<SummarizeResponse>> 
-  {
+  summarize(request: SummarizeRequest): Observable<ApiResponse<SummarizeResponse>> {
     return this.http.post<ApiResponse<SummarizeResponse>>(
       `${this.apiUrl}/summarize`,
       request
     );
   }
 
-  
+
 }

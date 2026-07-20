@@ -1,11 +1,11 @@
 using FluentValidation;
-using Application.Features.AI.Commands.GenerateAI;
+using Application.Features.AI.Commands.GenerateText;
 
-namespace Application.Features.AI.Commands.GenerateAI;
+namespace Application.Features.AI.Commands.GenerateText;
 
-public class GenerateAICommandValidator : AbstractValidator<GenerateAICommand>
+public class GenerateTextCommandValidator : AbstractValidator<GenerateTextCommand>
 {
-    public GenerateAICommandValidator()
+    public GenerateTextCommandValidator()
     {
         RuleFor(x => x.Prompt)
             .NotEmpty()

@@ -1,8 +1,32 @@
+/*
+AIWorker Working:
+1. Continuously monitor AIQueue for new jobs.
+2. Dequeue the next AIJob.
+3. Update AIJob Status="Processing" and save to database.
+4. Create an AIRequest from the AIJob.
+5. Call IAIService.ProcessAsync().
+6. Store AI result, update Status="Completed" and save to database.
+7. If processing fails:
+   - Increase RetryCount.
+   - Log the failure.
+   - If retries remain:
+       • Update status to Retrying.
+       • Save to database.
+       • Enqueue the job again.
+   - Otherwise:
+       • Update status to Failed.
+       • Save error message and CompletedAt.
+       • Save to database.
+       • Log the final failure.
+*/
+
+
 using Application.DTOs.AI;
 using Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Core.Enums;
 
 namespace Infrastructure.BackgroundServices;
 
@@ -36,28 +60,26 @@ public class AIWorker : BackgroundService
 
             using var scope = _scopeFactory.CreateScope();
 
-            var jobStore =
-                scope.ServiceProvider.GetRequiredService<IAIJobStore>();
+            var jobStore = scope.ServiceProvider.GetRequiredService<IAIJobStore>();
 
-            var aiService =
-                scope.ServiceProvider.GetRequiredService<IAIService>();
+            var aiService = scope.ServiceProvider.GetRequiredService<IAIService>();
 
             try
             {
-                job.Status = "Processing";
+                job.Status = AIJobStatus.Processing;
 
                 await jobStore.UpdateJobAsync(job);
 
                 var request = new AIRequest
                 {
-                    Prompt = job.Prompt
+                    Input = job.Prompt,
+                    JobType = job.JobType
                 };
 
-                var response =
-                    await aiService.GenerateAsync(request);
+                var response = await aiService.ProcessAsync(request);
 
                 job.Result = response.Output;
-                job.Status = "Completed";
+                job.Status = AIJobStatus.Completed;
                 job.CompletedAt = DateTime.UtcNow;
 
                 await jobStore.UpdateJobAsync(job);
@@ -75,7 +97,7 @@ public class AIWorker : BackgroundService
 
                 if (job.RetryCount < job.MaxRetries)
                 {
-                    job.Status = "Retrying";
+                    job.Status = AIJobStatus.Retrying;
 
                     await jobStore.UpdateJobAsync(job);
 
@@ -83,7 +105,7 @@ public class AIWorker : BackgroundService
                 }
                 else
                 {
-                    job.Status = "Failed";
+                    job.Status = AIJobStatus.Failed;
 
                     job.Error =
                         $"Job failed after {job.RetryCount} attempts: {ex.Message}";
