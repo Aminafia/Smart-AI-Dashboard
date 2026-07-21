@@ -1,29 +1,26 @@
 <div class="max-w-4xl">
     <app-page-header title="Generate AI Content" subtitle="Generate AI responses using your configured provider.">
     </app-page-header>
-    <app-page-card>
+    <app-workspace-section title="Prompt" subtitle="Describe what you want the AI to generate.">
         <form [formGroup]="generateForm">
             <mat-form-field appearance="outline" class="w-full">
                 <mat-label>Prompt</mat-label>
                 <textarea matInput rows="6" formControlName="prompt"></textarea>
             </mat-form-field>
         </form>
-        <div class="mt-4">
-            <button mat-raised-button color="primary" (click)="onGenerate()">Generate</button>
-        </div>
-    </app-page-card>
+        <button mat-flat-button color="primary" (click)="onGenerate()">Generate</button>
+    </app-workspace-section>
     <div class="mt-6">
-        <app-page-card>
-            <app-empty-state *ngIf="!jobId" icon="auto_awesome" title="No Results Yet" message="Generate AI content to see the result here."></app-empty-state>
-            <div *ngIf="jobId">
-                <p>Job Id: {{ jobId }} </p>
-                <p>Status: {{ getStatusText(currentStatus) }} </p>
-            </div>
-            <div *ngIf="resultText" class="result-content" [innerHTML]="renderedResult"></div>
-            <div *ngIf="errorMessage">
-                <p class="text-red-600">{{ errorMessage }}</p>
-            </div>
-        </app-page-card>
+        <app-workspace-section title="Result">
+            <app-result-viewer
+                [html]="renderedResult"
+                [status]="getStatusText(currentStatus)"
+                [error]="errorMessage"
+                emptyTitle="No Results Yet"
+                emptyMessage="Generate AI content to see the response here."
+                emptyIcon="auto_awesome">
+            </app-result-viewer>
+        </app-workspace-section>
     </div>
 
 

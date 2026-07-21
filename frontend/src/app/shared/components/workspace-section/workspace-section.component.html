@@ -1,0 +1,8 @@
+<app-page-card>
+    <div>
+        <h2 class="text-lg font-semibold">{{ title }}</h2>
+        <p *ngIf="subtitle" class="mt-1 text-sm text-gray-600">{{ subtitle }}</p>
+    </div>
+    <mat-divider class="my-5"></mat-divider>
+    <ng-content></ng-content>
+</app-page-card>

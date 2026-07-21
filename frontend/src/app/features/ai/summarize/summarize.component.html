@@ -1,10 +1,8 @@
 <div class="max-w-4xl">
-    <app-page-header 
-        title="Summarize Text" 
-        subtitle="Create concise summaries using AI.">
+    <app-page-header title="Summarize Text" subtitle="Create concise summaries using AI.">
     </app-page-header>
 
-    <app-page-card>
+    <app-workspace-section title="Summarize">
         <form [formGroup]="summarizeForm">
             <mat-form-field appearance="outline" class="w-full">
                 <mat-label>Text</mat-label>
@@ -12,19 +10,20 @@
             </mat-form-field>
         </form>
         <div class="mt-4">
-            <button mat-raised-button color="primary" (click)="summarize()">Summarize</button>
+            <button mat-flat-button color="primary" (click)="summarize()">Summarize</button>
         </div>
-    </app-page-card>
+    </app-workspace-section>
 
     <div class="mt-6">
-        <app-page-card>
-            <h2 class="font-semibold mb-4">Summary</h2>
-            <app-empty-state *ngIf="!resultText && !errorMessage" icon="summarize" title="Nothing to Summarize" message="Enter some text and generate a summary."></app-empty-state>
-            <div *ngIf="resultText" class="result-content" [innerHTML]="renderedResult"></div>
-            <div *ngIf="errorMessage">
-                <p class="text-red-600">{{ errorMessage }}</p>
-            </div>
-        </app-page-card>
+        <app-workspace-section title="Result">
+            <app-result-viewer
+                [html]="renderedResult"
+                [error]="errorMessage"
+                emptyTitle="Nothing to Summarize"
+                emptyMessage="Enter some text and generate a summary."
+                emptyIcon="summarize">
+            </app-result-viewer>
+        </app-workspace-section>
     </div>
 
 </div>

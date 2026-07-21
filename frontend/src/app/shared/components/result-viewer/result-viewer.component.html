@@ -1,0 +1,16 @@
+<app-empty-state *ngIf="!html && !error" [title]="emptyTitle" [message]="emptyMessage" [icon]="emptyIcon"></app-empty-state>
+<div *ngIf="error">
+    <div class="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700">
+        {{ error }}
+    </div>
+</div>
+<div *ngIf="html">
+    <div *ngIf="status" class="mb-4 text-sm text-gray-500">
+        Status:
+        <span class="font-medium">{{ status }}</span>
+    </div>
+    <div class="prose prose-slate max-w-none" 
+        [innerHTML]="html">
+    </div>
+
+</div>
