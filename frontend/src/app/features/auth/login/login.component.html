@@ -31,12 +31,7 @@
       @if (errorMessage) {
         <div class="error-message">{{ errorMessage }}</div> }
 
-      <button mat-flat-button class="login-button" type="submit" [disabled]="loading">
-        @if (!loading) { 
-          Login }
-        @if (loading) {
-          <mat-spinner diameter="22"></mat-spinner> }
-      </button>
+      <button mat-flat-button class="login-button" type="submit">Login</button>
 
     </form>
   </div>

@@ -40,7 +40,7 @@ MarkdownService.render() - renders the result or error message to the user in ma
 Displayed to UI through generated.component.html
 */
 
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -52,12 +52,9 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { interval } from 'rxjs';
 import { switchMap, takeWhile } from 'rxjs/operators';
-import { ChangeDetectorRef } from '@angular/core';
-
 
 import { GenerateRequest } from '../../../core/models/generate-request';
-import { JobStatusResponse } from '../../../core/models/job-status-response';
-
+import { AIJobStatus } from '../../../core/models/ai-job-status';
 import { AiService } from '../../../core/services/ai.service';
 import { MarkdownService } from '../../../shared/services/markdown.service';
 import { SnackbarService } from '../../../shared/services/snackbar.service';
@@ -83,25 +80,26 @@ export class GenerateComponent {
 
   resultText = '';
   renderedResult = '';
-  currentStatus = '';
+  currentStatus: AIJobStatus = AIJobStatus.Pending;
   jobId = '';
 
-    generateForm = new FormGroup({
+  generateForm = new FormGroup({
     prompt: new FormControl('', { nonNullable: true })
   });
 
   constructor(
     private aiService: AiService,
-    private cdr: ChangeDetectorRef,
     private markdownService: MarkdownService,
-    private snackbarService: SnackbarService
+    private snackbarService: SnackbarService,
+    private cdr: ChangeDetectorRef
+
   ) { }
 
   onGenerate(): void {
 
     this.resultText = '';
     this.renderedResult = '';
-    this.currentStatus = '';
+    this.currentStatus = AIJobStatus.Pending;
     this.jobId = '';
     this.errorMessage = '';
 
@@ -126,39 +124,55 @@ export class GenerateComponent {
       });
 
   }
-  
+
 
   pollJobStatus(): void {
 
     interval(2000)
       .pipe(
         switchMap(() => this.aiService.getStatus(this.jobId)),
-        takeWhile(responseData => 
-          responseData.data.status !== 'Completed' && 
-          responseData.data.status !== 'Failed', 
+        takeWhile(response =>
+          response.data.status !== AIJobStatus.Completed &&
+          response.data.status !== AIJobStatus.Failed,
           true))
       .subscribe({
-        next: (responseData) => {
+        next: (response) => {
 
-          const job = responseData.data;
+          const job = response.data;
 
-          this.currentStatus = responseData.data.status;
+          this.currentStatus = job.status;
+
+          if (job.status === AIJobStatus.Completed) {
+            this.resultText = job.result ?? '';
+            this.renderedResult = this.markdownService.render(this.resultText);
+          }
+
+          if (job.status === AIJobStatus.Failed) {
+            this.resultText = job.error ?? 'Unknown error';
+            this.renderedResult = this.markdownService.render(this.resultText);
+          }
           this.cdr.detectChanges();
 
-          if (responseData.data.status === 'Completed') {
-            this.resultText = responseData.data.result ?? '';
-            this.renderedResult = this.markdownService.render(this.resultText);
-            this.cdr.detectChanges();
-          }
-
-          if (responseData.data.status === 'Failed') {
-            this.resultText = responseData.data.error ?? 'Unknown error';
-            this.renderedResult = this.markdownService.render(this.resultText);
-            this.cdr.detectChanges();
-          }
         }
       });
 
   }
-  
+
+  getStatusText(status: AIJobStatus): string {
+    switch (status) {
+      case AIJobStatus.Pending:
+        return 'Pending';
+      case AIJobStatus.Processing:
+        return 'Processing';
+      case AIJobStatus.Completed:
+        return 'Completed';
+      case AIJobStatus.Failed:
+        return 'Failed';
+      case AIJobStatus.Retrying:
+        return 'Retrying';
+      default:
+        return 'Unknown';
+    }
+  }
+
 }

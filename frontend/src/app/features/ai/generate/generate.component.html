@@ -21,7 +21,7 @@
             <h2 class="font-semibold mb-4">Result</h2>
             <div *ngIf="jobId">
                 <p>Job Id: {{ jobId }} </p>
-                <p>Status: {{ currentStatus }} </p>
+                <p>Status: {{ getStatusText(currentStatus) }} </p>
             </div>
             <div *ngIf="resultText" class="result-content" [innerHTML]="renderedResult"></div>
             <div *ngIf="errorMessage">

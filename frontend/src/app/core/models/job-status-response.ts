@@ -1,6 +1,8 @@
+import { AIJobStatus } from "./ai-job-status";
+
 export interface JobStatusResponse {
   id: string;
-  status: string;
+  status: AIJobStatus;
   result: string | null;
   error: string | null;
 }

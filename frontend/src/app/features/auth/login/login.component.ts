@@ -30,7 +30,6 @@ import { MatCardModule } from '@angular/material/card';
 })
 export class LoginComponent {
   hidePassword = true;
-  loading = false;
   errorMessage = '';
   loginForm!: FormGroup;
 
@@ -57,12 +56,9 @@ export class LoginComponent {
       password: this.loginForm.value.password!
     };
 
-    this.loading = true;
     this.errorMessage = '';
 
     this.authService.login(request)
-      .pipe(
-        finalize(() => this.loading = false))
       .subscribe({
         next: () => { this.router.navigate(['/dashboard']); },
         error: (error) => { this.errorMessage = error.error?.message ?? 'Login failed. Please try again.'; } });
