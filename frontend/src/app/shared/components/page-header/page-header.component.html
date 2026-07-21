@@ -1,1 +1,9 @@
-<p>page-header works!</p>
+<div class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div>
+        <h1 class="text-3xl font-bold tracking-tight">{{ title }}</h1>
+        <p *ngIf="subtitle" class="mt-2 text-gray-600">{{ subtitle }}</p>
+    </div>
+    <div class="flex items-center gap-2">
+        <ng-content></ng-content>
+    </div>
+</div>

@@ -1,24 +1,20 @@
 <div class="max-w-4xl">
-
-    <h1 class="text-3xl font-bold mb-6">AI Generate</h1>
-
-    <mat-card>
-        <mat-card-content>
-            <form [formGroup]="generateForm">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Prompt</mat-label>
-                    <textarea matInput rows="6" formControlName="prompt"></textarea>
-                </mat-form-field>
-            </form>
-            <div class="mt-4">
-                <button mat-raised-button color="primary" (click)="onGenerate()">Generate</button>
-            </div>
-        </mat-card-content>
-    </mat-card>
-
-    <mat-card class="mt-6">
-        <mat-card-content>
-            <h2 class="font-semibold mb-4">Result</h2>
+    <app-page-header title="Generate AI Content" subtitle="Generate AI responses using your configured provider.">
+    </app-page-header>
+    <app-page-card>
+        <form [formGroup]="generateForm">
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Prompt</mat-label>
+                <textarea matInput rows="6" formControlName="prompt"></textarea>
+            </mat-form-field>
+        </form>
+        <div class="mt-4">
+            <button mat-raised-button color="primary" (click)="onGenerate()">Generate</button>
+        </div>
+    </app-page-card>
+    <div class="mt-6">
+        <app-page-card>
+            <app-empty-state *ngIf="!jobId" icon="auto_awesome" title="No Results Yet" message="Generate AI content to see the result here."></app-empty-state>
             <div *ngIf="jobId">
                 <p>Job Id: {{ jobId }} </p>
                 <p>Status: {{ getStatusText(currentStatus) }} </p>
@@ -27,7 +23,8 @@
             <div *ngIf="errorMessage">
                 <p class="text-red-600">{{ errorMessage }}</p>
             </div>
-        </mat-card-content>
-    </mat-card>
+        </app-page-card>
+    </div>
+
 
 </div>

@@ -5,6 +5,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../shared/components/confirmation-dialog/confirmation-dialog.component';
 
 import { AuthStateService } from '../../core/services/auth-state.service';
 import { CurrentUserService } from '../../core/services/current-user.service';
@@ -30,10 +32,28 @@ export class MainLayoutComponent {
 
   constructor(
     private authStateService: AuthStateService,
-    public currentUserService: CurrentUserService
+    public currentUserService: CurrentUserService,
+    private dialog: MatDialog
   ) { }
 
+
   logout(): void {
-    this.authStateService.logout();
+    this.dialog.open(ConfirmationDialogComponent,
+      {
+        width: '420px',
+        data: {
+          title: 'Logout',
+          message: 'Are you sure you want to logout?',
+          confirmText: 'Logout',
+          cancelText: 'Stay'
+        }
+      })
+      .afterClosed()
+      .subscribe(result => {
+        if (result) {
+          this.authStateService.logout();
+        }
+      });
+
   }
 }

@@ -1,28 +1,30 @@
 <div class="max-w-4xl">
-    <h1 class="text-3xl font-bold mb-6">AI Summarize</h1>
+    <app-page-header 
+        title="Summarize Text" 
+        subtitle="Create concise summaries using AI.">
+    </app-page-header>
 
-    <mat-card>
-        <mat-card-content>
-            <form [formGroup]="summarizeForm">
-                <mat-form-field appearance="outline" class="w-full">
-                    <mat-label>Text</mat-label>
-                    <textarea matInput rows="10" formControlName="text"></textarea>
-                </mat-form-field>
-            </form>
-            <div class="mt-4">
-                <button mat-raised-button color="primary" (click)="summarize()">Summarize</button>
-            </div>
-        </mat-card-content>
-    </mat-card>
+    <app-page-card>
+        <form [formGroup]="summarizeForm">
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Text</mat-label>
+                <textarea matInput rows="10" formControlName="text"></textarea>
+            </mat-form-field>
+        </form>
+        <div class="mt-4">
+            <button mat-raised-button color="primary" (click)="summarize()">Summarize</button>
+        </div>
+    </app-page-card>
 
-    <mat-card class="mt-6">
-        <mat-card-content>
+    <div class="mt-6">
+        <app-page-card>
             <h2 class="font-semibold mb-4">Summary</h2>
+            <app-empty-state *ngIf="!resultText && !errorMessage" icon="summarize" title="Nothing to Summarize" message="Enter some text and generate a summary."></app-empty-state>
             <div *ngIf="resultText" class="result-content" [innerHTML]="renderedResult"></div>
             <div *ngIf="errorMessage">
                 <p class="text-red-600">{{ errorMessage }}</p>
             </div>
-        </mat-card-content>
-    </mat-card>
+        </app-page-card>
+    </div>
 
 </div>

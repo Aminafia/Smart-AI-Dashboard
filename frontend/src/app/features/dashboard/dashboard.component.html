@@ -1,34 +1,27 @@
 <div class="p-6">
-  <h1 class="text-3xl font-bold mb-6">Dashboard</h1>
+  <app-page-header title="Dashboard" subtitle="Monitor AI jobs and platform activity">
+  </app-page-header>
+
   <div class="grid grid-cols-4 gap-4">
+    <app-page-card>
+      <h2>Total Jobs</h2>
+      <p class="text-3xl font-bold">0</p>
+    </app-page-card>
 
-    <mat-card>
-      <mat-card-content>
-        <h2>Total Jobs</h2>
-        <p class="text-3xl font-bold">0</p>
-      </mat-card-content>
-    </mat-card>
+    <app-page-card>
+      <h2>Completed</h2>
+      <p class="text-3xl font-bold">0</p>
+    </app-page-card>
 
-    <mat-card>
-      <mat-card-content>
-        <h2>Completed</h2>
-        <p class="text-3xl font-bold">0</p>
-      </mat-card-content>
-    </mat-card>
+    <app-page-card>
+      <h2>Processing</h2>
+      <p class="text-3xl font-bold">0</p>
+    </app-page-card>
 
-    <mat-card>
-      <mat-card-content>
-        <h2>Processing</h2>
-        <p class="text-3xl font-bold">0</p>
-      </mat-card-content>
-    </mat-card>
-
-    <mat-card>
-      <mat-card-content>
-        <h2>Failed</h2>
-        <p class="text-3xl font-bold">0</p>
-      </mat-card-content>
-    </mat-card>
+    <app-page-card>
+      <h2>Failed</h2>
+      <p class="text-3xl font-bold">0</p>
+    </app-page-card>
 
   </div>
 

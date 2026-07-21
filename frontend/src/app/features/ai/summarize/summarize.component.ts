@@ -3,9 +3,11 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+import { PageCardComponent } from '../../../shared/components/page-card/page-card.component';
+import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 
 import { AiService } from '../../../core/services/ai.service';
 import { SummarizeRequest } from '../../../core/models/summarize-request';
@@ -19,10 +21,12 @@ import { SnackbarService } from '../../../shared/services/snackbar.service';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatCardModule,
+    PageCardComponent,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    PageHeaderComponent,
+    EmptyStateComponent
   ],
   templateUrl: './summarize.component.html',
   styleUrl: './summarize.component.css'

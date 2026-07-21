@@ -45,11 +45,12 @@ import { CommonModule } from '@angular/common';
 
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
-import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component'; 
+import { PageCardComponent } from '../../../shared/components/page-card/page-card.component';
+import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
 import { interval } from 'rxjs';
 import { switchMap, takeWhile } from 'rxjs/operators';
 
@@ -65,10 +66,12 @@ import { SnackbarService } from '../../../shared/services/snackbar.service';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    PageHeaderComponent,
+    PageCardComponent,
+    EmptyStateComponent
   ],
   templateUrl: './generate.component.html',
   styleUrl: './generate.component.css'

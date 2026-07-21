@@ -1,1 +1,14 @@
-<p>empty-state works!</p>
+<div class="flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-gray-50 px-8 py-14 text-center">
+    <mat-icon class="!text-6xl !w-16 !h-16 text-gray-400">
+        {{ icon }}
+    </mat-icon>
+    <h2 class="mt-6 text-xl font-semibold">
+        {{ title }}
+    </h2>
+    <p class="mt-2 max-w-lg text-gray-600">
+        {{ message }}
+    </p>
+    <button *ngIf="actionText" mat-flat-button color="primary" class="mt-6" (click)="action.emit()">
+        {{ actionText }}
+    </button>
+</div>

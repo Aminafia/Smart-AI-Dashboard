@@ -1,1 +1,17 @@
-<p>confirmation-dialog works!</p>
+<h2 mat-dialog-title class="flex items-center gap-3">
+    <mat-icon color="warn">warning</mat-icon>
+    {{ data.title }}
+</h2>
+
+<mat-dialog-content>
+    <p class="text-gray-600">{{ data.message }}</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button (click)="cancel()">
+        {{ data.cancelText ?? 'Cancel' }}
+    </button>
+    <button mat-flat-button color="warn" (click)="confirm()">
+        {{ data.confirmText ?? 'Confirm' }}
+    </button>
+</mat-dialog-actions>
