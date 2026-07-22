@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>Job Details</h2>
+
+<mat-dialog-content>
+
+@if (jobStatus$ | async; as jobStatus) {
+
+  <p>Status: {{ jobStatus.status }}</p>
+
+  <p>Result:</p>
+
+  <p>{{ jobStatus.result }}</p>
+
+  @if (jobStatus.error) {
+    <p>Error:</p>
+    <p>{{ jobStatus.error }}</p>
+  }
+
+}
+@else {
+
+  <p>Loading...</p>
+
+}
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+
+<button mat-button mat-dialog-close>
+Close
+</button>
+
+</mat-dialog-actions>
