@@ -1,4 +1,4 @@
-import { AIJobStatus } from "./ai-job-status";
+import { AIJobStatus } from "./ai-job-status.model";
 
 export interface JobStatusResponse {
   id: string;

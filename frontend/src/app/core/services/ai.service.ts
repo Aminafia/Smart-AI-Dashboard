@@ -7,12 +7,13 @@ import { environment } from '../../../environments/environment';
 import { HttpContext } from '@angular/common/http';
 import { SKIP_LOADING } from '../constants/loading-context';
 
-import { GenerateRequest } from '../models/generate-request';
-import { GenerateResponse } from '../models/generate-response';
-import { JobStatusResponse } from '../models/job-status-response';
+import { GenerateRequest } from '../models/ai/generate-request.model';
+import { GenerateResponse } from '../models/ai/generate-response.model';
+import { SummarizeRequest } from '../models/ai/summarize-request.model';
+import { SummarizeResponse } from '../models/ai/summarize-response.model';
+import { JobStatusResponse } from '../models/ai/job-status-response.model';
 import { ApiResponse } from '../models/api-response';
-import { SummarizeRequest } from '../models/summarize-request';
-import { SummarizeResponse } from '../models/summarize-response';
+import { AIJob } from '../models/ai/ai-job.model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,14 +27,16 @@ export class AiService {
     private http: HttpClient,
   ) { }
 
-  generate(request: GenerateRequest): Observable<ApiResponse<GenerateResponse>> {
+  generate(request: GenerateRequest): Observable<ApiResponse<GenerateResponse>> 
+  {
     return this.http.post<ApiResponse<GenerateResponse>>(
       `${this.apiUrl}/generate`,
       request
     );
   }
 
-  getStatus(jobId: string): Observable<ApiResponse<JobStatusResponse>> {
+  getStatus(jobId: string): Observable<ApiResponse<JobStatusResponse>> 
+  {
     return this.http.get<ApiResponse<JobStatusResponse>>(
       `${this.apiUrl}/status/${jobId}`,
       { context: new HttpContext().set(SKIP_LOADING, true) }
@@ -41,12 +44,20 @@ export class AiService {
   }
 
 
-  summarize(request: SummarizeRequest): Observable<ApiResponse<SummarizeResponse>> {
+  summarize(request: SummarizeRequest): Observable<ApiResponse<SummarizeResponse>> 
+  {
     return this.http.post<ApiResponse<SummarizeResponse>>(
       `${this.apiUrl}/summarize`,
       request
     );
   }
+
+  getJobs(page: number, pageSize: number): Observable<ApiResponse<AIJob[]>> 
+  {
+  return this.http.get<ApiResponse<AIJob[]>>(
+    `${this.apiUrl}/jobs?page=${page}&pageSize=${pageSize}`
+  );
+}
 
 
 }

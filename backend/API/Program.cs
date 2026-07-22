@@ -16,6 +16,7 @@ using Serilog.Formatting.Compact;
 using Serilog.Enrichers;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,7 +57,13 @@ builder.Host.UseSerilog();
 // ----------------------
 // Core Services
 // ----------------------
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(
+                        new JsonStringEnumConverter());
+                });
+                
 builder.Services.AddEndpointsApiExplorer(); // for enabling Swagger to discover endpoints
 builder.Services.AddSwaggerGen(options =>
 {

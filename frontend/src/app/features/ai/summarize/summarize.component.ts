@@ -10,7 +10,7 @@ import { WorkspaceSectionComponent } from '../../../shared/components/workspace-
 import { ResultViewerComponent } from '../../../shared/components/result-viewer/result-viewer.component';
 
 import { AiService } from '../../../core/services/ai.service';
-import { SummarizeRequest } from '../../../core/models/summarize-request';
+import { SummarizeRequest } from '../../../core/models/ai/summarize-request.model';
 import { MarkdownService } from '../../../shared/services/markdown.service';
 import { SnackbarService } from '../../../shared/services/snackbar.service';
 

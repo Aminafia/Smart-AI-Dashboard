@@ -55,8 +55,8 @@ import { ResultViewerComponent } from '../../../shared/components/result-viewer/
 import { interval } from 'rxjs';
 import { switchMap, takeWhile } from 'rxjs/operators';
 
-import { GenerateRequest } from '../../../core/models/generate-request';
-import { AIJobStatus } from '../../../core/models/ai-job-status';
+import { GenerateRequest } from '../../../core/models/ai/generate-request.model';
+import { AIJobStatus } from '../../../core/models/ai/ai-job-status.model';
 import { AiService } from '../../../core/services/ai.service';
 import { MarkdownService } from '../../../shared/services/markdown.service';
 import { SnackbarService } from '../../../shared/services/snackbar.service';
