@@ -11,6 +11,7 @@ using Application.DTOs.AI;
 using Application.Interfaces;
 using MediatR;
 using Core.Enums;
+using Core.Entities;
 
 namespace Application.Features.AI.Commands.Summarize;
 
@@ -18,29 +19,64 @@ public class SummarizeCommandHandler
     : IRequestHandler<SummarizeCommand, AIOperationResponse>
 {
     private readonly IAIService _aiService;
+    private readonly IAIJobStore _jobStore;
 
-    public SummarizeCommandHandler(IAIService aiService)
+    public SummarizeCommandHandler(IAIService aiService, IAIJobStore jobStore)
     {
         _aiService = aiService;
+        _jobStore = jobStore;
     }
 
-    public async Task<AIOperationResponse> Handle(
-        SummarizeCommand request,
-        CancellationToken cancellationToken)
+    public async Task<AIOperationResponse> Handle(SummarizeCommand request, CancellationToken cancellationToken)
     {
-        var aiRequest = new AIRequest
+
+        var job = new AIJob
         {
-            Input = request.Text,
-            JobType = AIJobType.Summarize
+            ProjectId = Guid.NewGuid(),
+            JobType = AIJobType.Summarize,
+            Prompt = request.Text,
+            Status = AIJobStatus.Processing,
+            CreatedAt = DateTime.UtcNow
         };
 
-        var providerResponse = await _aiService.ProcessAsync(aiRequest);
+        await _jobStore.AddJobAsync(job);
 
-        return new AIOperationResponse
+        try
         {
-            Status = AIJobStatus.Completed,
-            Output = providerResponse.Output,
-            IsFallback = providerResponse.IsFallback
-        };
+            var aiRequest = new AIRequest
+            {
+                Input = request.Text,
+                JobType = AIJobType.Summarize
+            };
+
+            var providerResponse = await _aiService.ProcessAsync(aiRequest);
+
+            job.Status = AIJobStatus.Completed;
+            job.Result = providerResponse.Output;
+            job.CompletedAt = DateTime.UtcNow;
+
+            await _jobStore.UpdateJobAsync(job);
+
+            return new AIOperationResponse
+            {
+                JobId = job.Id,
+                Status = job.Status,
+                Output = providerResponse.Output,
+                IsFallback = providerResponse.IsFallback
+            };
+        }
+
+        catch (Exception ex)
+        {
+            job.Status = AIJobStatus.Failed;
+            job.Error = ex.Message;
+            job.CompletedAt = DateTime.UtcNow;
+
+            await _jobStore.UpdateJobAsync(job);
+
+            throw;
+        }
+
+
     }
 }

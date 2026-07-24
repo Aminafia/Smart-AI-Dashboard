@@ -1,0 +1,68 @@
+.label {
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+
+.value {
+    font-weight: 600;
+}
+
+.section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.prompt-box {
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 6px;
+    line-height: 1.6;
+}
+
+.result-box {
+    background: #f9fafb;
+    border:1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 16px;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.error-box {
+    background: #fef2f2;
+    color: #b91c1c;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.completed-chip {
+    background-color: #DCFCE7 !important;
+    color: #166534 !important;
+    font-weight: 600;
+}
+
+.processing-chip {
+    background-color: #DBEAFE !important;
+    color: #1D4ED8 !important;
+    font-weight: 600;
+}
+
+.pending-chip {
+    background-color: #FEF3C7 !important;
+    color: #B45309 !important;
+    font-weight: 600;
+}
+
+.failed-chip {
+    background-color: #FEE2E2 !important;
+    color: #B91C1C !important;
+    font-weight: 600;
+}
+
+.retrying-chip {
+    background-color: #F3E8FF !important;
+    color: #7E22CE !important;
+    font-weight: 600;
+}

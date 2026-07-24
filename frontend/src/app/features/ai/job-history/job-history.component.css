@@ -1,0 +1,37 @@
+.completed-chip {
+    background-color: #DCFCE7 !important;
+    color: #166534 !important;
+    font-weight: 600;
+}
+
+.processing-chip {
+    background-color: #DBEAFE !important;
+    color: #1D4ED8 !important;
+    font-weight: 600;
+}
+
+.pending-chip {
+    background-color: #FEF3C7 !important;
+    color: #B45309 !important;
+    font-weight: 600;
+}
+
+.failed-chip {
+    background-color: #FEE2E2 !important;
+    color: #B91C1C !important;
+    font-weight: 600;
+}
+
+.retrying-chip {
+    background-color: #F3E8FF !important;
+    color: #7E22CE !important;
+    font-weight: 600;
+}
+
+.prompt-cell {
+    max-width: 350px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: default;
+}

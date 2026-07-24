@@ -1,32 +1,64 @@
-<h2 mat-dialog-title>Job Details</h2>
+<h2 mat-dialog-title class="text-2xl font-semibold">
+  Job Details
+</h2>
 
 <mat-dialog-content>
+  @if (jobStatus$ | async; as jobStatus) {
+  <div class="grid grid-cols-2 gap-6 mb-6">
+    <div>
+      <div class="label">Status</div>
+      <div class="value">
+        @switch (jobStatus.status) {
+          @case ('Completed') { <mat-chip class="completed-chip">Completed</mat-chip> }
+          @case ('Processing') { <mat-chip class="processing-chip">Processing</mat-chip> }
+          @case ('Pending') { <mat-chip class="pending-chip">Pending</mat-chip> }
+          @case ('Failed') { <mat-chip class="failed-chip">Failed</mat-chip> }
+          @case ('Retrying') { <mat-chip class="retrying-chip">Retrying</mat-chip> }
+          @default { <mat-chip>{{ jobStatus.status }}</mat-chip> }
+        }
+      </div>
+    </div>
 
-@if (jobStatus$ | async; as jobStatus) {
+    <div>
+      <div class="label">Job Type</div>
+      <div class="value">{{ jobStatus.jobType }} </div>
+    </div>
 
-  <p>Status: {{ jobStatus.status }}</p>
+    <div>
+      <div class="label">Created</div>
+      <div class="value">{{ jobStatus.createdAt | date:'medium' }}</div>
+    </div>
 
-  <p>Result:</p>
+    <div>
+      <div class="label">Completed</div>
+      <div class="value">
+        @if(jobStatus.completedAt){
+        {{ jobStatus.completedAt | date:'medium' }} }
+        @else{
+        — }
+      </div>
+    </div>
+  </div>
 
-  <p>{{ jobStatus.result }}</p>
+  <hr class="my-6">
+  <h3 class="section-title">Prompt</h3>
+  <div class="prompt-box">{{ jobStatus.prompt }}</div>
+
+  <hr class="my-6">
+  <h3 class="section-title">Result</h3>
+  <div class="result-box markdown-body" [innerHTML]="renderedResult"></div>
 
   @if (jobStatus.error) {
-    <p>Error:</p>
-    <p>{{ jobStatus.error }}</p>
+  <hr class="my-6">
+  <h3 class="section-title text-red-600">Error</h3>
+  <div class="error-box">{{ jobStatus.error }}</div> }
+  }
+  @else {
+  <div class="py-8 text-center">Loading...</div>
   }
 
-}
-@else {
-
-  <p>Loading...</p>
-
-}
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-
-<button mat-button mat-dialog-close>
-Close
-</button>
-
+  <button mat-button mat-dialog-close>Close</button>
 </mat-dialog-actions>

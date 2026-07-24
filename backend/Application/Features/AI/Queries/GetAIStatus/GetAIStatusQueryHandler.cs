@@ -25,9 +25,13 @@ public class GetAIStatusQueryHandler
         return new AIStatusResponse
         {
             Id = job.Id,
+            JobType = job.JobType.ToString(),
+            Prompt = job.Prompt,
             Status = job.Status,
             Result = job.Result,
-            Error = job.Error
+            Error = job.Error,
+            CreatedAt = job.CreatedAt,
+            CompletedAt = job.CompletedAt
         };
     }
 }
