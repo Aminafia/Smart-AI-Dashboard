@@ -5,6 +5,7 @@ using Infrastructure.Auth;
 using Infrastructure.BackgroundServices;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
+using Infrastructure.Storage;
 using Infrastructure.Resilience;
 using Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,9 @@ public static class DependencyInjection
         // Repositories
         services.AddScoped<IUserRepository, UserRepository>();
 
+        // Storage
+        services.AddScoped<IDocumentStorage, LocalDocumentStorage>();
+
         // AI Services 
         services.AddScoped<IAIProvider, GeminiProvider>();
         services.AddScoped<IAIService, AiService>();
@@ -47,6 +51,8 @@ public static class DependencyInjection
         // Queue + Job Store
         services.AddSingleton<IAIQueue, AIQueue>();
         services.AddScoped<IAIJobStore, AIJobStore>();
+        
+        services.AddScoped<IDocumentStore, DocumentStore>();
 
         // Background Worker
         services.AddHostedService<AIWorker>();

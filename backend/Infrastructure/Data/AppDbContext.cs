@@ -25,5 +25,7 @@ namespace Infrastructure.Data
 
             base.OnModelCreating(modelBuilder);
         }
+
+        public DbSet<Document> Documents => Set<Document>();
     }
 }
