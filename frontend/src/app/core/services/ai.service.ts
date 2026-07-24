@@ -14,7 +14,7 @@ import { SummarizeResponse } from '../models/ai/summarize-response.model';
 import { JobStatusResponse } from '../models/ai/job-status-response.model';
 import { ApiResponse } from '../models/api-response';
 import { AIJob } from '../models/ai/ai-job.model';
-
+import { PagedResponse } from '../models/paged-response.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -27,16 +27,14 @@ export class AiService {
     private http: HttpClient,
   ) { }
 
-  generate(request: GenerateRequest): Observable<ApiResponse<GenerateResponse>> 
-  {
+  generate(request: GenerateRequest): Observable<ApiResponse<GenerateResponse>> {
     return this.http.post<ApiResponse<GenerateResponse>>(
       `${this.apiUrl}/generate`,
       request
     );
   }
 
-  getStatus(jobId: string): Observable<ApiResponse<JobStatusResponse>> 
-  {
+  getStatus(jobId: string): Observable<ApiResponse<JobStatusResponse>> {
     return this.http.get<ApiResponse<JobStatusResponse>>(
       `${this.apiUrl}/status/${jobId}`,
       { context: new HttpContext().set(SKIP_LOADING, true) }
@@ -44,20 +42,17 @@ export class AiService {
   }
 
 
-  summarize(request: SummarizeRequest): Observable<ApiResponse<SummarizeResponse>> 
-  {
+  summarize(request: SummarizeRequest): Observable<ApiResponse<SummarizeResponse>> {
     return this.http.post<ApiResponse<SummarizeResponse>>(
       `${this.apiUrl}/summarize`,
       request
     );
   }
 
-  getJobs(page: number, pageSize: number): Observable<ApiResponse<AIJob[]>> 
-  {
-  return this.http.get<ApiResponse<AIJob[]>>(
-    `${this.apiUrl}/jobs?page=${page}&pageSize=${pageSize}`
-  );
-}
+  getJobs(page: number, pageSize: number): Observable<ApiResponse<PagedResponse<AIJob>>> {
+    return this.http.get<ApiResponse<PagedResponse<AIJob>>>(
+      `${this.apiUrl}/jobs?page=${page}&pageSize=${pageSize}`);
+  }
 
 
 }

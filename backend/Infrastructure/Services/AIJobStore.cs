@@ -5,6 +5,7 @@ AIJobStore Purpose:
 - Contains no AI processing or business logic.
 */
 
+using Application.Common.Models;
 using Application.Interfaces;
 using Core.Entities;
 using Infrastructure.Data;
@@ -34,13 +35,23 @@ public class AIJobStore : IAIJobStore
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<List<AIJob>> GetJobsAsync(int page, int pageSize)
+    public async Task<PagedResponse<AIJob>> GetJobsAsync(int page, int pageSize)
     {
-        return await _dbContext.AIJobs
+        var totalCount = await _dbContext.AIJobs.CountAsync();
+
+        var jobs = await _dbContext.AIJobs
             .OrderByDescending(x => x.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
+
+        return new PagedResponse<AIJob>
+        {
+            Items = jobs,
+            Page = page,
+            PageSize = pageSize,
+            TotalCount = totalCount
+        };
     }
 
     public async Task UpdateJobAsync(AIJob job)

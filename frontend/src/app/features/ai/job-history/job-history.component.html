@@ -58,7 +58,14 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
     </table>
+    <div class="flex items-center justify-between mt-4">
+        <div class="text-sm text-gray-500">
+            Showing {{ startItem }} - {{ endItem }} of {{ totalCount }} jobs
+        </div>
+        <mat-paginator [length]="totalCount" [pageIndex]="page - 1" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions" (page)="onPageChange($event)"></mat-paginator>
+    </div>
     }
+
     @else {
     <app-empty-state icon="history" title="No AI jobs yet"
         message="Generate or summarize content to build your AI job history.">

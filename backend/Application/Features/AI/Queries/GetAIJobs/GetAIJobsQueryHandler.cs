@@ -1,4 +1,5 @@
 using Application.Interfaces;
+using Application.Common.Models;
 using MediatR;
 
 namespace Application.Features.AI.Queries.GetAIJobs;
@@ -6,7 +7,7 @@ namespace Application.Features.AI.Queries.GetAIJobs;
 public class GetAIJobsQueryHandler
     : IRequestHandler<
         GetAIJobsQuery,
-        List<GetAIJobsResponse>>
+        PagedResponse<GetAIJobsResponse>>
 {
     private readonly IAIJobStore _jobStore;
 
@@ -16,22 +17,29 @@ public class GetAIJobsQueryHandler
         _jobStore = jobStore;
     }
 
-    public async Task<List<GetAIJobsResponse>> Handle(
+    public async Task<PagedResponse<GetAIJobsResponse>> Handle(
         GetAIJobsQuery request,
         CancellationToken cancellationToken)
     {
-        var jobs = await _jobStore.GetJobsAsync(request.Page, request.PageSize);
+        var pagedJobs = await _jobStore.GetJobsAsync(request.Page, request.PageSize);
+        
+        return new PagedResponse<GetAIJobsResponse>
+        {
+            Items = pagedJobs.Items.Select(job =>
+                new GetAIJobsResponse
+                {
+                    Id = job.Id,
+                    JobType = job.JobType.ToString(),
+                    Status = job.Status,
+                    Prompt = job.Prompt,
+                    CreatedAt = job.CreatedAt,
+                    CompletedAt = job.CompletedAt
+                })
+                .ToList(),
 
-        return jobs.Select(job =>
-            new GetAIJobsResponse
-            {
-                Id = job.Id,
-                JobType = job.JobType.ToString(),
-                Status = job.Status,
-                Prompt = job.Prompt,
-                CreatedAt = job.CreatedAt,
-                CompletedAt = job.CompletedAt
-            })
-            .ToList();
+            Page = pagedJobs.Page,
+            PageSize = pagedJobs.PageSize,
+            TotalCount = pagedJobs.TotalCount
+        };
     }
 }

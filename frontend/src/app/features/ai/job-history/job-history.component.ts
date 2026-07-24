@@ -15,6 +15,8 @@ import { interval, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AIJobStatus } from '../../../core/models/ai/ai-job-status.model';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { PagedResponse } from '../../../core/models/paged-response.model';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-job-history',
@@ -29,7 +31,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatButtonModule,
     MatDialogModule,
     EmptyStateComponent,
-    MatTooltipModule
+    MatTooltipModule,
+    MatPaginatorModule
   ],
   templateUrl: './job-history.component.html',
   styleUrl: './job-history.component.css',
@@ -47,6 +50,9 @@ export class JobHistoryComponent implements OnInit {
   ];
   page = 1;
   pageSize = 10;
+  totalCount = 0;
+  pageSizeOptions = [5, 10, 25, 50];
+
   private pollingSubscription?: Subscription;
 
   constructor(
@@ -61,7 +67,9 @@ export class JobHistoryComponent implements OnInit {
   loadJobs(): void {
     this.aiService.getJobs(this.page, this.pageSize).subscribe({
       next: (response) => {
-        this.jobs = response.data;
+        this.jobs = response.data.items;
+        this.totalCount = response.data.totalCount;
+
         if (this.hasRunningJobs()) {
           this.startPolling();
         }
@@ -90,7 +98,8 @@ export class JobHistoryComponent implements OnInit {
         switchMap(() => this.aiService.getJobs(this.page, this.pageSize)))
       .subscribe({
         next: (response) => {
-          this.jobs = response.data;
+          this.jobs = response.data.items;
+          this.totalCount = response.data.totalCount;
           if (!this.hasRunningJobs()) {
             this.stopPolling();
           }
@@ -115,6 +124,21 @@ export class JobHistoryComponent implements OnInit {
         maxHeight: '85vh',
         data: job.id
       });
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.page = event.pageIndex + 1;
+    this.pageSize = event.pageSize;
+    this.loadJobs();
+  }
+  get startItem(): number {
+  return this.totalCount === 0
+    ? 0
+    : (this.page - 1) * this.pageSize + 1;
+  }
+
+  get endItem(): number {
+    return Math.min(this.page * this.pageSize, this.totalCount);
   }
 
 }

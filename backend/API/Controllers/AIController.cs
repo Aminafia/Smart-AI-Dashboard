@@ -290,7 +290,7 @@ public class AIController : ControllerBase
                 PageSize = pageSize
             });
 
-        return Ok(ApiResponse<List<GetAIJobsResponse>>
+        return Ok(ApiResponse<PagedResponse<GetAIJobsResponse>>
             .SuccessResponse(result, "AI jobs retrieved successfully."));
     }
 

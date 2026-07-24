@@ -6,6 +6,7 @@ AIJobStore Purpose:
 */
 
 using Core.Entities;
+using Application.Common.Models;
 
 namespace Application.Interfaces;
 
@@ -15,7 +16,7 @@ public interface IAIJobStore
 
     Task<AIJob?> GetJobAsync(Guid id);
 
-    Task<List<AIJob>> GetJobsAsync(
+    Task<PagedResponse<AIJob>> GetJobsAsync(
         int page,
         int pageSize);
     Task UpdateJobAsync(AIJob job);

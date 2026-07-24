@@ -1,9 +1,10 @@
 using MediatR;
+using Application.Common.Models;
 
 namespace Application.Features.AI.Queries.GetAIJobs;
 
 public class GetAIJobsQuery
-    : IRequest<List<GetAIJobsResponse>>
+    : IRequest<PagedResponse<GetAIJobsResponse>>
 {
     public int Page { get; set; } = 1;
 
