@@ -1,24 +1,25 @@
 using Application.Interfaces;
+using Application.Features.Documents.Models;
 using Core.Entities;
 using MediatR;
 
 namespace Application.Features.Documents.Commands.UploadDocument;
 
 public class UploadDocumentCommandHandler
-    : IRequestHandler<UploadDocumentCommand, UploadDocumentResponse>
+    : IRequestHandler<UploadDocumentCommand, DocumentResponse>
 {
     private readonly IDocumentStorage _documentStorage;
-    private readonly IDocumentStore _documentStore;
+    private readonly IDocumentRepository _documentRepository;
 
     public UploadDocumentCommandHandler(
         IDocumentStorage documentStorage,
-    IDocumentStore documentStore)
+    IDocumentRepository documentRepository)
     {
       _documentStorage = documentStorage;
-      _documentStore = documentStore;
+      _documentRepository = documentRepository;
     }
 
-    public async Task<UploadDocumentResponse> Handle(
+    public async Task<DocumentResponse> Handle(
         UploadDocumentCommand request,
         CancellationToken cancellationToken)
     {
@@ -35,9 +36,9 @@ public class UploadDocumentCommandHandler
             UploadedAt = DateTime.UtcNow
         };
 
-        await _documentStore.AddAsync(document);
+        await _documentRepository.AddAsync(document);
 
-        return new UploadDocumentResponse
+        return new DocumentResponse
         {
             Id = document.Id,
             FileName = document.FileName,

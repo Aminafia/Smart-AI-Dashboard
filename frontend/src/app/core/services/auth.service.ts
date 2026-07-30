@@ -4,9 +4,9 @@ import { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 
-import { LoginRequest } from '../models/login-request';
-import { LoginResponse } from '../models/login-response';
-import { ApiResponse } from '../models/api-response';
+import { LoginRequest } from '../models/auth/login-request';
+import { LoginResponse } from '../models/auth/login-response';
+import { ApiResponse } from '../models/shared/api-response';
 import { TokenService } from './token.service';
 import { CurrentUserService } from './current-user.service';
 import { tap } from 'rxjs/operators';

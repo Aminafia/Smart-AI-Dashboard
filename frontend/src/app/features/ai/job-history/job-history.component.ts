@@ -15,7 +15,7 @@ import { interval, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AIJobStatus } from '../../../core/models/ai/ai-job-status.model';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { PagedResponse } from '../../../core/models/paged-response.model';
+import { PagedResponse } from '../../../core/models/shared/paged-response.model';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 
 @Component({

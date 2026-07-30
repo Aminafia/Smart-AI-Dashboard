@@ -1,6 +1,6 @@
-namespace Application.Features.Documents.Commands.UploadDocument;
+namespace Application.Features.Documents.Models;
 
-public class UploadDocumentResponse
+public class DocumentResponse
 {
     public Guid Id { get; set; }
 

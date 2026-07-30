@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { LoginRequest } from '../../../core/models/login-request';
+import { LoginRequest } from '../../../core/models/auth/login-request';
 import { MatCardModule } from '@angular/material/card';
 
 @Component({

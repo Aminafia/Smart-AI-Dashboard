@@ -8,6 +8,7 @@ import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { GenerateComponent } from './features/ai/generate/generate.component';
 import { SummarizeComponent } from './features/ai/summarize/summarize.component';
 import { JobHistoryComponent } from './features/ai/job-history/job-history.component';
+import { DocumentListComponent } from './features/documents/pages/document-list/document-list.component';
 
 export const routes: Routes = [
   {
@@ -26,6 +27,7 @@ export const routes: Routes = [
       { path: 'ai/generate', component: GenerateComponent },
       { path: 'summarize', component: SummarizeComponent },
       { path: 'ai/jobs', component: JobHistoryComponent },
+      { path: 'documents', component: DocumentListComponent },
       //Add paths here
       
       { path: '**', redirectTo: 'dashboard' }

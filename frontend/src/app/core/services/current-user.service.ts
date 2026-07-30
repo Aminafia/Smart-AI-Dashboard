@@ -2,9 +2,9 @@ import { Injectable, signal, computed } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 
 import { TokenService } from './token.service';
-import { CurrentUser } from '../models/current-user';
+import { CurrentUser } from '../models/auth/current-user';
 import { JwtClaims } from '../constants/jwt-claims';
-import { JwtPayload } from '../models/jwt-payload';
+import { AppJwtPayload } from '../models/auth/jwt-payload';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +33,7 @@ export class CurrentUserService {
       return;
     }
 
-    const decoded = jwtDecode<JwtPayload>(token);
+    const decoded = jwtDecode<AppJwtPayload>(token);
 
     this._currentUser.set({
       userId: decoded[JwtClaims.UserId],

@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 
-import { ConfirmationDialogData } from '../../../core/models/confirmation-dialog-data';
+import { ConfirmationDialogData } from '../../../core/models/shared/confirmation-dialog-data';
 
 @Component({
   selector: 'app-confirmation-dialog',

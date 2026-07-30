@@ -4,13 +4,13 @@ using Core.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Services;
+namespace Infrastructure.Repositories;
 
-public class DocumentStore : IDocumentStore
+public class DocumentRepository : IDocumentRepository
 {
     private readonly AppDbContext _dbContext;
 
-    public DocumentStore(AppDbContext dbContext)
+    public DocumentRepository(AppDbContext dbContext)
     {
         _dbContext = dbContext;
     }
@@ -27,7 +27,7 @@ public class DocumentStore : IDocumentStore
             .FirstOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<PagedResponse<Document>> GetDocumentsAsync(int page, int pageSize)
+    public async Task<PagedResponse<Document>> GetPagedAsync(int page, int pageSize)
     {
         var query = _dbContext.Documents
             .OrderByDescending(x => x.UploadedAt);
@@ -48,13 +48,8 @@ public class DocumentStore : IDocumentStore
         };
     }
 
-    public async Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(Document document)
     {
-        var document = await GetByIdAsync(id);
-
-        if (document == null)
-            return;
-
         _dbContext.Documents.Remove(document);
 
         await _dbContext.SaveChangesAsync();

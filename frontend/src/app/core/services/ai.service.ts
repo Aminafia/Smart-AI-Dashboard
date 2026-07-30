@@ -12,9 +12,9 @@ import { GenerateResponse } from '../models/ai/generate-response.model';
 import { SummarizeRequest } from '../models/ai/summarize-request.model';
 import { SummarizeResponse } from '../models/ai/summarize-response.model';
 import { JobStatusResponse } from '../models/ai/job-status-response.model';
-import { ApiResponse } from '../models/api-response';
+import { ApiResponse } from '../models/shared/api-response';
 import { AIJob } from '../models/ai/ai-job.model';
-import { PagedResponse } from '../models/paged-response.model';
+import { PagedResponse } from '../models/shared/paged-response.model';
 @Injectable({
   providedIn: 'root'
 })

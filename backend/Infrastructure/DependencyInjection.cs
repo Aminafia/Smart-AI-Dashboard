@@ -52,7 +52,7 @@ public static class DependencyInjection
         services.AddSingleton<IAIQueue, AIQueue>();
         services.AddScoped<IAIJobStore, AIJobStore>();
         
-        services.AddScoped<IDocumentStore, DocumentStore>();
+        services.AddScoped<IDocumentRepository, DocumentRepository>();
 
         // Background Worker
         services.AddHostedService<AIWorker>();

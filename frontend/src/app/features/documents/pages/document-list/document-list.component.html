@@ -1,0 +1,77 @@
+<app-page-header
+    title="Documents"
+    subtitle="Manage uploaded documents">
+    <div class="flex gap-2">
+        <button mat-stroked-button (click)="loadDocuments()">
+            <mat-icon>refresh</mat-icon>
+            Refresh
+        </button>
+        <button mat-flat-button color="primary" (click)="fileInput.click()">
+            <mat-icon>upload</mat-icon>
+            Upload
+        </button>
+    </div>
+</app-page-header>
+
+<input #fileInput type="file" hidden accept=".pdf,.doc,.docx,.txt" (change)="uploadDocument($event)">
+
+<app-page-card>
+    @if(documents.length > 0){
+    <table mat-table [dataSource]="documents">
+
+        <ng-container matColumnDef="fileName">
+            <th mat-header-cell *matHeaderCellDef>File Name</th>
+            <td mat-cell *matCellDef="let document">
+                {{ document.fileName }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="contentType">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let document">
+                {{ getFileType(document.contentType) }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fileSize">
+            <th mat-header-cell *matHeaderCellDef>Size</th>
+            <td mat-cell *matCellDef="let document">
+                {{ formatFileSize(document.fileSize) }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="uploadedAt">
+            <th mat-header-cell *matHeaderCellDef>Uploaded</th>
+            <td mat-cell *matCellDef="let document">
+                {{ document.uploadedAt | date:'medium' }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let document">
+                <button mat-icon-button (click)="downloadDocument(document)">
+                    <mat-icon>download</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteDocument(document)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+
+    <mat-paginator
+        [length]="totalCount"
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[5,10,20]"
+        (page)="onPageChange($event)">
+    </mat-paginator>
+
+    } @else {
+        <app-empty-state icon="description" title="No documents" message="Upload your first document."></app-empty-state>
+    }
+</app-page-card>
