@@ -1,5 +1,5 @@
-using Application.Interfaces;
 using Application.Features.Documents.Models;
+using Application.Interfaces;
 using Core.Entities;
 using MediatR;
 
@@ -13,38 +13,54 @@ public class UploadDocumentCommandHandler
 
     public UploadDocumentCommandHandler(
         IDocumentStorage documentStorage,
-    IDocumentRepository documentRepository)
+        IDocumentRepository documentRepository)
     {
-      _documentStorage = documentStorage;
-      _documentRepository = documentRepository;
+        _documentStorage = documentStorage;
+        _documentRepository = documentRepository;
     }
 
     public async Task<DocumentResponse> Handle(
         UploadDocumentCommand request,
         CancellationToken cancellationToken)
     {
-        var storedFileName = await _documentStorage.SaveAsync(request.Document);
+        var storedFileName =
+            await _documentStorage.SaveAsync(
+                request.Document,
+                cancellationToken);
 
-        var document = new Document
+        try
         {
-            Id = Guid.NewGuid(),
-            FileName = request.Document.FileName,
-            StoredFileName = storedFileName,
-            StoragePath = storedFileName,
-            ContentType = request.Document.ContentType,
-            FileSize = request.Document.Content.Length,
-            UploadedAt = DateTime.UtcNow
-        };
+            var document = new Document
+            {
+                Id = Guid.NewGuid(),
+                FileName = request.Document.FileName,
+                StoredFileName = storedFileName,
+                StoragePath = storedFileName,
+                ContentType = request.Document.ContentType,
+                FileSize = request.Document.Content.Length,
+                UploadedAt = DateTime.UtcNow
+            };
 
-        await _documentRepository.AddAsync(document);
+            await _documentRepository.AddAsync(
+                document,
+                cancellationToken);
 
-        return new DocumentResponse
+            return new DocumentResponse
+            {
+                Id = document.Id,
+                FileName = document.FileName,
+                ContentType = document.ContentType,
+                FileSize = document.FileSize,
+                UploadedAt = document.UploadedAt
+            };
+        }
+        catch
         {
-            Id = document.Id,
-            FileName = document.FileName,
-            ContentType = document.ContentType,
-            FileSize = document.FileSize,
-            UploadedAt = document.UploadedAt
-        };
+            await _documentStorage.DeleteAsync(
+                storedFileName,
+                CancellationToken.None);
+
+            throw;
+        }
     }
 }

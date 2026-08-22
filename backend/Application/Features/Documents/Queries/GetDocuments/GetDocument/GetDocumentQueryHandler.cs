@@ -22,14 +22,18 @@ public class GetDocumentQueryHandler
         GetDocumentQuery request,
         CancellationToken cancellationToken)
     {
-        var document = await _documentRepository.GetByIdAsync(request.Id);
+        var document = await _documentRepository.GetByIdAsync(
+            request.Id,
+            cancellationToken);
 
         if (document == null)
         {
             throw new NotFoundException("Document not found.");
         }
 
-        var stream = await _documentStorage.OpenReadAsync(document.StoragePath);
+        var stream = await _documentStorage.OpenReadAsync(
+            document.StoragePath,
+            cancellationToken);
 
         return new GetDocumentResult
         {

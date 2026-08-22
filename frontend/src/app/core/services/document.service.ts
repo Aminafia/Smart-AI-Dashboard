@@ -6,6 +6,7 @@ import { environment } from '../../../environments/environment';
 
 import { DocumentModel } from '../models/documents/document.model';
 import { PagedResponse } from '../models/shared/paged-response.model';
+import { DocumentContentResponse } from '../models/documents/document-content-response.model';
 
 @Injectable({
     providedIn: 'root'
@@ -16,22 +17,19 @@ export class DocumentService {
 
     constructor(private readonly http: HttpClient) { }
 
-    upload(file: File): Observable<DocumentModel> 
-    {
+    upload(file: File): Observable<DocumentModel> {
         const formData = new FormData();
         formData.append('file', file);
 
         return this.http.post<DocumentModel>(this.apiUrl, formData);
     }
 
-    getDocuments(page: number, pageSize: number): Observable<PagedResponse<DocumentModel>> 
-    {
+    getDocuments(page: number, pageSize: number): Observable<PagedResponse<DocumentModel>> {
         return this.http.get<PagedResponse<DocumentModel>>(
             `${this.apiUrl}?page=${page}&pageSize=${pageSize}`);
     }
 
-    download(id: string): Observable<Blob> 
-    {
+    download(id: string): Observable<Blob> {
         return this.http.get(
             `${this.apiUrl}/${id}`,
             {
@@ -39,9 +37,21 @@ export class DocumentService {
             });
     }
 
-    delete(id: string): Observable<void> 
-    {
+    delete(id: string): Observable<void> {
         return this.http.delete<void>(
             `${this.apiUrl}/${id}`);
+    }
+
+    extract(id: string): Observable<void> {
+        return this.http.post<void>(
+            `${this.apiUrl}/${id}/extract`,
+            null
+        );
+    }
+
+    getContent(id: string): Observable<DocumentContentResponse> {
+        return this.http.get<DocumentContentResponse>(
+            `${this.apiUrl}/${id}/content`
+        );
     }
 }

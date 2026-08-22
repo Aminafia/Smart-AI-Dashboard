@@ -1,10 +1,12 @@
-using Application.DTOs.Documents;
-using Application.Features.Documents.Commands.UploadDocument;
-using Application.Features.Documents.Queries.GetDocuments;
-using Application.Features.Documents.Queries.GetDocument;
-using Application.Features.Documents.Models;
-using Application.Features.Documents.Commands.DeleteDocument;
 using Application.Common.Models;
+using Application.DTOs.Documents;
+using Application.Features.Documents.Commands.DeleteDocument;
+using Application.Features.Documents.Commands.UploadDocument;
+using Application.Features.Documents.Models;
+using Application.Features.Documents.Queries.GetDocument;
+using Application.Features.Documents.Queries.GetDocuments;
+using Application.Features.Documents.Commands.ExtractDocument;
+using Application.Features.Documents.Queries.GetDocumentContent;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,12 +23,12 @@ public class DocumentsController : ControllerBase
         _mediator = mediator;
     }
 
-
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<DocumentResponse>> Upload(
-        IFormFile file)
+        IFormFile file,
+        CancellationToken cancellationToken)
     {
         if (file == null || file.Length == 0)
         {
@@ -45,32 +47,72 @@ public class DocumentsController : ControllerBase
             }
         };
 
-        var response = await _mediator.Send(command);
+        var response = await _mediator.Send(
+            command,
+            cancellationToken);
 
         return Ok(response);
     }
 
 
-    [HttpGet]
+    [HttpPost("{id:guid}/extract")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<PagedResponse<DocumentResponse>>> GetDocuments(
-    [FromQuery] GetDocumentsQuery query)
+    public async Task<IActionResult> ExtractDocument(Guid id, CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(query);
+        await _mediator.Send(
+            new ExtractDocumentCommand
+            {
+                DocumentId = id
+            },
+            cancellationToken);
+
+        return NoContent();
+    }
+
+    [HttpGet("{id:guid}/content")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<DocumentContentResponse>> GetDocumentContent(
+    Guid id,
+    CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(
+            new GetDocumentContentQuery
+            {
+                DocumentId = id
+            },
+            cancellationToken);
+
+        return Ok(response);
+    }
+
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<PagedResponse<DocumentResponse>>> GetDocuments(
+        [FromQuery] GetDocumentsQuery query,
+        CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(
+            query,
+            cancellationToken);
 
         return Ok(response);
     }
 
     [HttpGet("{id:guid}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetDocument(Guid id)
+    public async Task<IActionResult> GetDocument(
+        Guid id,
+        CancellationToken cancellationToken)
     {
-        var document = await _mediator.Send(new GetDocumentQuery
-        {
-            Id = id
-        });
+        var document = await _mediator.Send(
+            new GetDocumentQuery
+            {
+                Id = id
+            },
+            cancellationToken);
 
         return File(
             document.Content,
@@ -81,12 +123,16 @@ public class DocumentsController : ControllerBase
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteDocument(Guid id)
+    public async Task<IActionResult> DeleteDocument(
+        Guid id,
+        CancellationToken cancellationToken)
     {
-        await _mediator.Send(new DeleteDocumentCommand
-        {
-            Id = id
-        });
+        await _mediator.Send(
+            new DeleteDocumentCommand
+            {
+                Id = id
+            },
+            cancellationToken);
 
         return NoContent();
     }

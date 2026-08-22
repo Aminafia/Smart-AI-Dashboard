@@ -1,3 +1,13 @@
+/*
+Purpose of LoginComponent:
+ - Collect user input through a form 
+ - Validate input 
+ - Ask AuthService to login
+ - React to success or failure of login
+    * Navigate to dashboard on success
+    * Display error message on failure
+*/
+
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';

@@ -13,7 +13,7 @@ public class LocalDocumentStorage : IDocumentStorage
         Directory.CreateDirectory(_documentsPath);
     }
 
-    public async Task<string> SaveAsync(DocumentUpload document)
+    public async Task<string> SaveAsync(DocumentUpload document, CancellationToken cancellationToken)
     {
         var storedFileName = $"{Guid.NewGuid()}{Path.GetExtension(document.FileName)}";
 
@@ -21,13 +21,14 @@ public class LocalDocumentStorage : IDocumentStorage
 
         await using var stream = new FileStream(fullPath, FileMode.Create, FileAccess.Write);
 
-        await document.Content.CopyToAsync(stream);
+        await document.Content.CopyToAsync(stream, cancellationToken);
 
         return storedFileName;
     }
 
-    public Task DeleteAsync(string storagePath)
+    public Task DeleteAsync(string storagePath, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var fullPath = Path.Combine(_documentsPath, storagePath);
 
         if (File.Exists(fullPath)) {
@@ -36,8 +37,9 @@ public class LocalDocumentStorage : IDocumentStorage
         return Task.CompletedTask;
     }
 
-    public Task<Stream> OpenReadAsync(string storagePath)
+    public Task<Stream> OpenReadAsync(string storagePath, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var fullPath = Path.Combine(_documentsPath, storagePath);
 
         Stream stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read);

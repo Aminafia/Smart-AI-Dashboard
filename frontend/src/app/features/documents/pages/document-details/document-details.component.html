@@ -1,0 +1,74 @@
+<app-page-header [title]="document?.fileName ?? 'Document'" subtitle="Document details and extracted content">
+
+    <div class="flex gap-2">
+        <button mat-stroked-button (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+            Back
+        </button>
+        <button mat-stroked-button (click)="downloadDocument()" [disabled]="!document">
+            <mat-icon>download</mat-icon>
+            Download
+        </button>
+        <button mat-flat-button color="primary" (click)="extractDocument()" [disabled]="extracting || !document">
+            <mat-icon>text_snippet</mat-icon>
+            {{ extracting ? 'Extracting...' : 'Extract Text' }}
+        </button>
+    </div>
+
+</app-page-header>
+
+
+<app-page-card>
+
+    @if (document) {
+    <div class="document-info">
+        <div>
+            <span class="label">File name</span>
+            <span>{{ document.fileName }}</span>
+        </div>
+        <div>
+            <span class="label">Type</span>
+            <span>{{ document.contentType }}</span>
+        </div>
+        <div>
+            <span class="label">Size</span>
+            <span>{{ document.fileSize }} bytes</span>
+        </div>
+        <div>
+            <span class="label">Uploaded</span>
+            <span>{{ document.uploadedAt | date:'medium' }}</span>
+        </div>
+    </div>
+    }
+
+</app-page-card>
+
+
+<app-page-card>
+
+    <div class="content-header">
+        <div>
+            <h2>Extracted Content</h2>
+            @if (content) { <p>Extracted {{ content.extractedAt | date:'medium' }}</p> }
+        </div>
+    </div>
+
+    @if (loadingContent) {
+    <div class="empty-content">
+        Loading extracted content...
+    </div> }
+    @else if (content) {
+    <pre class="extracted-text">{{ content.extractedText }}</pre> }
+    @else {
+    <div class="empty-content">
+        <mat-icon>text_snippet</mat-icon>
+        <h3>No extracted content</h3>
+        <p>Extract text from this document to make its contents available for AI processing.</p>
+        <button mat-flat-button color="primary" (click)="extractDocument()" [disabled]="extracting">
+            <mat-icon>text_snippet</mat-icon>
+            Extract Text
+        </button>
+    </div>
+    }
+
+</app-page-card>

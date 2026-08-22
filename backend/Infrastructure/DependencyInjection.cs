@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Infrastructure.DocumentProcessing;
 using Polly;
 
 namespace Infrastructure;
@@ -32,6 +33,13 @@ public static class DependencyInjection
         // Storage
         services.AddScoped<IDocumentStorage, LocalDocumentStorage>();
 
+        // Document Processing
+        services.AddScoped<IDocumentTextExtractor, PdfTextExtractor>();
+
+        // Document Repositories
+        services.AddScoped<IDocumentRepository, DocumentRepository>();
+        services.AddScoped<IDocumentContentRepository, DocumentContentRepository>();
+
         // AI Services 
         services.AddScoped<IAIProvider, GeminiProvider>();
         services.AddScoped<IAIService, AiService>();
@@ -51,8 +59,6 @@ public static class DependencyInjection
         // Queue + Job Store
         services.AddSingleton<IAIQueue, AIQueue>();
         services.AddScoped<IAIJobStore, AIJobStore>();
-        
-        services.AddScoped<IDocumentRepository, DocumentRepository>();
 
         // Background Worker
         services.AddHostedService<AIWorker>();

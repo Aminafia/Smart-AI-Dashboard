@@ -1,0 +1,56 @@
+.document-info {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.document-info > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 600;
+  opacity: 0.65;
+  text-transform: uppercase;
+}
+
+.content-header {
+  margin-bottom: 16px;
+}
+
+.content-header h2 {
+  margin: 0;
+}
+
+.content-header p {
+  margin: 4px 0 0;
+  opacity: 0.65;
+}
+
+.extracted-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: inherit;
+  line-height: 1.7;
+  margin: 0;
+  max-height: 700px;
+  overflow-y: auto;
+}
+
+.empty-content {
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 12px;
+}
+
+.empty-content h3,
+.empty-content p {
+  margin: 0;
+}

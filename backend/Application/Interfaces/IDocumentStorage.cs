@@ -4,7 +4,7 @@ namespace Application.Interfaces;
 
 public interface IDocumentStorage
 {
-    Task<string> SaveAsync(DocumentUpload document);
-    Task DeleteAsync(string storagePath);
-    Task<Stream> OpenReadAsync(string storagePath);
+    Task<string> SaveAsync(DocumentUpload document, CancellationToken cancellationToken);
+    Task DeleteAsync(string storagePath, CancellationToken cancellationToken);
+    Task<Stream> OpenReadAsync(string storagePath, CancellationToken cancellationToken);
 }

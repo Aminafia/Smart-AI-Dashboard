@@ -10,7 +10,8 @@ public class GetDocumentsQueryHandler
 {
     private readonly IDocumentRepository _documentRepository;
 
-    public GetDocumentsQueryHandler(IDocumentRepository documentRepository)
+    public GetDocumentsQueryHandler(
+        IDocumentRepository documentRepository)
     {
         _documentRepository = documentRepository;
     }
@@ -21,18 +22,21 @@ public class GetDocumentsQueryHandler
     {
         var documents = await _documentRepository.GetPagedAsync(
             request.Page,
-            request.PageSize);
+            request.PageSize,
+            cancellationToken);
 
         return new PagedResponse<DocumentResponse>
         {
-            Items = documents.Items.Select(d => new DocumentResponse
-            {
-                Id = d.Id,
-                FileName = d.FileName,
-                ContentType = d.ContentType,
-                FileSize = d.FileSize,
-                UploadedAt = d.UploadedAt
-            }).ToList(),
+            Items = documents.Items
+                .Select(d => new DocumentResponse
+                {
+                    Id = d.Id,
+                    FileName = d.FileName,
+                    ContentType = d.ContentType,
+                    FileSize = d.FileSize,
+                    UploadedAt = d.UploadedAt
+                })
+                .ToList(),
 
             Page = documents.Page,
             PageSize = documents.PageSize,

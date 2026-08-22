@@ -1,31 +1,39 @@
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Data
+namespace Infrastructure.Data;
+
+public class AppDbContext : DbContext
 {
-    public class AppDbContext : DbContext
+    public AppDbContext(DbContextOptions<AppDbContext> options)
+        : base(options)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options)
-            : base(options)
-        {
-        }
+    }
 
-        public DbSet<User> Users { get; set; } = null!;
-        public DbSet<AIJob> AIJobs { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = null!;
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<AIJob>()
-                .Property(x => x.JobType)
-                .HasConversion<string>();
+    public DbSet<AIJob> AIJobs { get; set; } = null!;
 
-            modelBuilder.Entity<AIJob>()
-                .Property(x => x.Status)
-                .HasConversion<string>();
+    public DbSet<Document> Documents => Set<Document>();
 
-            base.OnModelCreating(modelBuilder);
-        }
+    public DbSet<DocumentContent> DocumentContents => Set<DocumentContent>();
 
-        public DbSet<Document> Documents => Set<Document>();
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<AIJob>()
+            .Property(x => x.JobType)
+            .HasConversion<string>();
+
+        modelBuilder.Entity<AIJob>()
+            .Property(x => x.Status)
+            .HasConversion<string>();
+
+        modelBuilder.Entity<DocumentContent>()
+            .HasOne(x => x.Document)
+            .WithOne()
+            .HasForeignKey<DocumentContent>(x => x.DocumentId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        base.OnModelCreating(modelBuilder);
     }
 }

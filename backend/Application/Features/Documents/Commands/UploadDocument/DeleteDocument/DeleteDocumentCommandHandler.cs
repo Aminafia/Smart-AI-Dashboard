@@ -22,15 +22,21 @@ public class DeleteDocumentCommandHandler
         DeleteDocumentCommand request,
         CancellationToken cancellationToken)
     {
-        var document = await _documentRepository.GetByIdAsync(request.Id);
+        var document = await _documentRepository.GetByIdAsync(
+            request.Id,
+            cancellationToken);
 
         if (document == null)
         {
             throw new NotFoundException("Document not found.");
         }
 
-        await _documentStorage.DeleteAsync(document.StoragePath);
+        await _documentStorage.DeleteAsync(
+            document.StoragePath,
+            cancellationToken);
 
-        await _documentRepository.DeleteAsync(document);
+        await _documentRepository.DeleteAsync(
+            document,
+            cancellationToken);
     }
 }

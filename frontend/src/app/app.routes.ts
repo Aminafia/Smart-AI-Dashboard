@@ -9,6 +9,7 @@ import { GenerateComponent } from './features/ai/generate/generate.component';
 import { SummarizeComponent } from './features/ai/summarize/summarize.component';
 import { JobHistoryComponent } from './features/ai/job-history/job-history.component';
 import { DocumentListComponent } from './features/documents/pages/document-list/document-list.component';
+import { DocumentDetailsComponent } from './features/documents/pages/document-details/document-details.component';  
 
 export const routes: Routes = [
   {
@@ -28,6 +29,7 @@ export const routes: Routes = [
       { path: 'summarize', component: SummarizeComponent },
       { path: 'ai/jobs', component: JobHistoryComponent },
       { path: 'documents', component: DocumentListComponent },
+      { path: 'documents/:id', component: DocumentDetailsComponent },
       //Add paths here
       
       { path: '**', redirectTo: 'dashboard' }

@@ -5,11 +5,11 @@ namespace Application.Interfaces;
 
 public interface IDocumentRepository
 {
-    Task AddAsync(Document document);
+    Task AddAsync(Document document, CancellationToken cancellationToken);
 
-    Task<Document?> GetByIdAsync(Guid id);
+    Task<Document?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-    Task<PagedResponse<Document>> GetPagedAsync(int page, int pageSize);
+    Task<PagedResponse<Document>> GetPagedAsync(int page, int pageSize, CancellationToken cancellationToken);
 
-    Task DeleteAsync(Document document);
+    Task DeleteAsync(Document document, CancellationToken cancellationToken);
 }

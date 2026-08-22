@@ -15,29 +15,29 @@ public class DocumentRepository : IDocumentRepository
         _dbContext = dbContext;
     }
 
-    public async Task AddAsync(Document document)
+    public async Task AddAsync(Document document, CancellationToken cancellationToken)
     {
         _dbContext.Documents.Add(document);
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<Document?> GetByIdAsync(Guid id)
+    public async Task<Document?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _dbContext.Documents
-            .FirstOrDefaultAsync(x => x.Id == id);
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
-    public async Task<PagedResponse<Document>> GetPagedAsync(int page, int pageSize)
+    public async Task<PagedResponse<Document>> GetPagedAsync(int page, int pageSize, CancellationToken cancellationToken)
     {
         var query = _dbContext.Documents
             .OrderByDescending(x => x.UploadedAt);
 
-        var totalCount = await query.CountAsync();
+        var totalCount = await query.CountAsync(cancellationToken);
 
         var items = await query
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         return new PagedResponse<Document>
         {
@@ -48,10 +48,10 @@ public class DocumentRepository : IDocumentRepository
         };
     }
 
-    public async Task DeleteAsync(Document document)
+    public async Task DeleteAsync(Document document, CancellationToken cancellationToken)
     {
         _dbContext.Documents.Remove(document);
 
-        await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }
