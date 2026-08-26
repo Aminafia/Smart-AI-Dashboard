@@ -29,6 +29,10 @@ export class DocumentService {
             `${this.apiUrl}?page=${page}&pageSize=${pageSize}`);
     }
 
+    getDocument(id: string): Observable<DocumentModel> {
+        return this.http.get<DocumentModel>(`${this.apiUrl}/${id}`);
+    }
+
     download(id: string): Observable<Blob> {
         return this.http.get(
             `${this.apiUrl}/${id}`,
