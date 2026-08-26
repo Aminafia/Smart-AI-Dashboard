@@ -54,26 +54,15 @@ export class DocumentDetailsComponent implements OnInit {
     }
 
     this.documentService
-      .getDocuments(1, 100)
+      .getDocument(id)
       .subscribe({
-        next: response => {
-          const document = response.items.find(
-            item => item.id === id
-          );
-
-          if (!document) {
-            this.snackbarService.error('Document not found.');
-            this.router.navigate(['/documents']);
-            return;
-          }
-
+        next: document => {
           this.document = document;
           this.loadContent(id);
         },
         error: () => {
-          this.snackbarService.error(
-            'Unable to load document.'
-          );
+          this.snackbarService.error('Unable to load document.');
+          this.router.navigate(['/documents']);
         }
       });
   }
@@ -97,7 +86,8 @@ export class DocumentDetailsComponent implements OnInit {
 
   extractDocument(): void {
     if (!this.document) {
-      return;}
+      return;
+    }
 
     this.extracting = true;
 
@@ -109,28 +99,36 @@ export class DocumentDetailsComponent implements OnInit {
           this.snackbarService.success('Document text extracted successfully.');
           this.loadContent(this.document!.id);
         },
-        error: () => { this.extracting = false; }
+        error: () => {
+          this.extracting = false;
+          this.snackbarService.error('Unable to extract document text.');
+        }
       });
   }
 
   downloadDocument(): void {
     if (!this.document) {
-      return; }
+      return;
+    }
 
     this.documentService
       .download(this.document.id)
-      .subscribe(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = this.document!.fileName;
-        link.click();
-        window.URL.revokeObjectURL(url);
+      .subscribe({
+        next: blob => {
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = this.document!.fileName;
+          link.click();
+          window.URL.revokeObjectURL(url);
+        },
+        error: () => {
+          this.snackbarService.error('Unable to download document.');
+        }
       });
   }
 
   goBack(): void {
     this.router.navigate(['/documents']);
   }
-  
 }
