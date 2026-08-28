@@ -23,44 +23,33 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        // Database
+        services.AddHttpContextAccessor();
+
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
-        // Repositories
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-        // Storage
         services.AddScoped<IDocumentStorage, LocalDocumentStorage>();
-
-        // Document Processing
         services.AddScoped<IDocumentTextExtractor, PdfTextExtractor>();
 
-        // Document Repositories
         services.AddScoped<IDocumentRepository, DocumentRepository>();
         services.AddScoped<IDocumentContentRepository, DocumentContentRepository>();
 
-        // AI Services 
         services.AddScoped<IAIProvider, GeminiProvider>();
         services.AddScoped<IAIService, AiService>();
 
-        // Authentication
         services.AddScoped<IJwtTokenService, JwtTokenService>();
-
-        // Caching
         services.AddScoped<ICacheService, CacheService>();
 
-        // Resilience
         services.AddHttpClient("AIClient")
             .AddPolicyHandler(AIResiliencePolicy.GetRetryPolicy())
             .AddPolicyHandler(AIResiliencePolicy.GetCircuitBreakerPolicy())
             .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(60));
 
-        // Queue + Job Store
         services.AddSingleton<IAIQueue, AIQueue>();
         services.AddScoped<IAIJobStore, AIJobStore>();
-
-        // Background Worker
         services.AddHostedService<AIWorker>();
 
         return services;
