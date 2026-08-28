@@ -23,9 +23,9 @@ public partial class AddOwnership : Migration
         migrationBuilder.CreateIndex("IX_AIJobs_UserId_CreatedAt", "AIJobs", new[] { "UserId", "CreatedAt" });
         migrationBuilder.CreateIndex("IX_AIJobs_DocumentId", "AIJobs", "DocumentId");
 
-        migrationBuilder.AddForeignKey("FK_Documents_Users_UserId", "Documents", "UserId", "Users", "Id", ReferentialAction.Cascade);
-        migrationBuilder.AddForeignKey("FK_AIJobs_Users_UserId", "AIJobs", "UserId", "Users", "Id", ReferentialAction.Cascade);
-        migrationBuilder.AddForeignKey("FK_AIJobs_Documents_DocumentId", "AIJobs", "DocumentId", "Documents", "Id", ReferentialAction.SetNull);
+        migrationBuilder.AddForeignKey("FK_Documents_Users_UserId", "Documents", "UserId", "Users", "Id", onDelete: ReferentialAction.Cascade);
+        migrationBuilder.AddForeignKey("FK_AIJobs_Users_UserId", "AIJobs", "UserId", "Users", "Id", onDelete: ReferentialAction.Cascade);
+        migrationBuilder.AddForeignKey("FK_AIJobs_Documents_DocumentId", "AIJobs", "DocumentId", "Documents", "Id", onDelete: ReferentialAction.SetNull);
     }
 
     protected override void Down(MigrationBuilder migrationBuilder)
