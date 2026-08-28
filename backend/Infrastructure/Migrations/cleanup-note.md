@@ -1,0 +1,1 @@
+Do not use the former hand-written ownership migration. Generate it with EF Core tooling.
