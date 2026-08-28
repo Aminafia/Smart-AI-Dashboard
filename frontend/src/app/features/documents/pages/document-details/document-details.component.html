@@ -1,4 +1,4 @@
-<app-page-header [title]="document?.fileName ?? 'Document'" subtitle="Document details and extracted content">
+<app-page-header [title]="document?.fileName ?? 'Document'" subtitle="Document details and AI processing">
 
     <div class="flex gap-2">
         <button mat-stroked-button (click)="goBack()">
@@ -9,17 +9,20 @@
             <mat-icon>download</mat-icon>
             Download
         </button>
-        <button mat-flat-button color="primary" (click)="extractDocument()" [disabled]="extracting || !document">
+        <button mat-stroked-button (click)="extractDocument()" [disabled]="extracting || !document">
             <mat-icon>text_snippet</mat-icon>
             {{ extracting ? 'Extracting...' : 'Extract Text' }}
+        </button>
+        <button mat-flat-button color="primary" (click)="summarizeDocument()"
+            [disabled]="summarizing || !content?.extractedText">
+            <mat-icon>auto_awesome</mat-icon>
+            {{ summarizing ? 'Summarizing...' : 'Summarize Document' }}
         </button>
     </div>
 
 </app-page-header>
 
-
 <app-page-card>
-
     @if (document) {
     <div class="document-info">
         <div>
@@ -40,12 +43,9 @@
         </div>
     </div>
     }
-
 </app-page-card>
 
-
 <app-page-card>
-
     <div class="content-header">
         <div>
             <h2>Extracted Content</h2>
@@ -54,21 +54,30 @@
     </div>
 
     @if (loadingContent) {
-    <div class="empty-content">
-        Loading extracted content...
-    </div> }
-    @else if (content) {
-    <pre class="extracted-text">{{ content.extractedText }}</pre> }
-    @else {
+    <div class="empty-content">Loading extracted content...</div>
+    } @else if (content) {
+    <pre class="extracted-text">{{ content.extractedText }}</pre>
+    } @else {
     <div class="empty-content">
         <mat-icon>text_snippet</mat-icon>
         <h3>No extracted content</h3>
-        <p>Extract text from this document to make its contents available for AI processing.</p>
+        <p>Extract text from this document before using AI features.</p>
         <button mat-flat-button color="primary" (click)="extractDocument()" [disabled]="extracting">
             <mat-icon>text_snippet</mat-icon>
             Extract Text
         </button>
     </div>
     }
-
 </app-page-card>
+
+@if (summary) {
+<app-page-card>
+    <div class="content-header">
+        <div>
+            <h2>AI Summary</h2>
+            <p>Generated from the extracted document content</p>
+        </div>
+    </div>
+    <div class="summary-text">{{ summary }}</div>
+</app-page-card>
+}
