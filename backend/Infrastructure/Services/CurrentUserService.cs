@@ -20,9 +20,7 @@ public sealed class CurrentUserService : ICurrentUserService
             var value = _httpContextAccessor.HttpContext?.User
                 .FindFirstValue(ClaimTypes.NameIdentifier)
                 ?? _httpContextAccessor.HttpContext?.User
-                    .FindFirstValue(ClaimTypes.Name)
-                ?? _httpContextAccessor.HttpContext?.User
-                    .FindFirstValue(JwtRegisteredClaimNames.Sub);
+                    .FindFirstValue("sub");
 
             if (!Guid.TryParse(value, out var userId))
                 throw new UnauthorizedAccessException("Authenticated user id is missing.");
