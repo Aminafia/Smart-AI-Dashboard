@@ -1,70 +1,41 @@
 using API.Middlewares;
 using API.Extensions;
 using Application;
-using Core.Constants;
 using Infrastructure;
-using Infrastructure.Auth;
-using Infrastructure.Resilience;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.IdentityModel.Tokens;
-using Polly;
 using Serilog;
 using Serilog.Formatting.Compact;
-using Serilog.Enrichers;
-using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Configuration means external values the application needs to run. Such as database connection string, JWT secret key, Redis URL, API keys, OpenAI key, ports, environment settings.
-// We use COnfiguration because these values change between environments, should NOT be hardcoded, may contain sensitive data.
-// Example: Development → localhost DB, Production → cloud PostgreSQL DB
-// appsettings.json is the main application configuration file. 
 var configuration = builder.Configuration;
 
-var dbconnectionString = configuration.GetConnectionString("DefaultConnection");
-if (string.IsNullOrEmpty(dbconnectionString))
-{
+var dbConnectionString = configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrWhiteSpace(dbConnectionString))
     throw new InvalidOperationException("Database connection string is not configured.");
-}
-
-// ----------------------
-// Logging (Serilog)
-// ----------------------
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .Enrich.FromLogContext()
     .Enrich.WithMachineName()
     .Enrich.WithThreadId()
-    .WriteTo.Console(
-        outputTemplate:
+    .WriteTo.Console(outputTemplate:
         "[{Timestamp:HH:mm:ss} {Level:u3}] " +
         "[CorrelationId: {CorrelationId}] " +
         "[Machine: {MachineName}] " +
         "{Message:lj}{NewLine}{Exception}")
     .WriteTo.File(
-        formatter: new Serilog.Formatting.Compact.RenderedCompactJsonFormatter(),
+        formatter: new RenderedCompactJsonFormatter(),
         path: "logs/log-.json",
         rollingInterval: RollingInterval.Day)
     .CreateLogger();
 builder.Host.UseSerilog();
 
-// ----------------------
-// Core Services
-// ----------------------
 builder.Services.AddControllers()
-                .AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.Converters.Add(
-                        new JsonStringEnumConverter());
-                });
-                
-builder.Services.AddEndpointsApiExplorer(); // for enabling Swagger to discover endpoints
+    .AddJsonOptions(options =>
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
@@ -77,7 +48,6 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Enter: Bearer {your token}"
     });
 
-    // 
     options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
     {
         {
@@ -89,56 +59,35 @@ builder.Services.AddSwaggerGen(options =>
                     Id = "Bearer"
                 }
             },
-            new string[] {}
+            Array.Empty<string>()
         }
     });
 });
 
-// ----------------------
-// Application & Infrastructure
-// ----------------------
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(configuration);
+builder.Services.AddCustomHealthChecks(dbConnectionString);
+builder.Services.AddAuth(configuration);
 
-// ----------------------
-// Health Checks
-// ----------------------
-builder.Services.AddCustomHealthChecks(dbconnectionString);
-
-// ----------------------
-// Authentication & Authorization
-// ----------------------
-builder.Services.AddAuth(configuration); //customized
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AngularPolicy", policy =>
     {
-        policy
-            .WithOrigins("http://localhost:4200")
-            .AllowAnyHeader()
-            .AllowAnyMethod();
+        var origins = configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
+        policy.WithOrigins(origins).AllowAnyHeader().AllowAnyMethod();
     });
 });
 
-// ----------------------
-//  API Behavior
-// ----------------------
 builder.Services.Configure<ApiBehaviorOptions>(options =>
-{
-    options.SuppressModelStateInvalidFilter = true;
-});
+    options.SuppressModelStateInvalidFilter = true);
 
-// ----------------------
-// Caching (Redis)
-// ----------------------
+var redisConnection = configuration.GetConnectionString("Redis");
+if (string.IsNullOrWhiteSpace(redisConnection))
+    throw new InvalidOperationException("Redis connection string is not configured.");
+
 builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = "localhost:6379";
-});
+    options.Configuration = redisConnection);
 
-// ----------------------
-// Rate Limiting
-// ----------------------
 builder.Services.AddRateLimiter(options =>
 {
     options.AddConcurrencyLimiter("concurrency", opt =>
@@ -156,9 +105,6 @@ builder.Services.AddRateLimiter(options =>
 
 var app = builder.Build();
 
-// ----------------------
-// Middleware Pipeline
-// ----------------------
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -169,20 +115,12 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<RequestLoggingMiddleware>();
 
-// app.UseHttpsRedirection();
 app.UseCors("AngularPolicy");
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.UseRateLimiter();
 
-// ----------------------
-// Endpoints
-// ----------------------
-app.MapControllers()
-   .RequireRateLimiting("concurrency");
-
+app.MapControllers().RequireRateLimiting("concurrency");
 app.MapCustomHealthChecks();
 
 app.Run();
