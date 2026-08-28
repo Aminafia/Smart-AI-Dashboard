@@ -1,82 +1,42 @@
-/*
-SummarizeCommandHandler Working:
-1. Take SummarizeCommand from controller through MediatR
-2. Create new AIRequest with JobType=Summarize
-3. Call IAIService.ProcessAsync() with this AIRequest
-4. Convert AIProviderResponse -> AIOperationResponse 
-5. Return AIOperationResponse to controller
-*/
-
 using Application.DTOs.AI;
 using Application.Interfaces;
-using MediatR;
-using Core.Enums;
 using Core.Entities;
+using Core.Enums;
+using MediatR;
 
 namespace Application.Features.AI.Commands.Summarize;
 
-public class SummarizeCommandHandler
-    : IRequestHandler<SummarizeCommand, AIOperationResponse>
+public class SummarizeCommandHandler : IRequestHandler<SummarizeCommand, AIOperationResponse>
 {
     private readonly IAIService _aiService;
     private readonly IAIJobStore _jobStore;
+    private readonly ICurrentUserService _currentUser;
 
-    public SummarizeCommandHandler(IAIService aiService, IAIJobStore jobStore)
+    public SummarizeCommandHandler(IAIService aiService, IAIJobStore jobStore, ICurrentUserService currentUser)
     {
-        _aiService = aiService;
-        _jobStore = jobStore;
+        _aiService = aiService; _jobStore = jobStore; _currentUser = currentUser;
     }
 
     public async Task<AIOperationResponse> Handle(SummarizeCommand request, CancellationToken cancellationToken)
     {
-
         var job = new AIJob
         {
-            ProjectId = Guid.NewGuid(),
-            JobType = AIJobType.Summarize,
-            Prompt = request.Text,
-            Status = AIJobStatus.Processing,
-            CreatedAt = DateTime.UtcNow
+            UserId = _currentUser.UserId, ProjectId = Guid.NewGuid(), JobType = AIJobType.Summarize,
+            Prompt = request.Text, Status = AIJobStatus.Processing, CreatedAt = DateTime.UtcNow
         };
-
         await _jobStore.AddJobAsync(job);
 
         try
         {
-            var aiRequest = new AIRequest
-            {
-                Input = request.Text,
-                JobType = AIJobType.Summarize
-            };
-
-            var providerResponse = await _aiService.ProcessAsync(aiRequest);
-
-            job.Status = AIJobStatus.Completed;
-            job.Result = providerResponse.Output;
-            job.CompletedAt = DateTime.UtcNow;
-
+            var response = await _aiService.ProcessAsync(new AIRequest { Input = request.Text, JobType = AIJobType.Summarize });
+            job.Status = AIJobStatus.Completed; job.Result = response.Output; job.CompletedAt = DateTime.UtcNow;
             await _jobStore.UpdateJobAsync(job);
-
-            return new AIOperationResponse
-            {
-                JobId = job.Id,
-                Status = job.Status,
-                Output = providerResponse.Output,
-                IsFallback = providerResponse.IsFallback
-            };
+            return new AIOperationResponse { JobId = job.Id, Status = job.Status, Output = response.Output, IsFallback = response.IsFallback };
         }
-
         catch (Exception ex)
         {
-            job.Status = AIJobStatus.Failed;
-            job.Error = ex.Message;
-            job.CompletedAt = DateTime.UtcNow;
-
-            await _jobStore.UpdateJobAsync(job);
-
-            throw;
+            job.Status = AIJobStatus.Failed; job.Error = ex.Message; job.CompletedAt = DateTime.UtcNow;
+            await _jobStore.UpdateJobAsync(job); throw;
         }
-
-
     }
 }
