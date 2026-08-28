@@ -1,0 +1,1 @@
+The previous hand-written ownership migration was invalid. Regenerate the EF Core migration locally with: dotnet ef migrations add AddOwnership --project ..\Infrastructure --startup-project .
