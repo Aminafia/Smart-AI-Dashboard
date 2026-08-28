@@ -21,19 +21,19 @@ public class DocumentRepository : IDocumentRepository
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<Document?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<Document?> GetByIdAsync(Guid id, Guid userId, CancellationToken cancellationToken = default)
     {
         return await _dbContext.Documents
-            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId, cancellationToken);
     }
 
-    public async Task<PagedResponse<Document>> GetPagedAsync(int page, int pageSize, CancellationToken cancellationToken)
+    public async Task<PagedResponse<Document>> GetPagedAsync(int page, int pageSize, Guid userId, CancellationToken cancellationToken)
     {
         var query = _dbContext.Documents
+            .Where(x => x.UserId == userId)
             .OrderByDescending(x => x.UploadedAt);
 
         var totalCount = await query.CountAsync(cancellationToken);
-
         var items = await query
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
@@ -51,7 +51,6 @@ public class DocumentRepository : IDocumentRepository
     public async Task DeleteAsync(Document document, CancellationToken cancellationToken)
     {
         _dbContext.Documents.Remove(document);
-
         await _dbContext.SaveChangesAsync(cancellationToken);
     }
 }
