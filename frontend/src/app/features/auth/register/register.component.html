@@ -1,8 +1,6 @@
 <div class="login-page">
 
-  <!-- =====================================================
-       BRAND PANEL
-       ===================================================== -->
+  <!-- BRAND PANEL -->
 
   <section class="brand-panel">
 
@@ -22,13 +20,14 @@
         <span class="eyebrow">INTELLIGENT WORKSPACE</span>
 
         <h1>
-          One workspace.<br />
-          <span>Infinite possibilities.</span>
+          Start your<br />
+          <span>AI journey.</span>
         </h1>
 
         <p>
-          Explore AI-powered generation, document intelligence,
-          summarization and intelligent workflows from one unified platform.
+          Create your account and explore AI-powered generation,
+          document intelligence, summarization and intelligent
+          workflows from one unified platform.
         </p>
 
       </div>
@@ -82,8 +81,6 @@
     </div>
 
 
-    <!-- Decorative background elements -->
-
     <div class="brand-decoration decoration-one"></div>
     <div class="brand-decoration decoration-two"></div>
     <div class="brand-grid"></div>
@@ -91,15 +88,14 @@
   </section>
 
 
-  <!-- =====================================================
-       LOGIN PANEL
-       ===================================================== -->
+  <!-- REGISTER PANEL -->
 
   <section class="login-panel">
 
     <div class="login-wrapper">
 
       <!-- Mobile brand -->
+
       <div class="mobile-brand">
 
         <div class="mobile-logo">
@@ -116,15 +112,15 @@
       <div class="login-header">
 
         <span class="welcome-label">
-          WELCOME BACK
+          GET STARTED
         </span>
 
         <h2>
-          Login to your account
+          Create your account
         </h2>
 
         <p>
-          Enter your credentials to continue to your workspace.
+          Enter your details to create your Smart AI Dashboard account.
         </p>
 
       </div>
@@ -133,10 +129,42 @@
       <!-- Form -->
 
       <form
-        [formGroup]="loginForm"
-        (ngSubmit)="login()"
+        [formGroup]="registerForm"
+        (ngSubmit)="register()"
         class="login-form"
       >
+
+        <!-- Name -->
+
+        <mat-form-field
+          appearance="outline"
+          class="full-width"
+        >
+
+          <mat-label>Full name</mat-label>
+
+          <mat-icon matPrefix>
+            person_outline
+          </mat-icon>
+
+          <input
+            matInput
+            type="text"
+            formControlName="name"
+            autocomplete="name"
+            placeholder="Enter your full name"
+          />
+
+          @if (registerForm.get('name')?.hasError('required')) {
+
+            <mat-error>
+              Name is required
+            </mat-error>
+
+          }
+
+        </mat-form-field>
+
 
         <!-- Email -->
 
@@ -159,7 +187,7 @@
             placeholder="you@example.com"
           />
 
-          @if (loginForm.get('email')?.hasError('required')) {
+          @if (registerForm.get('email')?.hasError('required')) {
 
             <mat-error>
               Email is required
@@ -168,8 +196,8 @@
           }
 
           @if (
-            loginForm.get('email')?.hasError('email') &&
-            !loginForm.get('email')?.hasError('required')
+            registerForm.get('email')?.hasError('email') &&
+            !registerForm.get('email')?.hasError('required')
           ) {
 
             <mat-error>
@@ -198,8 +226,8 @@
             matInput
             [type]="hidePassword ? 'password' : 'text'"
             formControlName="password"
-            autocomplete="current-password"
-            placeholder="Enter your password"
+            autocomplete="new-password"
+            placeholder="Create a password"
           />
 
           <button
@@ -217,7 +245,7 @@
           </button>
 
 
-          @if (loginForm.get('password')?.hasError('required')) {
+          @if (registerForm.get('password')?.hasError('required')) {
 
             <mat-error>
               Password is required
@@ -226,8 +254,8 @@
           }
 
           @if (
-            loginForm.get('password')?.hasError('minlength') &&
-            !loginForm.get('password')?.hasError('required')
+            registerForm.get('password')?.hasError('minlength') &&
+            !registerForm.get('password')?.hasError('required')
           ) {
 
             <mat-error>
@@ -239,7 +267,26 @@
         </mat-form-field>
 
 
-        <!-- Authentication error -->
+        <!-- Success -->
+
+        @if (successMessage) {
+
+          <div class="success-message">
+
+            <mat-icon>
+              check_circle_outline
+            </mat-icon>
+
+            <span>
+              {{ successMessage }}
+            </span>
+
+          </div>
+
+        }
+
+
+        <!-- Error -->
 
         @if (errorMessage) {
 
@@ -258,7 +305,7 @@
         }
 
 
-        <!-- Sign in -->
+        <!-- Register -->
 
         <button
           mat-flat-button
@@ -266,7 +313,7 @@
           class="login-button"
         >
 
-          <span>Login</span>
+          <span>Sign up</span>
 
           <mat-icon>
             arrow_forward
@@ -275,47 +322,23 @@
         </button>
 
 
-        <!-- Divider -->
-
-        <div class="divider">
-          <span>OR</span>
-        </div>
-
-
-        <!-- Google -->
-
-        <button
-          type="button"
-          class="google-button"
-          disabled
-          title="Google sign-in will be available in a future version"
-        >
-
-          <span class="google-icon">
-            G
-          </span>
-
-          <span>
-            Continue with Google
-          </span>
-
-        </button>
-
-        <p class="google-note">
-          Google sign-in will be available in a future version.
-        </p>
+        <!-- Login link -->
 
         <div class="register-link">
-  <span>Don't have an account?</span>
 
-  <button 
-    type="button"
-    mat-button
-    routerLink="/register"
-  >
-    Create account
-  </button>
-</div>
+          <span>
+            Already have an account?
+          </span>
+
+          <button
+            type="button"
+            mat-button
+            routerLink="/login"
+          >
+            Login
+          </button>
+
+        </div>
 
       </form>
 
