@@ -1,362 +1,124 @@
 <div class="login-page">
-
-  <!-- BRAND PANEL -->
-
   <section class="brand-panel">
-
     <div class="brand-content">
-
       <div class="brand-logo">
         <div class="logo-mark">
           <mat-icon>auto_awesome</mat-icon>
         </div>
-
         <span>Smart AI Dashboard</span>
       </div>
 
-
       <div class="brand-message">
-
         <span class="eyebrow">INTELLIGENT WORKSPACE</span>
-
-        <h1>
-          Start your<br />
-          <span>AI journey.</span>
-        </h1>
-
+        <h1>Start your<br /><span>AI journey.</span></h1>
         <p>
           Create your account and explore AI-powered generation,
           document intelligence, summarization and intelligent
           workflows from one unified platform.
         </p>
-
       </div>
-
-
       <div class="brand-features">
-
         <div class="feature-item">
-
-          <div class="feature-icon">
-            <mat-icon>psychology</mat-icon>
-          </div>
-
-          <div>
-            <strong>AI Powered</strong>
-            <span>Modern intelligent workflows</span>
-          </div>
-
+          <div class="feature-icon"><mat-icon>psychology</mat-icon></div>
+          <div><strong>AI Powered</strong><span>Modern intelligent workflows</span></div>
         </div>
-
-
         <div class="feature-item">
-
-          <div class="feature-icon">
-            <mat-icon>description</mat-icon>
-          </div>
-
-          <div>
-            <strong>Document Intelligence</strong>
-            <span>Extract, understand and summarize</span>
-          </div>
-
+          <div class="feature-icon"><mat-icon>description</mat-icon></div>
+          <div><strong>Document Intelligence</strong><span>Extract, understand and summarize</span></div>
         </div>
-
-
         <div class="feature-item">
-
-          <div class="feature-icon">
-            <mat-icon>insights</mat-icon>
-          </div>
-
-          <div>
-            <strong>One Dashboard</strong>
-            <span>Everything in one workspace</span>
-          </div>
-
+            <div class="feature-icon"><mat-icon>insights</mat-icon></div>
+            <div><strong>One Dashboard</strong><span>Everything in one workspace</span></div>
         </div>
-
       </div>
-
     </div>
-
 
     <div class="brand-decoration decoration-one"></div>
     <div class="brand-decoration decoration-two"></div>
     <div class="brand-grid"></div>
-
   </section>
 
 
-  <!-- REGISTER PANEL -->
-
   <section class="login-panel">
-
     <div class="login-wrapper">
 
-      <!-- Mobile brand -->
-
       <div class="mobile-brand">
-
-        <div class="mobile-logo">
-          <mat-icon>auto_awesome</mat-icon>
-        </div>
-
+        <div class="mobile-logo"><mat-icon>auto_awesome</mat-icon></div>
         <span>Smart AI Dashboard</span>
-
       </div>
-
-
-      <!-- Header -->
 
       <div class="login-header">
-
-        <span class="welcome-label">
-          GET STARTED
-        </span>
-
-        <h2>
-          Create your account
-        </h2>
-
-        <p>
-          Enter your details to create your Smart AI Dashboard account.
-        </p>
-
+        <span class="welcome-label">GET STARTED</span>
+        <h2>Create your account</h2>
+        <p>Enter your details to create your Smart AI Dashboard account.</p>
       </div>
 
+      <form [formGroup]="registerForm" (ngSubmit)="register()" class="login-form">
 
-      <!-- Form -->
-
-      <form
-        [formGroup]="registerForm"
-        (ngSubmit)="register()"
-        class="login-form"
-      >
-
-        <!-- Name -->
-
-        <mat-form-field
-          appearance="outline"
-          class="full-width"
-        >
-
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Full name</mat-label>
-
-          <mat-icon matPrefix>
-            person_outline
-          </mat-icon>
-
-          <input
-            matInput
-            type="text"
-            formControlName="name"
-            autocomplete="name"
-            placeholder="Enter your full name"
-          />
-
+          <mat-icon matPrefix>person_outline</mat-icon>
+          <input matInput type="text" formControlName="name" autocomplete="name" placeholder="Enter your full name"/>
           @if (registerForm.get('name')?.hasError('required')) {
-
-            <mat-error>
-              Name is required
-            </mat-error>
-
-          }
-
+            <mat-error>Name is required</mat-error>  }
         </mat-form-field>
 
-
-        <!-- Email -->
-
-        <mat-form-field
-          appearance="outline"
-          class="full-width"
-        >
-
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Email address</mat-label>
-
-          <mat-icon matPrefix>
-            mail_outline
-          </mat-icon>
-
-          <input
-            matInput
-            type="email"
-            formControlName="email"
-            autocomplete="email"
-            placeholder="you@example.com"
-          />
-
+          <mat-icon matPrefix>mail_outline</mat-icon>
+          <input matInput type="email" formControlName="email" autocomplete="email" placeholder="you@example.com"/>
           @if (registerForm.get('email')?.hasError('required')) {
-
-            <mat-error>
-              Email is required
-            </mat-error>
-
-          }
-
-          @if (
-            registerForm.get('email')?.hasError('email') &&
-            !registerForm.get('email')?.hasError('required')
-          ) {
-
-            <mat-error>
-              Please enter a valid email address
-            </mat-error>
-
-          }
-
+            <mat-error>Email is required</mat-error> }
+          @if (registerForm.get('email')?.hasError('email') && !registerForm.get('email')?.hasError('required')) {
+            <mat-error>Please enter a valid email address</mat-error>}
         </mat-form-field>
 
-
-        <!-- Password -->
-
-        <mat-form-field
-          appearance="outline"
-          class="full-width"
-        >
-
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Password</mat-label>
-
-          <mat-icon matPrefix>
-            lock_outline
-          </mat-icon>
-
-          <input
-            matInput
-            [type]="hidePassword ? 'password' : 'text'"
-            formControlName="password"
-            autocomplete="new-password"
-            placeholder="Create a password"
-          />
-
-          <button
-            mat-icon-button
-            matSuffix
-            type="button"
-            aria-label="Toggle password visibility"
-            (click)="hidePassword = !hidePassword"
-          >
-
-            <mat-icon>
-              {{ hidePassword ? 'visibility' : 'visibility_off' }}
-            </mat-icon>
-
+          <mat-icon matPrefix>lock_outline</mat-icon>
+          <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" autocomplete="new-password" placeholder="Create a password"/>
+          <button mat-icon-button matSuffix type="button" aria-label="Toggle password visibility" (click)="hidePassword = !hidePassword">
+            <mat-icon>{{ hidePassword ? 'visibility' : 'visibility_off' }}</mat-icon>
           </button>
-
-
           @if (registerForm.get('password')?.hasError('required')) {
-
-            <mat-error>
-              Password is required
-            </mat-error>
-
-          }
-
-          @if (
-            registerForm.get('password')?.hasError('minlength') &&
-            !registerForm.get('password')?.hasError('required')
-          ) {
-
-            <mat-error>
-              Password must be at least 6 characters
-            </mat-error>
-
-          }
-
+            <mat-error>Password is required</mat-error> } 
+          @if (registerForm.get('password')?.hasError('minlength') && !registerForm.get('password')?.hasError('required')) {
+            <mat-error>Password must be at least 6 characters</mat-error> }
         </mat-form-field>
-
-
-        <!-- Success -->
 
         @if (successMessage) {
-
           <div class="success-message">
-
-            <mat-icon>
-              check_circle_outline
-            </mat-icon>
-
-            <span>
-              {{ successMessage }}
-            </span>
-
+            <mat-icon>check_circle_outline</mat-icon>
+            <span>{{ successMessage }}</span>
           </div>
-
         }
-
-
-        <!-- Error -->
-
         @if (errorMessage) {
-
           <div class="error-message">
-
-            <mat-icon>
-              error_outline
-            </mat-icon>
-
-            <span>
-              {{ errorMessage }}
-            </span>
-
+            <mat-icon>error_outline</mat-icon>
+            <span>{{ errorMessage }}</span>
           </div>
-
         }
 
-
-        <!-- Register -->
-
-        <button
-          mat-flat-button
-          type="submit"
-          class="login-button"
-        >
-
+        <button mat-flat-button type="submit" class="login-button">
           <span>Sign up</span>
-
-          <mat-icon>
-            arrow_forward
-          </mat-icon>
-
+          <mat-icon>arrow_forward</mat-icon>
         </button>
 
-
-        <!-- Login link -->
-
         <div class="register-link">
-
-          <span>
-            Already have an account?
-          </span>
-
-          <button
-            type="button"
-            mat-button
-            routerLink="/login"
-          >
-            Login
-          </button>
-
+          <span>Already have an account?</span>
+          <button type="button" mat-button routerLink="/login">Login</button>
         </div>
 
       </form>
 
 
-      <!-- Footer -->
 
       <div class="login-footer">
-
         <span>Smart AI Dashboard</span>
-
         <span class="footer-dot">•</span>
-
         <span>AI Workspace</span>
-
       </div>
 
     </div>
-
   </section>
-
 </div>
