@@ -1,28 +1,87 @@
-<div class="p-6">
-  <app-page-header title="Dashboard" subtitle="Monitor AI jobs and platform activity">
-  </app-page-header>
+<div class="dashboard-page">
 
-  <div class="grid grid-cols-4 gap-4">
-    <app-page-card>
-      <h2>Total Jobs</h2>
-      <p class="text-3xl font-bold">0</p>
-    </app-page-card>
+  <app-page-header
+    title="Dashboard"
+    subtitle="Monitor AI jobs and platform activity"
+  />
 
-    <app-page-card>
-      <h2>Completed</h2>
-      <p class="text-3xl font-bold">0</p>
-    </app-page-card>
+  <section class="stats-grid">
 
     <app-page-card>
-      <h2>Processing</h2>
-      <p class="text-3xl font-bold">0</p>
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon">
+            <mat-icon>work_history</mat-icon>
+          </div>
+
+          <span class="stat-label">Total Jobs</span>
+        </div>
+
+        <div class="stat-value">0</div>
+
+        <span class="stat-description">
+          All AI jobs
+        </span>
+      </div>
     </app-page-card>
+
 
     <app-page-card>
-      <h2>Failed</h2>
-      <p class="text-3xl font-bold">0</p>
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon completed">
+            <mat-icon>check_circle</mat-icon>
+          </div>
+
+          <span class="stat-label">Completed</span>
+        </div>
+
+        <div class="stat-value">0</div>
+
+        <span class="stat-description">
+          Successfully completed
+        </span>
+      </div>
     </app-page-card>
 
-  </div>
+
+    <app-page-card>
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon processing">
+            <mat-icon>autorenew</mat-icon>
+          </div>
+
+          <span class="stat-label">Processing</span>
+        </div>
+
+        <div class="stat-value">0</div>
+
+        <span class="stat-description">
+          Currently running
+        </span>
+      </div>
+    </app-page-card>
+
+
+    <app-page-card>
+      <div class="stat-card">
+        <div class="stat-header">
+          <div class="stat-icon failed">
+            <mat-icon>error_outline</mat-icon>
+          </div>
+
+          <span class="stat-label">Failed</span>
+        </div>
+
+        <div class="stat-value">0</div>
+
+        <span class="stat-description">
+          Jobs requiring attention
+        </span>
+      </div>
+    </app-page-card>
+
+  </section>
 
 </div>

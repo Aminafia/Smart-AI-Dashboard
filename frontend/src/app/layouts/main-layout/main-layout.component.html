@@ -1,43 +1,126 @@
-<mat-toolbar color="primary">
-  <span class="font-semibold text">
-    Smart AI Dashboard</span>
-  <span class="spacer"></span>
-  <span class="mr-4">Welcome, {{ currentUserService.fullName() }}</span>
-  <button mat-button (click)="logout()">
+<mat-toolbar class="app-toolbar">
+
+  <div class="toolbar-brand">
+    <div class="brand-icon">
+      <mat-icon>auto_awesome</mat-icon>
+    </div>
+
+    <span class="brand-name">Smart AI Dashboard</span>
+  </div>
+
+  <span class="toolbar-spacer"></span>
+
+  <div class="user-area">
+    <div class="user-avatar">
+      <mat-icon>person</mat-icon>
+    </div>
+
+    <div class="user-info">
+      <span class="welcome-text">Welcome back</span>
+      <span class="user-name">
+        {{ currentUserService.fullName() }}
+      </span>
+    </div>
+  </div>
+
+  <button
+    mat-icon-button
+    class="logout-button"
+    type="button"
+    aria-label="Logout"
+    matTooltip="Logout"
+    (click)="logout()"
+  >
     <mat-icon>logout</mat-icon>
-    Logout
   </button>
+
 </mat-toolbar>
 
-<mat-sidenav-container class="container">
-  <mat-sidenav mode="side" opened>
 
-    <mat-nav-list>
-      <a mat-list-item routerLink="/dashboard" routerLinkActive="active-link">
-        <mat-icon>dashboard</mat-icon>
-        Dashboard</a>
-      <a mat-list-item routerLink="/ai/generate" routerLinkActive="active-link">
-        <mat-icon>auto_awesome</mat-icon>
-        Generate</a>
-      <a mat-list-item routerLink="/summarize" routerLinkActive="active-link">
-        <mat-icon>summarize</mat-icon>
-        Summarize</a>
-      <a mat-list-item routerLink="/documents" routerLinkActive="active-link">
-        <mat-icon>description</mat-icon>
-        Documents
-      </a>
-      <a mat-list-item routerLink="/ai/jobs" routerLinkActive="active-link">
-        <mat-icon>history</mat-icon>
-        Job History
-      </a>
-    </mat-nav-list>
+<mat-sidenav-container class="app-container">
+
+  <mat-sidenav
+    class="app-sidenav"
+    mode="side"
+    opened
+  >
+
+    <div class="sidenav-content">
+
+      <div class="nav-section">
+
+        <span class="nav-section-label">
+          WORKSPACE
+        </span>
+
+        <mat-nav-list>
+
+          <a
+            mat-list-item
+            routerLink="/dashboard"
+            routerLinkActive="active-link"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <mat-icon matListItemIcon>dashboard</mat-icon>
+            <span class="nav-label">Dashboard</span>
+          </a>
+
+          <a
+            mat-list-item
+            routerLink="/ai/generate"
+            routerLinkActive="active-link"
+          >
+            <mat-icon matListItemIcon>auto_awesome</mat-icon>
+            <span class="nav-label">Generate</span>
+          </a>
+
+          <a
+            mat-list-item
+            routerLink="/summarize"
+            routerLinkActive="active-link"
+          >
+            <mat-icon matListItemIcon>summarize</mat-icon>
+            <span class="nav-label">Summarize</span>
+          </a>
+
+          <a
+            mat-list-item
+            routerLink="/documents"
+            routerLinkActive="active-link"
+          >
+            <mat-icon matListItemIcon>description</mat-icon>
+            <span class="nav-label">Documents</span>
+          </a>
+
+        </mat-nav-list>
+
+      </div>
+
+
+      <div class="sidenav-footer">
+
+        <div class="workspace-status">
+          <div class="status-dot"></div>
+
+          <div>
+            <span class="status-title">AI Workspace</span>
+            <span class="status-text">Ready to use</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
 
   </mat-sidenav>
 
-  <mat-sidenav-content>
-    <div class="content">
+
+  <mat-sidenav-content class="app-content">
+
+    <main class="content">
       <router-outlet></router-outlet>
-    </div>
+    </main>
+
   </mat-sidenav-content>
 
 </mat-sidenav-container>

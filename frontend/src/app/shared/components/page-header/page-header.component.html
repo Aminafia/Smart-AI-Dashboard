@@ -1,9 +1,15 @@
-<div class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-    <div>
-        <h1 class="text-3xl font-bold tracking-tight">{{ title }}</h1>
-        <p *ngIf="subtitle" class="mt-2 text-gray-600">{{ subtitle }}</p>
-    </div>
-    <div class="flex items-center gap-2">
-        <ng-content></ng-content>
-    </div>
+<div class="page-header">
+
+  <div class="page-header-content">
+    <h1>{{ title }}</h1>
+
+    @if (subtitle) {
+      <p>{{ subtitle }}</p>
+    }
+  </div>
+
+  <div class="page-header-actions">
+    <ng-content></ng-content>
+  </div>
+
 </div>

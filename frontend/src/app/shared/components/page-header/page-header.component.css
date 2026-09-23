@@ -1,0 +1,62 @@
+:host {
+  display: block;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.page-header-content {
+  min-width: 0;
+}
+
+.page-header h1 {
+  margin: 0;
+
+  color: #111827;
+
+  font-size: 32px;
+  line-height: 1.15;
+  font-weight: 700;
+
+  letter-spacing: -0.035em;
+}
+
+.page-header p {
+  margin: 8px 0 0;
+
+  color: #6b7280;
+
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.page-header-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  flex-shrink: 0;
+}
+
+@media (max-width: 700px) {
+  .page-header {
+    flex-direction: column;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .page-header h1 {
+    font-size: 28px;
+  }
+
+  .page-header-actions {
+    width: 100%;
+  }
+}
