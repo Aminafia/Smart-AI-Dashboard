@@ -56,8 +56,18 @@ export class DocumentDetailsComponent implements OnInit {
       return;
     }
 
-    this.documentService.getDocument(id).subscribe({
-      next: document => {
+    // GET /api/Documents/{id} returns the file itself, not DocumentModel metadata.
+    // Load metadata from the authenticated document list instead.
+    this.documentService.getDocuments(1, 100).subscribe({
+      next: response => {
+        const document = response.items.find(item => item.id === id);
+
+        if (!document) {
+          this.snackbarService.error('Unable to load document.');
+          this.router.navigate(['/documents']);
+          return;
+        }
+
         this.document = document;
         this.loadContent(id);
       },

@@ -5,39 +5,27 @@ using MediatR;
 
 namespace Application.Features.Documents.Queries.GetDocuments;
 
-public class GetDocumentsQueryHandler
-    : IRequestHandler<GetDocumentsQuery, PagedResponse<DocumentResponse>>
+public class GetDocumentsQueryHandler : IRequestHandler<GetDocumentsQuery, PagedResponse<DocumentResponse>>
 {
     private readonly IDocumentRepository _documentRepository;
+    private readonly ICurrentUserService _currentUser;
 
-    public GetDocumentsQueryHandler(
-        IDocumentRepository documentRepository)
+    public GetDocumentsQueryHandler(IDocumentRepository documentRepository, ICurrentUserService currentUser)
     {
         _documentRepository = documentRepository;
+        _currentUser = currentUser;
     }
 
-    public async Task<PagedResponse<DocumentResponse>> Handle(
-        GetDocumentsQuery request,
-        CancellationToken cancellationToken)
+    public async Task<PagedResponse<DocumentResponse>> Handle(GetDocumentsQuery request, CancellationToken cancellationToken)
     {
-        var documents = await _documentRepository.GetPagedAsync(
-            request.Page,
-            request.PageSize,
-            cancellationToken);
-
+        var documents = await _documentRepository.GetPagedAsync(request.Page, request.PageSize, _currentUser.UserId, cancellationToken);
         return new PagedResponse<DocumentResponse>
         {
-            Items = documents.Items
-                .Select(d => new DocumentResponse
-                {
-                    Id = d.Id,
-                    FileName = d.FileName,
-                    ContentType = d.ContentType,
-                    FileSize = d.FileSize,
-                    UploadedAt = d.UploadedAt
-                })
-                .ToList(),
-
+            Items = documents.Items.Select(d => new DocumentResponse
+            {
+                Id = d.Id, FileName = d.FileName, ContentType = d.ContentType,
+                FileSize = d.FileSize, UploadedAt = d.UploadedAt
+            }).ToList(),
             Page = documents.Page,
             PageSize = documents.PageSize,
             TotalCount = documents.TotalCount

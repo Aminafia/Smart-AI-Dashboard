@@ -10,6 +10,7 @@ import { ApiResponse } from '../models/shared/api-response';
 import { TokenService } from './token.service';
 import { CurrentUserService } from './current-user.service';
 import { tap } from 'rxjs/operators';
+import { RegisterRequest } from '../models/auth/register-request';
 
 @Injectable({
   providedIn: 'root'
@@ -22,17 +23,23 @@ export class AuthService {
     private http: HttpClient,
     private tokenService: TokenService,
     private currentUserService: CurrentUserService,
-  ) {}
+  ) { }
 
-  login(request: LoginRequest): Observable<ApiResponse<LoginResponse>> 
-  {
+  login(request: LoginRequest): Observable<ApiResponse<LoginResponse>> {
     return this.http
       .post<ApiResponse<LoginResponse>>(
         `${this.apiUrl}/login`,
         request)
-      .pipe(tap(response => 
-        { this.tokenService.saveToken(response.data.token);
-          this.currentUserService.refreshCurrentUser();
-         }));
+      .pipe(tap(response => {
+        this.tokenService.saveToken(response.data.token);
+        this.currentUserService.refreshCurrentUser();
+      }));
+  }
+
+  register(request: RegisterRequest): Observable<ApiResponse<string>> {
+    return this.http.post<ApiResponse<string>>(
+      `${this.apiUrl}/register`,
+      request
+    );
   }
 }

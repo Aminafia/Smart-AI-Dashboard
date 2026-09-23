@@ -1,29 +1,18 @@
-/*
-Purpose of LoginComponent:
- - Collect user input through a form 
- - Validate input 
- - Ask AuthService to login
- - React to success or failure of login
-    * Navigate to dashboard on success
-    * Display error message on failure
-*/
-
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { finalize } from 'rxjs';
 
 import { AuthService } from '../../../core/services/auth.service';
+import { RegisterRequest } from '../../../core/models/auth/register-request';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { LoginRequest } from '../../../core/models/auth/login-request';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-register',
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -34,43 +23,60 @@ import { LoginRequest } from '../../../core/models/auth/login-request';
     MatProgressSpinnerModule,
     RouterLink
   ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  templateUrl: './register.component.html',
+  styleUrl: './register.component.css'
 })
-export class LoginComponent {
+export class RegisterComponent {
+
   hidePassword = true;
   errorMessage = '';
-  loginForm!: FormGroup;
+  successMessage = '';
+
+  registerForm!: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
   ) {
-    this.loginForm = this.fb.group({
+    this.registerForm = this.fb.group({
+      name: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
-  login(): void {
+  register(): void {
 
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
+    if (this.registerForm.invalid) {
+      this.registerForm.markAllAsTouched();
       return;
     }
 
-    const request: LoginRequest = {
-      email: this.loginForm.value.email!,
-      password: this.loginForm.value.password!
+    const request: RegisterRequest = {
+      name: this.registerForm.value.name!,
+      email: this.registerForm.value.email!,
+      password: this.registerForm.value.password!
     };
 
     this.errorMessage = '';
+    this.successMessage = '';
 
-    this.authService.login(request)
+    this.authService.register(request)
       .subscribe({
-        next: () => { this.router.navigate(['/dashboard']); },
-        error: (error) => { this.errorMessage = error.error?.message ?? 'Login failed. Please try again.'; } });
+        next: () => {
+          this.successMessage = 'Account created successfully. Redirecting to login...';
 
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 1000);
+        },
+
+        error: (error) => {
+          this.errorMessage =
+            error.error?.message ??
+            'Registration failed. Please try again.';
+        }
+      });
   }
 }

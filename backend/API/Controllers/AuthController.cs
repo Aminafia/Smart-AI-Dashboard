@@ -43,6 +43,7 @@ Client - receives JWT token for authenticated access to protected resources
 using Application.Common.Models;
 using Application.DTOs.Auth;
 using Application.Features.Auth.Commands.Login;
+using Application.Features.Users.Commands.CreateUser;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -86,5 +87,19 @@ public class AuthController : ControllerBase
         Log.Information("[Controller] Login successful, returning response");
 
         return Ok(ApiResponse<LoginResponse>.SuccessResponse(result, "Login successful"));
+    }
+
+    [AllowAnonymous]
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(
+    [FromBody] CreateUserCommand command)
+    {
+        Log.Information("[Controller] Register endpoint hit");
+
+        var userId = await _mediator.Send(command);
+
+        Log.Information("[Controller] User registered with ID: {UserId}", userId);
+
+        return Ok(ApiResponse<Guid>.SuccessResponse(userId, "Account created successfully"));
     }
 }

@@ -4,6 +4,8 @@ public class Document
 {
     public Guid Id { get; set; }
 
+    public Guid UserId { get; set; }
+
     public string FileName { get; set; } = string.Empty;
 
     public string StoredFileName { get; set; } = string.Empty;

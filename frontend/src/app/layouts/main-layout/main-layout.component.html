@@ -1,12 +1,12 @@
 <mat-toolbar color="primary">
-    <span class="font-semibold text">
-        Smart AI Dashboard</span>
-    <span class="spacer"></span>
-    <span class="mr-4">Welcome, {{ currentUserService.fullName() }}</span>
-    <button mat-button (click)="logout()">
-      <mat-icon>logout</mat-icon>
-      Logout
-    </button>
+  <span class="font-semibold text">
+    Smart AI Dashboard</span>
+  <span class="spacer"></span>
+  <span class="mr-4">Welcome, {{ currentUserService.fullName() }}</span>
+  <button mat-button (click)="logout()">
+    <mat-icon>logout</mat-icon>
+    Logout
+  </button>
 </mat-toolbar>
 
 <mat-sidenav-container class="container">
@@ -19,12 +19,16 @@
       <a mat-list-item routerLink="/ai/generate" routerLinkActive="active-link">
         <mat-icon>auto_awesome</mat-icon>
         Generate</a>
-      <a mat-list-item routerLink="/summarize">
+      <a mat-list-item routerLink="/summarize" routerLinkActive="active-link">
         <mat-icon>summarize</mat-icon>
         Summarize</a>
       <a mat-list-item routerLink="/documents" routerLinkActive="active-link">
         <mat-icon>description</mat-icon>
         Documents
+      </a>
+      <a mat-list-item routerLink="/ai/jobs" routerLinkActive="active-link">
+        <mat-icon>history</mat-icon>
+        Job History
       </a>
     </mat-nav-list>
 
