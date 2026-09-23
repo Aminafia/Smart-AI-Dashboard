@@ -22,3 +22,5 @@ Thumbs.db
 
 # --- Logs ---
 backend/API/logs/
+# --- Application Runtime Storage ---
+backend/API/Storage/Documents/
