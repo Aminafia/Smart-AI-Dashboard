@@ -8,78 +8,72 @@
   display: grid;
   place-items: center;
   padding: 32px 20px;
-
-  background:
-    radial-gradient(circle at top, rgba(201, 87, 115, 0.06), transparent 34%),
-    #fcf8f9;
+  background: #fbf8f9;
 }
 
 .login-card {
-  width: min(100%, 420px);
+  width: min(100%, 400px);
   padding: 40px;
 
   background: #ffffff;
-  border: 1px solid #eadfe3;
-  border-radius: 20px;
-  box-shadow: 0 18px 50px rgba(73, 45, 54, 0.08);
+  border: 1px solid #eee3e7;
+  border-radius: 16px;
+  box-shadow: 0 12px 36px rgba(55, 35, 42, 0.07);
 }
 
 .brand-mark {
-  width: 44px;
-  height: 44px;
-  margin: 0 auto 28px;
+  width: 42px;
+  height: 42px;
+  margin: 0 auto 24px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 12px;
-  background: #f8e8ed;
+  border-radius: 10px;
+  background: #f9e9ee;
   color: #c95773;
 }
 
 .brand-mark mat-icon {
-  width: 22px;
-  height: 22px;
-  font-size: 22px;
+  width: 21px;
+  height: 21px;
+  font-size: 21px;
 }
 
 .login-header {
+  margin-bottom: 26px;
   text-align: center;
-  margin-bottom: 28px;
 }
 
 .eyebrow {
-  margin: 0 0 10px;
-
+  margin: 0 0 9px;
   color: #c95773;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.15em;
 }
 
 .login-header h1 {
   margin: 0;
-
-  color: #1f2937;
-  font-size: 30px;
+  color: #202124;
+  font-size: 28px;
   line-height: 1.2;
-  font-weight: 700;
-  letter-spacing: -0.035em;
+  font-weight: 650;
+  letter-spacing: -0.03em;
 }
 
 .subtitle {
-  margin: 9px 0 0;
-
-  color: #6b7280;
+  margin: 8px 0 0;
+  color: #70757d;
   font-size: 13px;
-  line-height: 1.6;
+  line-height: 1.55;
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
 
 .full-width {
@@ -87,7 +81,7 @@
 }
 
 ::ng-deep .login-form .mat-mdc-form-field {
-  --mdc-outlined-text-field-container-shape: 10px;
+  --mdc-outlined-text-field-container-shape: 9px;
 }
 
 ::ng-deep .login-form .mat-mdc-text-field-wrapper {
@@ -106,17 +100,17 @@
 .error-message {
   display: flex;
   align-items: flex-start;
-  gap: 9px;
+  gap: 8px;
 
-  padding: 11px 13px;
+  padding: 10px 12px;
 
-  border: 1px solid #f1c8d2;
-  border-radius: 9px;
-  background: #fff5f7;
-  color: #a63f59;
+  border: 1px solid #f0cbd4;
+  border-radius: 8px;
+  background: #fff6f8;
+  color: #a7445d;
 
   font-size: 12px;
-  line-height: 1.5;
+  line-height: 1.45;
 }
 
 .error-message mat-icon {
@@ -140,7 +134,7 @@
   background: #c95773;
   color: #ffffff;
 
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
 
   box-shadow: none;
@@ -166,10 +160,12 @@
   align-items: center;
   gap: 12px;
 
-  color: #a1a1aa;
+  margin: 2px 0;
+
+  color: #a0a3a8;
   font-size: 9px;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
 }
 
 .divider::before,
@@ -177,7 +173,7 @@
   content: '';
   flex: 1;
   height: 1px;
-  background: #eee5e8;
+  background: #eee7e9;
 }
 
 .google-button {
@@ -187,12 +183,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 9px;
 
-  border: 1px solid #ded7da;
+  border: 1px solid #ddd7da;
   border-radius: 9px;
   background: #ffffff;
-  color: #4b5563;
+  color: #45484d;
 
   font-size: 13px;
   font-weight: 500;
@@ -204,23 +200,22 @@
 }
 
 .google-icon {
-  width: 19px;
-  height: 19px;
+  width: 18px;
+  height: 18px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
   color: #4285f4;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
 }
 
 .google-note {
-  margin: -7px 0 0;
-
+  margin: -5px 0 0;
   text-align: center;
-  color: #a1a1aa;
+  color: #a0a3a8;
   font-size: 10px;
   line-height: 1.4;
 }
@@ -229,32 +224,30 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 3px;
 
   margin-top: 2px;
 
-  color: #6b7280;
+  color: #70757d;
   font-size: 12px;
 }
 
 .register-link button {
   min-width: auto;
   padding: 0 4px;
-
   color: #c95773;
   font-size: 12px;
   font-weight: 600;
 }
 
 .register-link button:hover {
-  background: #fff5f7;
+  background: #fff6f8;
 }
 
 .login-footer {
-  margin: 28px 0 0;
-
+  margin: 24px 0 0;
   text-align: center;
-  color: #a1a1aa;
+  color: #a0a3a8;
   font-size: 10px;
 }
 
@@ -265,10 +258,10 @@
 
   .login-card {
     padding: 30px 22px;
-    border-radius: 16px;
+    border-radius: 14px;
   }
 
   .login-header h1 {
-    font-size: 27px;
+    font-size: 26px;
   }
 }
