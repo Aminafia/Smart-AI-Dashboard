@@ -12,6 +12,7 @@ import { JobStatusResponse } from '../models/ai/job-status-response.model';
 import { ApiResponse } from '../models/shared/api-response';
 import { AIJob } from '../models/ai/ai-job.model';
 import { PagedResponse } from '../models/shared/paged-response.model';
+import { AIStats } from '../models/ai/ai-stats.model';
 
 @Injectable({
   providedIn: 'root'
@@ -46,4 +47,11 @@ export class AiService {
     return this.http.get<ApiResponse<PagedResponse<AIJob>>>(
       `${this.apiUrl}/jobs?page=${page}&pageSize=${pageSize}`);
   }
+
+  getStats(): Observable<ApiResponse<AIStats>> {
+  return this.http.get<ApiResponse<AIStats>>(
+    `${this.apiUrl}/stats`
+  );
 }
+}
+

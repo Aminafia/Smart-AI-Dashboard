@@ -2,9 +2,45 @@
 
 @source "./**/*.html";
 
+/* =========================================================
+   Smart AI Dashboard — Global Foundation
+   Mature Rose / Blush Theme
+   ========================================================= */
+
+html,
 body {
-  background-color: var(--mat-sys-surface, #fff);
+  min-height: 100%;
 }
+
+body {
+  margin: 0;
+  background: #faf7f8;
+  color: #29252a;
+  font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Shared Material surfaces */
+
+.mat-mdc-card,
+.mat-mdc-dialog-container,
+.mat-mdc-menu-panel {
+  --mat-card-elevated-container-color: #ffffff;
+}
+
+/* =========================================================
+   Snackbar
+   ========================================================= */
 
 .snackbar-success {
   --mdc-snackbar-container-color: #2e7d32;
@@ -22,6 +58,6 @@ body {
 }
 
 .snackbar-info {
-  --mdc-snackbar-container-color: #1976d2;
+  --mdc-snackbar-container-color: #ad4967;
   --mat-snack-bar-button-color: #ffffff;
 }

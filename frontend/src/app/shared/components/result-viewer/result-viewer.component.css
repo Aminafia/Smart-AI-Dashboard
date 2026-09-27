@@ -1,0 +1,17 @@
+:host {
+  display: block;
+}
+
+::ng-deep .result-viewer-content {
+  color: #40383d;
+}
+
+::ng-deep .result-viewer-content h1,
+::ng-deep .result-viewer-content h2,
+::ng-deep .result-viewer-content h3 {
+  color: #30292d;
+}
+
+::ng-deep .result-viewer-content a {
+  color: #a84f69;
+}

@@ -4,40 +4,43 @@
 
 .page-header {
   display: flex;
-  align-items: flex-start;
+
+  align-items: flex-end;
+
   justify-content: space-between;
 
   gap: 24px;
-  margin-bottom: 30px;
+
+  margin-bottom: 24px;
 }
 
-.page-header-content {
-  min-width: 0;
-}
-
-.page-header h1 {
+.page-header-content h1 {
   margin: 0;
 
-  color: #111827;
+  color: #30292d;
 
-  font-size: 32px;
+  font-size: 28px;
+
   line-height: 1.15;
-  font-weight: 700;
+
+  font-weight: 650;
 
   letter-spacing: -0.035em;
 }
 
-.page-header p {
-  margin: 8px 0 0;
+.page-header-content p {
+  margin: 7px 0 0;
 
-  color: #6b7280;
+  color: #8b8087;
 
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 13px;
+
+  line-height: 1.5;
 }
 
 .page-header-actions {
   display: flex;
+
   align-items: center;
 
   gap: 8px;
@@ -45,18 +48,32 @@
   flex-shrink: 0;
 }
 
+::ng-deep .page-header-actions button {
+  border-radius: 9px;
+}
+
+::ng-deep .page-header-actions button[mat-flat-button] {
+  --mdc-filled-button-container-color: #b95774;
+  --mdc-filled-button-label-text-color: #ffffff;
+}
+
+::ng-deep .page-header-actions button[mat-stroked-button] {
+  --mdc-outlined-button-label-text-color: #8f4e64;
+  --mdc-outlined-button-outline-color: #d9c5cd;
+}
+
 @media (max-width: 700px) {
   .page-header {
-    flex-direction: column;
-    gap: 18px;
-    margin-bottom: 24px;
-  }
+    align-items: flex-start;
 
-  .page-header h1 {
-    font-size: 28px;
+    flex-direction: column;
+
+    gap: 14px;
   }
 
   .page-header-actions {
     width: 100%;
+
+    flex-wrap: wrap;
   }
 }

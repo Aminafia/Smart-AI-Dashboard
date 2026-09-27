@@ -17,7 +17,7 @@
           <span class="stat-label">Total Jobs</span>
         </div>
 
-        <div class="stat-value">0</div>
+        <div class="stat-value">{{ stats.totalJobs }}</div>
 
         <span class="stat-description">
           All AI jobs
@@ -36,7 +36,7 @@
           <span class="stat-label">Completed</span>
         </div>
 
-        <div class="stat-value">0</div>
+        <div class="stat-value">{{ stats.completedJobs }}</div>
 
         <span class="stat-description">
           Successfully completed
@@ -55,7 +55,7 @@
           <span class="stat-label">Processing</span>
         </div>
 
-        <div class="stat-value">0</div>
+        <div class="stat-value">{{ stats.processingJobs }}</div>
 
         <span class="stat-description">
           Currently running
@@ -74,7 +74,7 @@
           <span class="stat-label">Failed</span>
         </div>
 
-        <div class="stat-value">0</div>
+        <div class="stat-value">{{ stats.failedJobs }}</div>
 
         <span class="stat-description">
           Jobs requiring attention

@@ -1,0 +1,16 @@
+:host {
+  display: block;
+}
+
+::ng-deep .mat-mdc-dialog-container {
+  --mdc-dialog-container-shape: 16px;
+}
+
+::ng-deep mat-dialog-title mat-icon {
+  color: #b95774 !important;
+}
+
+::ng-deep mat-dialog-actions button[mat-flat-button] {
+  --mdc-filled-button-container-color: #b95774;
+  --mdc-filled-button-label-text-color: #ffffff;
+}

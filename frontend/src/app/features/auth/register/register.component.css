@@ -3,25 +3,20 @@
   min-height: 100vh;
 }
 
-
-/* =========================================================
-   PAGE
-   ========================================================= */
-
 .login-page {
   min-height: 100vh;
 
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
 
-  background: #f7f8fc;
+  grid-template-columns: 1.05fr 0.95fr;
+
+  background: #fbf8f9;
 
   overflow: hidden;
 }
 
-
 /* =========================================================
-   LEFT BRAND PANEL
+   BRAND PANEL
    ========================================================= */
 
 .brand-panel {
@@ -40,40 +35,37 @@
 
   background:
     radial-gradient(
-      circle at 15% 20%,
-      rgba(99, 102, 241, 0.35),
+      circle at 18% 18%,
+      rgba(232, 160, 183, 0.30),
       transparent 32%
     ),
     radial-gradient(
-      circle at 85% 80%,
-      rgba(59, 130, 246, 0.25),
-      transparent 35%
+      circle at 82% 82%,
+      rgba(190, 113, 143, 0.25),
+      transparent 36%
     ),
     linear-gradient(
       145deg,
-      #111827 0%,
-      #172554 45%,
-      #312e81 100%
+      #4b2938 0%,
+      #754357 48%,
+      #9a5b70 100%
     );
 }
-
-
-/* Background grid */
 
 .brand-grid {
   position: absolute;
   inset: 0;
 
-  opacity: 0.08;
+  opacity: 0.055;
 
   background-image:
     linear-gradient(
-      rgba(255, 255, 255, 0.4) 1px,
+      rgba(255, 255, 255, 0.5) 1px,
       transparent 1px
     ),
     linear-gradient(
       90deg,
-      rgba(255, 255, 255, 0.4) 1px,
+      rgba(255, 255, 255, 0.5) 1px,
       transparent 1px
     );
 
@@ -89,9 +81,6 @@
   pointer-events: none;
 }
 
-
-/* Decorative circles */
-
 .brand-decoration {
   position: absolute;
 
@@ -99,7 +88,7 @@
 
   pointer-events: none;
 
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .decoration-one {
@@ -117,9 +106,8 @@
   left: -320px;
   bottom: -330px;
 
-  border-color: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.08);
 }
-
 
 /* =========================================================
    BRAND CONTENT
@@ -133,9 +121,6 @@
   max-width: 650px;
 }
 
-
-/* Logo */
-
 .brand-logo {
   display: flex;
   align-items: center;
@@ -145,7 +130,7 @@
   margin-bottom: 90px;
 
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 600;
 
   letter-spacing: -0.02em;
 }
@@ -161,24 +146,20 @@
 
   border-radius: 12px;
 
-  background:
-    linear-gradient(
-      135deg,
-      #6366f1,
-      #8b5cf6
-    );
+  background: rgba(255, 255, 255, 0.14);
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
 
   box-shadow:
-    0 10px 30px rgba(99, 102, 241, 0.35);
+    0 10px 30px rgba(53, 20, 32, 0.18);
+
+  backdrop-filter: blur(10px);
 }
 
 .logo-mark mat-icon,
 .mobile-logo mat-icon {
-  color: white;
+  color: #ffffff;
 }
-
-
-/* Heading */
 
 .eyebrow,
 .welcome-label {
@@ -193,7 +174,7 @@
 }
 
 .eyebrow {
-  color: #a5b4fc;
+  color: #f4c9d6;
 
   margin-bottom: 18px;
 }
@@ -205,24 +186,13 @@
 
   line-height: 1.05;
 
-  font-weight: 700;
+  font-weight: 600;
 
   letter-spacing: -0.045em;
 }
 
 .brand-message h1 span {
-  background:
-    linear-gradient(
-      90deg,
-      #a5b4fc,
-      #c4b5fd,
-      #93c5fd
-    );
-
-  -webkit-background-clip: text;
-  background-clip: text;
-
-  color: transparent;
+  color: #f2c0cf;
 }
 
 .brand-message p {
@@ -236,7 +206,6 @@
 
   color: rgba(255, 255, 255, 0.72);
 }
-
 
 /* =========================================================
    FEATURES
@@ -270,10 +239,10 @@
 
   border-radius: 10px;
 
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.09);
 
   border:
-    1px solid rgba(255, 255, 255, 0.1);
+    1px solid rgba(255, 255, 255, 0.11);
 
   backdrop-filter: blur(10px);
 }
@@ -284,7 +253,7 @@
 
   font-size: 20px;
 
-  color: #c7d2fe;
+  color: #f2c7d4;
 }
 
 .feature-item strong,
@@ -294,7 +263,6 @@
 
 .feature-item strong {
   font-size: 14px;
-
   font-weight: 600;
 }
 
@@ -306,9 +274,8 @@
   color: rgba(255, 255, 255, 0.55);
 }
 
-
 /* =========================================================
-   LOGIN PANEL
+   REGISTER PANEL
    ========================================================= */
 
 .login-panel {
@@ -320,7 +287,13 @@
 
   padding: 48px;
 
-  background: #f8f9fc;
+  background:
+    radial-gradient(
+      circle at 85% 15%,
+      rgba(232, 190, 204, 0.20),
+      transparent 35%
+    ),
+    #fcfafb;
 }
 
 .login-wrapper {
@@ -329,17 +302,12 @@
   max-width: 440px;
 }
 
-
-/* =========================================================
-   LOGIN HEADER
-   ========================================================= */
-
 .login-header {
   margin-bottom: 34px;
 }
 
 .welcome-label {
-  color: #6366f1;
+  color: #ad526d;
 
   margin-bottom: 12px;
 }
@@ -347,27 +315,31 @@
 .login-header h2 {
   margin: 0;
 
-  color: #111827;
+  color: #292329;
 
-  font-size: 34px;
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
 
-  line-height: 1.15;
+  font-size: 38px;
 
-  font-weight: 700;
+  line-height: 1.1;
 
-  letter-spacing: -0.035em;
+  font-weight: 400;
+
+  letter-spacing: -0.04em;
 }
 
 .login-header p {
   margin: 12px 0 0;
 
-  color: #6b7280;
+  color: #746b71;
 
   font-size: 14px;
 
   line-height: 1.6;
 }
-
 
 /* =========================================================
    FORM
@@ -375,6 +347,7 @@
 
 .login-form {
   display: flex;
+
   flex-direction: column;
 
   gap: 18px;
@@ -384,33 +357,47 @@
   width: 100%;
 }
 
+::ng-deep .login-form .mat-mdc-form-field {
+  --mdc-outlined-text-field-container-shape: 10px;
 
-/* Material field refinement */
+  --mdc-outlined-text-field-outline-color: #d9ced3;
 
-::ng-deep .login-form
-.mat-mdc-form-field {
-  --mdc-outlined-text-field-container-shape: 12px;
+  --mdc-outlined-text-field-hover-outline-color: #b95774;
+
+  --mdc-outlined-text-field-focus-outline-color: #b95774;
+
+  --mdc-outlined-text-field-focus-label-text-color: #b95774;
 }
 
-::ng-deep .login-form
-.mat-mdc-text-field-wrapper {
+::ng-deep .login-form .mat-mdc-text-field-wrapper {
   background: #ffffff;
 }
 
-::ng-deep .login-form
-.mat-mdc-form-field-focus-overlay {
+::ng-deep .login-form .mat-mdc-form-field-focus-overlay {
   background: transparent;
 }
 
+::ng-deep .login-form .mat-mdc-form-field input {
+  color: #29252a;
+  font-size: 13px;
+}
+
+::ng-deep .login-form .mat-mdc-form-field mat-icon[matprefix] {
+  color: #8e8289;
+}
 
 /* =========================================================
-   LOGIN BUTTON
+   BUTTON
    ========================================================= */
 
 .login-button {
+  --mdc-filled-button-container-color: #b95774;
+
+  --mdc-filled-button-label-text-color: #ffffff;
+
   width: 100%;
 
-  height: 52px;
+  height: 50px;
 
   margin-top: 4px;
 
@@ -420,51 +407,36 @@
 
   gap: 10px;
 
-  border-radius: 12px;
+  border-radius: 25px;
 
-  background:
-    linear-gradient(
-      135deg,
-      #4f46e5,
-      #6366f1
-    );
-
-  color: white;
-
-  font-size: 14px;
+  font-size: 13px;
 
   font-weight: 600;
 
   box-shadow:
-    0 10px 24px rgba(79, 70, 229, 0.22);
+    0 10px 24px rgba(150, 72, 99, 0.18);
 
-  transition:
-    transform 0.18s ease,
-    box-shadow 0.18s ease;
+  transition: transform 0.18s ease;
 }
 
 .login-button:hover {
+  --mdc-filled-button-container-color: #aa4c68;
+
   transform: translateY(-1px);
-
-  box-shadow:
-    0 14px 30px rgba(79, 70, 229, 0.3);
-}
-
-.login-button:active {
-  transform: translateY(0);
 }
 
 .login-button mat-icon {
-  font-size: 19px;
+  font-size: 18px;
 }
 
-
 /* =========================================================
-   ERROR
+   MESSAGES
    ========================================================= */
 
+.success-message,
 .error-message {
   display: flex;
+
   align-items: flex-start;
 
   gap: 10px;
@@ -473,17 +445,28 @@
 
   border-radius: 10px;
 
-  background: #fef2f2;
-
-  border: 1px solid #fecaca;
-
-  color: #b91c1c;
-
   font-size: 13px;
 
   line-height: 1.5;
 }
 
+.success-message {
+  background: #f0faf3;
+
+  border: 1px solid #ccebd5;
+
+  color: #287a43;
+}
+
+.error-message {
+  background: #fff5f7;
+
+  border: 1px solid #edc9d3;
+
+  color: #a7465e;
+}
+
+.success-message mat-icon,
 .error-message mat-icon {
   width: 18px;
   height: 18px;
@@ -493,97 +476,36 @@
   font-size: 18px;
 }
 
-
 /* =========================================================
-   DIVIDER
+   REGISTER LINK
    ========================================================= */
 
-.divider {
+.register-link {
   display: flex;
+
   align-items: center;
+  justify-content: center;
 
-  gap: 14px;
+  gap: 4px;
 
-  color: #9ca3af;
+  margin-top: 2px;
 
-  font-size: 10px;
+  color: #6f676c;
+
+  font-size: 13px;
+}
+
+.register-link button {
+  min-width: auto;
+
+  padding: 0 6px;
+
+  color: #ad526d;
+
+  font-size: 13px;
 
   font-weight: 600;
-
-  letter-spacing: 0.12em;
 }
-
-.divider::before,
-.divider::after {
-  content: '';
-
-  flex: 1;
-
-  height: 1px;
-
-  background: #e5e7eb;
-}
-
-
-/* =========================================================
-   GOOGLE BUTTON
-   ========================================================= */
-
-.google-button {
-  width: 100%;
-
-  height: 50px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  gap: 11px;
-
-  border: 1px solid #d1d5db;
-
-  border-radius: 12px;
-
-  background: #ffffff;
-
-  color: #374151;
-
-  font-size: 14px;
-
-  font-weight: 500;
-
-  cursor: not-allowed;
-}
-
-.google-button:disabled {
-  opacity: 1;
-}
-
-.google-icon {
-  width: 20px;
-  height: 20px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 17px;
-
-  font-weight: 700;
-
-  color: #4285f4;
-}
-
-.google-note {
-  margin: -8px 0 0;
-
-  text-align: center;
-
-  font-size: 10px;
-
-  color: #9ca3af;
-}
-
 
 /* =========================================================
    FOOTER
@@ -591,6 +513,7 @@
 
 .login-footer {
   display: flex;
+
   align-items: center;
   justify-content: center;
 
@@ -598,31 +521,24 @@
 
   margin-top: 46px;
 
-  color: #9ca3af;
+  color: #aaa0a5;
 
   font-size: 11px;
 }
 
 .footer-dot {
-  color: #d1d5db;
+  color: #d6c9cf;
 }
-
-
-/* =========================================================
-   MOBILE BRAND
-   ========================================================= */
 
 .mobile-brand {
   display: none;
 }
-
 
 /* =========================================================
    RESPONSIVE
    ========================================================= */
 
 @media (max-width: 900px) {
-
   .login-page {
     grid-template-columns: 1fr;
   }
@@ -637,6 +553,7 @@
 
   .mobile-brand {
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -644,11 +561,11 @@
 
     margin-bottom: 48px;
 
-    color: #111827;
+    color: #30292d;
 
     font-size: 18px;
 
-    font-weight: 700;
+    font-weight: 600;
   }
 
   .mobile-logo {
@@ -656,83 +573,23 @@
     height: 36px;
 
     border-radius: 10px;
-  }
 
-  .mobile-logo mat-icon {
-    font-size: 20px;
-  }
+    background: #b95774;
 
+    border: none;
+  }
 }
 
-
 @media (max-width: 480px) {
-
   .login-panel {
     padding: 24px 18px;
   }
 
   .login-header h2 {
-    font-size: 28px;
+    font-size: 32px;
   }
 
   .login-header {
     margin-bottom: 28px;
   }
-
-}
-
-.success-message {
-  display: flex;
-  align-items: flex-start;
-
-  gap: 10px;
-
-  padding: 12px 14px;
-
-  border-radius: 10px;
-
-  background: #f0fdf4;
-
-  border: 1px solid #bbf7d0;
-
-  color: #15803d;
-
-  font-size: 13px;
-
-  line-height: 1.5;
-}
-
-.success-message mat-icon {
-  width: 18px;
-  height: 18px;
-
-  flex-shrink: 0;
-
-  font-size: 18px;
-}
-
-.register-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  gap: 4px;
-
-  margin-top: 2px;
-
-  color: #6b7280;
-
-  font-size: 13px;
-}
-
-.register-link button {
-  min-width: auto;
-
-  padding: 0 6px;
-
-  color: #4f46e5;
-
-  font-size: 13px;
-
-  font-weight: 600;
 }

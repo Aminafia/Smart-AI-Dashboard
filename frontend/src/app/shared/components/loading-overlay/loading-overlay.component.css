@@ -1,12 +1,25 @@
+:host {
+  display: block;
+}
+
 .loading-overlay {
   position: fixed;
+
   inset: 0;
 
+  z-index: 2000;
+
   display: flex;
-  justify-content: center;
+
   align-items: center;
 
-  background: rgba(255, 255, 255, 0.55);
+  justify-content: center;
 
-  z-index: 9999;
+  background: rgba(253, 249, 250, 0.72);
+
+  backdrop-filter: blur(3px);
+}
+
+::ng-deep .loading-overlay .mat-mdc-progress-spinner {
+  --mdc-circular-progress-active-indicator-color: #b95774;
 }

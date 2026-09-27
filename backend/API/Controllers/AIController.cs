@@ -5,6 +5,7 @@ using Application.Features.AI.Commands.Summarize;
 using Application.Features.AI.Commands.SummarizeDocument;
 using Application.Features.AI.Queries.GetAIJobs;
 using Application.Features.AI.Queries.GetAIStatus;
+using Application.Features.AI.Queries.GetAIStats;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -93,5 +94,18 @@ public class AIController : ControllerBase
 
         return Ok(ApiResponse<AIOperationResponse>
             .SuccessResponse(result, "Document summary generated successfully."));
+    }
+
+    [Authorize]
+    [HttpGet("stats")]
+    public async Task<IActionResult> GetStats()
+    {
+        var result = await _mediator.Send(new GetAIStatsQuery());
+
+        return Ok(
+            ApiResponse<AIStatsResponse>
+                .SuccessResponse(
+                    result,
+                    "AI job statistics retrieved successfully."));
     }
 }

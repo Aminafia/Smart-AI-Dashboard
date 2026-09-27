@@ -1,20 +1,46 @@
-.max-w-4xl {
-  max-width: 900px;
+:host {
+  display: block;
 }
 
-mat-card {
-  margin-bottom: 24px;
+.max-w-4xl {
+  max-width: 900px;
 }
 
 mat-form-field {
   width: 100%;
 }
 
+::ng-deep .max-w-4xl .mat-mdc-form-field {
+  --mdc-outlined-text-field-container-shape: 10px;
+  --mdc-outlined-text-field-outline-color: #d9ced3;
+  --mdc-outlined-text-field-hover-outline-color: #b95774;
+  --mdc-outlined-text-field-focus-outline-color: #b95774;
+  --mdc-outlined-text-field-focus-label-text-color: #b95774;
+}
+
+::ng-deep .max-w-4xl .mat-mdc-text-field-wrapper {
+  background: #ffffff;
+}
+
+button[mat-flat-button] {
+  --mdc-filled-button-container-color: #b95774;
+  --mdc-filled-button-label-text-color: #ffffff;
+
+  border-radius: 10px;
+
+  padding: 0 22px;
+
+  height: 42px;
+}
+
 pre {
   white-space: pre-wrap;
   word-break: break-word;
+
   font-family: inherit;
+
   line-height: 1.6;
+
   margin: 0;
 }
 

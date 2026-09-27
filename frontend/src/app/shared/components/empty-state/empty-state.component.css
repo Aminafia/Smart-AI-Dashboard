@@ -1,0 +1,21 @@
+:host {
+  display: block;
+}
+
+::ng-deep app-empty-state > div {
+  border-color: #eadfe3 !important;
+
+  background: #fcf8fa !important;
+}
+
+::ng-deep app-empty-state mat-icon {
+  color: #b95774 !important;
+}
+
+::ng-deep app-empty-state h2 {
+  color: #40383d;
+}
+
+::ng-deep app-empty-state p {
+  color: #8b8087;
+}
