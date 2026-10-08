@@ -1,83 +1,87 @@
-<app-page-header [title]="document?.fileName ?? 'Document'" subtitle="Document details and AI processing">
+<app-page-header
+  [title]="document?.fileName ?? 'Document'"
+  subtitle="Document details and AI processing">
 
-    <div class="flex gap-2">
-        <button mat-stroked-button (click)="goBack()">
-            <mat-icon>arrow_back</mat-icon>
-            Back
-        </button>
-        <button mat-stroked-button (click)="downloadDocument()" [disabled]="!document">
-            <mat-icon>download</mat-icon>
-            Download
-        </button>
-        <button mat-stroked-button (click)="extractDocument()" [disabled]="extracting || !document">
-            <mat-icon>text_snippet</mat-icon>
-            {{ extracting ? 'Extracting...' : 'Extract Text' }}
-        </button>
-        <button mat-flat-button color="primary" (click)="summarizeDocument()"
-            [disabled]="summarizing || !content?.extractedText">
-            <mat-icon>auto_awesome</mat-icon>
-            {{ summarizing ? 'Summarizing...' : 'Summarize Document' }}
-        </button>
-    </div>
-
+  <div class="header-actions">
+    <button mat-stroked-button (click)="goBack()"><mat-icon>arrow_back</mat-icon>Back</button>
+    <button mat-stroked-button (click)="downloadDocument()" [disabled]="!document"><mat-icon>download</mat-icon>Download</button>
+    <button mat-stroked-button (click)="extractDocument()" [disabled]="extracting || !document">
+      <mat-icon>text_snippet</mat-icon>{{ extracting ? 'Extracting...' : 'Extract Text' }}
+    </button>
+    <button mat-flat-button color="primary" (click)="summarizeDocument()" [disabled]="summarizing || !content?.extractedText">
+      <mat-icon>auto_awesome</mat-icon>{{ summarizing ? 'Summarizing...' : 'Summarize Document' }}
+    </button>
+  </div>
 </app-page-header>
 
-<app-page-card>
-    @if (document) {
+@if (document) {
+  <app-page-card>
     <div class="document-info">
-        <div>
-            <span class="label">File name</span>
-            <span>{{ document.fileName }}</span>
-        </div>
-        <div>
-            <span class="label">Type</span>
-            <span>{{ document.contentType }}</span>
-        </div>
-        <div>
-            <span class="label">Size</span>
-            <span>{{ document.fileSize }} bytes</span>
-        </div>
-        <div>
-            <span class="label">Uploaded</span>
-            <span>{{ document.uploadedAt | date:'medium' }}</span>
-        </div>
+      <div><span class="label">File name</span><span>{{ document.fileName }}</span></div>
+      <div><span class="label">Type</span><span>{{ document.contentType }}</span></div>
+      <div><span class="label">Size</span><span>{{ document.fileSize }} bytes</span></div>
+      <div><span class="label">Uploaded</span><span>{{ document.uploadedAt | date:'medium' }}</span></div>
     </div>
-    }
-</app-page-card>
+  </app-page-card>
 
-<app-page-card>
-    <div class="content-header">
-        <div>
-            <h2>Extracted Content</h2>
-            @if (content) { <p>Extracted {{ content.extractedAt | date:'medium' }}</p> }
+  @if (document.contentType === 'application/pdf') {
+    <app-page-card>
+      <div class="preview-header">
+        <div><h2>Document Preview</h2><p>Review the original PDF before processing it.</p></div>
+        <button mat-icon-button (click)="togglePreview()" [attr.aria-label]="previewVisible ? 'Minimize preview' : 'Expand preview'">
+          <mat-icon>{{ previewVisible ? 'expand_less' : 'expand_more' }}</mat-icon>
+        </button>
+      </div>
+
+      @if (previewVisible) {
+        <div class="preview-container">
+          @if (loadingPreview) {
+            <div class="empty-content"><mat-icon>picture_as_pdf</mat-icon><p>Loading PDF preview...</p></div>
+          } @else if (pdfPreviewUrl) {
+            <iframe class="pdf-preview" [src]="pdfPreviewUrl" title="PDF document preview"></iframe>
+          } @else {
+            <div class="empty-content"><mat-icon>picture_as_pdf</mat-icon><p>Preview unavailable.</p></div>
+          }
         </div>
-    </div>
+      }
+    </app-page-card>
+  }
 
-    @if (loadingContent) {
-    <div class="empty-content">Loading extracted content...</div>
-    } @else if (content) {
-    <pre class="extracted-text">{{ content.extractedText }}</pre>
-    } @else {
-    <div class="empty-content">
-        <mat-icon>text_snippet</mat-icon>
-        <h3>No extracted content</h3>
+  @if (content) {
+    <section class="workspace-grid">
+      <app-page-card>
+        <div class="content-header"><div><h2>Extracted Text</h2><p>Extracted {{ content.extractedAt | date:'medium' }}</p></div></div>
+        <div class="workspace-scroll"><pre class="extracted-text">{{ content.extractedText }}</pre></div>
+      </app-page-card>
+
+      <app-page-card>
+        <div class="content-header"><div><h2>AI Summary</h2><p>Generated from the extracted document content</p></div></div>
+        @if (summarizing) {
+          <div class="empty-content"><mat-icon>auto_awesome</mat-icon><p>Generating summary...</p></div>
+        } @else if (summary) {
+          <div class="workspace-scroll"><div class="summary-text">{{ summary }}</div></div>
+        } @else {
+          <div class="empty-content">
+            <mat-icon>auto_awesome</mat-icon><h3>Ready for AI</h3>
+            <p>Generate a concise summary from the extracted text.</p>
+            <button mat-flat-button color="primary" (click)="summarizeDocument()" [disabled]="!content.extractedText">
+              <mat-icon>auto_awesome</mat-icon>Summarize Document
+            </button>
+          </div>
+        }
+      </app-page-card>
+    </section>
+  } @else if (loadingContent) {
+    <app-page-card><div class="empty-content"><mat-icon>hourglass_top</mat-icon><p>Loading document content...</p></div></app-page-card>
+  } @else {
+    <app-page-card>
+      <div class="empty-content">
+        <mat-icon>text_snippet</mat-icon><h3>No extracted content</h3>
         <p>Extract text from this document before using AI features.</p>
         <button mat-flat-button color="primary" (click)="extractDocument()" [disabled]="extracting">
-            <mat-icon>text_snippet</mat-icon>
-            Extract Text
+          <mat-icon>text_snippet</mat-icon>Extract Text
         </button>
-    </div>
-    }
-</app-page-card>
-
-@if (summary) {
-<app-page-card>
-    <div class="content-header">
-        <div>
-            <h2>AI Summary</h2>
-            <p>Generated from the extracted document content</p>
-        </div>
-    </div>
-    <div class="summary-text">{{ summary }}</div>
-</app-page-card>
+      </div>
+    </app-page-card>
+  }
 }
