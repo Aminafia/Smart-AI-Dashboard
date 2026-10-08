@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 import { DocumentModel } from '../../../../core/models/documents/document.model';
 import { DocumentContentResponse } from '../../../../core/models/documents/document-content-response.model';
@@ -27,7 +28,7 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './document-details.component.html',
   styleUrl: './document-details.component.css'
 })
-export class DocumentDetailsComponent implements OnInit {
+export class DocumentDetailsComponent implements OnInit, OnDestroy {
   document: DocumentModel | null = null;
   content: DocumentContentResponse | null = null;
 
@@ -35,17 +36,27 @@ export class DocumentDetailsComponent implements OnInit {
   extracting = false;
   summarizing = false;
   summary = '';
+  pdfPreviewUrl: SafeResourceUrl | null = null;
+  previewVisible = true;
+  loadingPreview = false;
+
+  private previewObjectUrl: string | null = null;
 
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly documentService: DocumentService,
     private readonly aiService: AiService,
-    private readonly snackbarService: SnackbarService
+    private readonly snackbarService: SnackbarService,
+    private readonly sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
     this.loadDocument();
+  }
+
+  ngOnDestroy(): void {
+    if (this.previewObjectUrl) window.URL.revokeObjectURL(this.previewObjectUrl);
   }
 
   private loadDocument(): void {
@@ -69,6 +80,7 @@ export class DocumentDetailsComponent implements OnInit {
         }
 
         this.document = document;
+        this.loadPdfPreview(id);
         this.loadContent(id);
       },
       error: () => {
@@ -76,6 +88,27 @@ export class DocumentDetailsComponent implements OnInit {
         this.router.navigate(['/documents']);
       }
     });
+  }
+
+  private loadPdfPreview(id: string): void {
+    if (this.document?.contentType !== 'application/pdf') return;
+    this.loadingPreview = true;
+    this.documentService.download(id).subscribe({
+      next: blob => {
+        if (this.previewObjectUrl) window.URL.revokeObjectURL(this.previewObjectUrl);
+        this.previewObjectUrl = window.URL.createObjectURL(blob);
+        this.pdfPreviewUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.previewObjectUrl);
+        this.loadingPreview = false;
+      },
+      error: () => {
+        this.loadingPreview = false;
+        this.snackbarService.error('Unable to load document preview.');
+      }
+    });
+  }
+
+  togglePreview(): void {
+    this.previewVisible = !this.previewVisible;
   }
 
   loadContent(id: string): void {
@@ -100,6 +133,7 @@ export class DocumentDetailsComponent implements OnInit {
     this.documentService.extract(this.document.id).subscribe({
       next: () => {
         this.extracting = false;
+        this.previewVisible = false;
         this.snackbarService.success('Document text extracted successfully.');
         this.loadContent(this.document!.id);
       },
