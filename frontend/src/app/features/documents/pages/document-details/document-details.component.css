@@ -11,12 +11,10 @@
   padding-bottom: 24px;
 }
 
-.page-actions {
+.back-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  min-width: 0;
+  min-height: 36px;
 }
 
 .back-button {
@@ -24,22 +22,6 @@
   width: 36px;
   height: 36px;
   line-height: 36px;
-}
-
-.action-buttons {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.action-buttons button {
-  white-space: nowrap;
-}
-
-.action-buttons mat-icon {
-  margin-right: 4px;
 }
 
 .document-card {
@@ -50,7 +32,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 16px;
   min-width: 0;
 }
 
@@ -59,6 +41,7 @@
   align-items: center;
   gap: 10px;
   min-width: 0;
+  flex: 1 1 auto;
   color: var(--mat-sys-on-surface, #30292d);
   font-size: 17px;
   font-weight: 600;
@@ -75,6 +58,23 @@
   white-space: nowrap;
 }
 
+.action-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+}
+
+.action-buttons button {
+  white-space: nowrap;
+}
+
+.action-buttons button mat-icon {
+  margin-right: 4px;
+}
+
 .preview-toggle {
   flex: 0 0 auto;
 }
@@ -84,7 +84,7 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 8px 18px;
-  margin: 4px 0 16px 34px;
+  margin: 10px 0 16px 34px;
   color: var(--mat-sys-on-surface-variant, #746b71);
   font-size: 12px;
 }
@@ -241,6 +241,22 @@
   50% { opacity: 1; transform: scale(1); }
 }
 
+@media (max-width: 1100px) {
+  .document-card-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .file-title {
+    width: 100%;
+  }
+
+  .action-buttons {
+    justify-content: flex-start;
+    width: 100%;
+  }
+}
+
 @media (max-width: 900px) {
   .workspace-grid {
     grid-template-columns: minmax(0, 1fr);
@@ -257,10 +273,6 @@
 }
 
 @media (max-width: 600px) {
-  .page-actions {
-    align-items: flex-start;
-  }
-
   .action-buttons {
     gap: 6px;
   }
@@ -270,7 +282,7 @@
     font-size: 12px;
   }
 
-  .action-buttons mat-icon {
+  .action-buttons button mat-icon {
     margin-right: 2px;
   }
 
@@ -282,5 +294,9 @@
   .preview-container {
     min-height: 240px;
     height: 55vh;
+  }
+
+  .panel-scroll {
+    min-height: 200px;
   }
 }
