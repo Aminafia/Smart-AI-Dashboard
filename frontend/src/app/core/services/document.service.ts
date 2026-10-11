@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpContext } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { SKIP_LOADING } from '../constants/loading-context';
 
 import { environment } from '../../../environments/environment';
 
@@ -37,7 +38,9 @@ export class DocumentService {
         return this.http.get(
             `${this.apiUrl}/${id}`,
             {
-                responseType: 'blob'
+                responseType: 'blob',
+                context: new HttpContext().set(SKIP_LOADING, true)
+
             });
     }
 
@@ -49,13 +52,15 @@ export class DocumentService {
     extract(id: string): Observable<void> {
         return this.http.post<void>(
             `${this.apiUrl}/${id}/extract`,
-            null
+            null,
+            { context: new HttpContext().set(SKIP_LOADING, true) }
         );
     }
 
     getContent(id: string): Observable<DocumentContentResponse> {
         return this.http.get<DocumentContentResponse>(
-            `${this.apiUrl}/${id}/content`
+            `${this.apiUrl}/${id}/content`,
+            { context: new HttpContext().set(SKIP_LOADING, true) }
         );
     }
 }

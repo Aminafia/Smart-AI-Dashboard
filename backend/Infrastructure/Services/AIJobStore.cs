@@ -41,27 +41,42 @@ public class AIJobStore : IAIJobStore
     }
 
     public async Task<AIStatsResponse> GetStatsAsync(Guid userId)
-{
-    var query = _dbContext.AIJobs
-        .Where(x => x.UserId == userId);
+    {
+        var query = _dbContext.AIJobs
+            .Where(x => x.UserId == userId);
 
-    var stats = await query
-        .GroupBy(_ => 1)
-        .Select(g => new AIStatsResponse
-        {
-            TotalJobs = g.Count(),
+        var stats = await query
+            .GroupBy(_ => 1)
+            .Select(g => new AIStatsResponse
+            {
+                TotalJobs = g.Count(),
 
-            CompletedJobs = g.Count(
-                x => x.Status == AIJobStatus.Completed),
+                CompletedJobs = g.Count(
+                    x => x.Status == AIJobStatus.Completed),
 
-            ProcessingJobs = g.Count(
-                x => x.Status == AIJobStatus.Processing),
+                ProcessingJobs = g.Count(
+                    x => x.Status == AIJobStatus.Processing),
 
-            FailedJobs = g.Count(
-                x => x.Status == AIJobStatus.Failed)
-        })
-        .FirstOrDefaultAsync();
+                FailedJobs = g.Count(
+                    x => x.Status == AIJobStatus.Failed)
+            })
+            .FirstOrDefaultAsync();
 
-    return stats ?? new AIStatsResponse();
-}
+        return stats ?? new AIStatsResponse();
+    }
+
+    public async Task<AIJob?> GetLatestCompletedSummaryAsync(
+        Guid documentId,
+        Guid userId)
+    {
+        return await _dbContext.AIJobs
+            .Where(x =>
+                x.DocumentId == documentId &&
+                x.UserId == userId &&
+                x.JobType == AIJobType.Summarize &&
+                x.Status == AIJobStatus.Completed &&
+                x.Result != null)
+            .OrderByDescending(x => x.CompletedAt)
+            .FirstOrDefaultAsync();
+    }
 }

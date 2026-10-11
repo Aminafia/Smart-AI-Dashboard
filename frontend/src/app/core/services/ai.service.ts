@@ -13,6 +13,7 @@ import { ApiResponse } from '../models/shared/api-response';
 import { AIJob } from '../models/ai/ai-job.model';
 import { PagedResponse } from '../models/shared/paged-response.model';
 import { AIStats } from '../models/ai/ai-stats.model';
+import { DocumentSummaryResponse } from '../models/ai/document-summary-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +21,7 @@ import { AIStats } from '../models/ai/ai-stats.model';
 export class AiService {
   private readonly apiUrl = `${environment.apiUrl}/AI`;
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient) { }
 
   generate(request: GenerateRequest): Observable<ApiResponse<GenerateResponse>> {
     return this.http.post<ApiResponse<GenerateResponse>>(
@@ -40,7 +41,9 @@ export class AiService {
 
   summarizeDocument(documentId: string): Observable<ApiResponse<SummarizeResponse>> {
     return this.http.post<ApiResponse<SummarizeResponse>>(
-      `${this.apiUrl}/documents/${documentId}/summarize`, null);
+      `${this.apiUrl}/documents/${documentId}/summarize`,
+      null,
+      { context: new HttpContext().set(SKIP_LOADING, true) });
   }
 
   getJobs(page: number, pageSize: number): Observable<ApiResponse<PagedResponse<AIJob>>> {
@@ -49,9 +52,18 @@ export class AiService {
   }
 
   getStats(): Observable<ApiResponse<AIStats>> {
-  return this.http.get<ApiResponse<AIStats>>(
-    `${this.apiUrl}/stats`
-  );
-}
+    return this.http.get<ApiResponse<AIStats>>(
+      `${this.apiUrl}/stats`
+    );
+  }
+
+  getDocumentSummary(
+    documentId: string
+  ): Observable<ApiResponse<DocumentSummaryResponse>> {
+    return this.http.get<ApiResponse<DocumentSummaryResponse>>(
+      `${this.apiUrl}/documents/${documentId}/summary`,
+      { context: new HttpContext().set(SKIP_LOADING, true) }
+    );
+  }
 }
 

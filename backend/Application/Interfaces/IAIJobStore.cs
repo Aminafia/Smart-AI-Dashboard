@@ -11,4 +11,5 @@ public interface IAIJobStore
     Task<PagedResponse<AIJob>> GetJobsAsync(int page, int pageSize, Guid userId);
     Task UpdateJobAsync(AIJob job);
     Task<AIStatsResponse> GetStatsAsync(Guid userId);
+    Task<AIJob?> GetLatestCompletedSummaryAsync(Guid documentId, Guid userId);
 }
