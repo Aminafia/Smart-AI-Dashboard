@@ -6,11 +6,13 @@ using Application.Features.AI.Commands.SummarizeDocument;
 using Application.Features.AI.Queries.GetAIJobs;
 using Application.Features.AI.Queries.GetAIStatus;
 using Application.Features.AI.Queries.GetAIStats;
+using Application.Features.AI.Queries.GetDocumentSummary;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using MediatR;
+
 
 namespace API.Controllers;
 
@@ -107,5 +109,25 @@ public class AIController : ControllerBase
                 .SuccessResponse(
                     result,
                     "AI job statistics retrieved successfully."));
+    }
+
+    [Authorize]
+    [HttpGet("documents/{documentId:guid}/summary")]
+    public async Task<IActionResult> GetDocumentSummary(
+    Guid documentId,
+    CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(
+            new GetDocumentSummaryQuery
+            {
+                DocumentId = documentId
+            },
+            cancellationToken);
+
+        return Ok(
+            ApiResponse<DocumentSummaryResponse>
+                .SuccessResponse(
+                    result,
+                    "Document summary retrieved successfully."));
     }
 }

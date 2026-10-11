@@ -10,6 +10,7 @@ import { DatePipe } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
@@ -25,6 +26,7 @@ import { Router } from '@angular/router';
     MatTableModule,
     MatButtonModule,
     MatIconModule,
+    MatTooltipModule,
     PageHeaderComponent,
     PageCardComponent,
     EmptyStateComponent,
@@ -94,10 +96,8 @@ export class DocumentListComponent implements OnInit {
   }
 
   viewDocument(documentModel: DocumentModel): void {
-    this.router.navigate([
-      '/documents',
-      documentModel.id
-    ]);
+    this.router.navigate(['/documents', documentModel.id]);
+    { state: { document: documentModel } }
   }
 
   downloadDocument(documentModel: DocumentModel): void {

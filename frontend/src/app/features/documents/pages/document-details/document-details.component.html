@@ -1,83 +1,228 @@
-<app-page-header [title]="document?.fileName ?? 'Document'" subtitle="Document details and AI processing">
+<div class="document-page">
+  <div class="back-row">
+    <button
+      mat-icon-button
+      class="back-button"
+      (click)="goBack()"
+      aria-label="Back to documents"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </div>
 
-    <div class="flex gap-2">
-        <button mat-stroked-button (click)="goBack()">
-            <mat-icon>arrow_back</mat-icon>
-            Back
-        </button>
-        <button mat-stroked-button (click)="downloadDocument()" [disabled]="!document">
-            <mat-icon>download</mat-icon>
-            Download
-        </button>
-        <button mat-stroked-button (click)="extractDocument()" [disabled]="extracting || !document">
-            <mat-icon>text_snippet</mat-icon>
-            {{ extracting ? 'Extracting...' : 'Extract Text' }}
-        </button>
-        <button mat-flat-button color="primary" (click)="summarizeDocument()"
-            [disabled]="summarizing || !content?.extractedText">
+  @if (loadingDocument && !document) {
+    <app-page-card>
+      <div class="status-message">Loading document...</div>
+    </app-page-card>
+  }
+
+  @if (document) {
+    <app-page-card>
+      <div class="document-card">
+        <div class="document-card-header">
+          <div class="file-title">
+            <mat-icon>picture_as_pdf</mat-icon>
+            <span [title]="document.fileName">
+              {{ document.fileName }}
+            </span>
+          </div>
+
+          <div class="action-buttons">
+            <button
+              mat-stroked-button
+              (click)="downloadDocument()"
+              [disabled]="!document"
+            >
+              <mat-icon>download</mat-icon>
+              <span>Download</span>
+            </button>
+
+            <button
+              mat-stroked-button
+              (click)="extractDocument()"
+              [disabled]="
+                !document ||
+                extracting ||
+                summarizing ||
+                loadingContent
+              "
+            >
+              <mat-icon>text_snippet</mat-icon>
+              <span>
+                {{ extracting ? 'Extracting...' : 'Extract Text' }}
+              </span>
+            </button>
+
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="summarizeDocument()"
+              [disabled]="
+                !document ||
+                summarizing ||
+                extracting
+              "
+            >
+              <mat-icon>auto_awesome</mat-icon>
+              <span>
+                {{ summarizing ? 'Summarizing...' : 'Summarize' }}
+              </span>
+            </button>
+
+            <button
+              mat-icon-button
+              class="preview-toggle"
+              (click)="togglePreview()"
+              [attr.aria-label]="
+                previewVisible
+                  ? 'Minimize preview'
+                  : 'Expand preview'
+              "
+            >
+              <mat-icon>
+                {{ previewVisible ? 'expand_less' : 'expand_more' }}
+              </mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <div class="file-metadata">
+          <span>{{ document.contentType || 'Document' }}</span>
+          <span>{{ formatFileSize(document.fileSize) }}</span>
+          <span>
+            Uploaded {{ document.uploadedAt | date:'mediumDate' }}
+          </span>
+        </div>
+
+        @if (previewVisible) {
+          <div class="preview-container">
+            @if (loadingPreview) {
+              <div class="preview-status">
+                Loading PDF preview...
+              </div>
+            } @else if (
+              pdfPreviewUrl &&
+              document.contentType === 'application/pdf'
+            ) {
+              <iframe
+                class="pdf-preview"
+                [src]="pdfPreviewUrl"
+                [title]="document.fileName"
+              ></iframe>
+            } @else if (
+              document.contentType === 'application/pdf'
+            ) {
+              <div class="preview-status">
+                PDF preview is unavailable. You can still download the file.
+              </div>
+            } @else {
+              <div class="preview-status">
+                Preview is available for PDF documents.
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </app-page-card>
+  }
+
+  @if (workspaceVisible) {
+    <section
+      #workspaceAnchor
+      class="workspace-grid"
+      aria-label="Document text and summary"
+    >
+      <!-- Extracted Text -->
+      <app-page-card>
+        <div class="panel-header">
+          <div class="panel-title">
+            <mat-icon>article</mat-icon>
+            <h2>Extracted Text</h2>
+          </div>
+
+          @if (content?.extractedAt) {
+            <span class="panel-meta">
+              Extracted {{ content?.extractedAt | date:'short' }}
+            </span>
+          }
+        </div>
+
+        <!-- Always show returned text before considering loading flags. -->
+        @if (content?.extractedText?.trim()) {
+          <div class="panel-scroll extracted-text">{{ content?.extractedText }}</div>
+        } @else if (loadingContent || extracting) {
+          <div class="panel-status">
+            {{ extracting ? 'Extracting text...' : 'Loading extracted text...' }}
+          </div>
+        } @else if (contentError) {
+          <div class="panel-status error-message">
+            {{ contentError }}
+          </div>
+
+          <button
+            mat-stroked-button
+            (click)="extractDocument()"
+            [disabled]="extracting || summarizing || loadingContent"
+          >
+            <mat-icon>refresh</mat-icon>
+            Retry extraction
+          </button>
+        } @else {
+          <div class="panel-status">
+            Extract text to view the document's contents here.
+          </div>
+        }
+      </app-page-card>
+
+      <!-- Summary -->
+      <app-page-card>
+        <div class="panel-header">
+          <div class="panel-title">
             <mat-icon>auto_awesome</mat-icon>
-            {{ summarizing ? 'Summarizing...' : 'Summarize Document' }}
-        </button>
-    </div>
+            <h2>Summary</h2>
+          </div>
+        </div>
 
-</app-page-header>
+        @if (summary) {
+          <div class="panel-scroll summary-text">{{ summary }}</div>
+        } @else if (summarizing) {
+          <div class="panel-status summary-progress">
+            <span class="progress-dot"></span>
+            <span>Generating summary...</span>
+          </div>
+        } @else if (summaryError) {
+          <div class="panel-status error-message">
+            {{ summaryError }}
+          </div>
 
-<app-page-card>
-    @if (document) {
-    <div class="document-info">
-        <div>
-            <span class="label">File name</span>
-            <span>{{ document.fileName }}</span>
-        </div>
-        <div>
-            <span class="label">Type</span>
-            <span>{{ document.contentType }}</span>
-        </div>
-        <div>
-            <span class="label">Size</span>
-            <span>{{ document.fileSize }} bytes</span>
-        </div>
-        <div>
-            <span class="label">Uploaded</span>
-            <span>{{ document.uploadedAt | date:'medium' }}</span>
-        </div>
-    </div>
-    }
-</app-page-card>
+          <button
+            mat-stroked-button
+            (click)="summarizeDocument()"
+            [disabled]="summarizing || extracting"
+          >
+            <mat-icon>refresh</mat-icon>
+            Try again
+          </button>
+        } @else {
+          <div class="panel-empty">
+            <mat-icon>auto_awesome</mat-icon>
 
-<app-page-card>
-    <div class="content-header">
-        <div>
-            <h2>Extracted Content</h2>
-            @if (content) { <p>Extracted {{ content.extractedAt | date:'medium' }}</p> }
-        </div>
-    </div>
+            <p>
+              Click Summarize to generate a concise overview of this document.
+            </p>
 
-    @if (loadingContent) {
-    <div class="empty-content">Loading extracted content...</div>
-    } @else if (content) {
-    <pre class="extracted-text">{{ content.extractedText }}</pre>
-    } @else {
-    <div class="empty-content">
-        <mat-icon>text_snippet</mat-icon>
-        <h3>No extracted content</h3>
-        <p>Extract text from this document before using AI features.</p>
-        <button mat-flat-button color="primary" (click)="extractDocument()" [disabled]="extracting">
-            <mat-icon>text_snippet</mat-icon>
-            Extract Text
-        </button>
-    </div>
-    }
-</app-page-card>
-
-@if (summary) {
-<app-page-card>
-    <div class="content-header">
-        <div>
-            <h2>AI Summary</h2>
-            <p>Generated from the extracted document content</p>
-        </div>
-    </div>
-    <div class="summary-text">{{ summary }}</div>
-</app-page-card>
-}
+            <button
+              mat-flat-button
+              color="primary"
+              (click)="summarizeDocument()"
+              [disabled]="summarizing || extracting"
+            >
+              <mat-icon>auto_awesome</mat-icon>
+              Summarize
+            </button>
+          </div>
+        }
+      </app-page-card>
+    </section>
+  }
+</div>
