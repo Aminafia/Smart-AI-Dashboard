@@ -23,10 +23,10 @@
             <button mat-stroked-button (click)="downloadDocument()" [disabled]="!document">
               <mat-icon>download</mat-icon><span>Download</span>
             </button>
-            <button mat-stroked-button (click)="extractDocument()" [disabled]="!document || extracting">
+            <button mat-stroked-button (click)="extractDocument()" [disabled]="!document || extracting || summarizing || loadingContent">
               <mat-icon>text_snippet</mat-icon><span>{{ extracting ? 'Extracting...' : 'Extract Text' }}</span>
             </button>
-            <button mat-flat-button color="primary" (click)="summarizeDocument()" [disabled]="!document || summarizing">
+            <button mat-flat-button color="primary" (click)="summarizeDocument()" [disabled]="!document || summarizing || extracting">
               <mat-icon>auto_awesome</mat-icon><span>{{ summarizing ? 'Summarizing...' : 'Summarize' }}</span>
             </button>
             <button mat-icon-button class="preview-toggle" (click)="togglePreview()"
@@ -75,7 +75,7 @@
           <div class="panel-scroll extracted-text">{{ content?.extractedText }}</div>
         } @else if (contentError) {
           <div class="panel-status error-message">{{ contentError }}</div>
-          <button mat-stroked-button (click)="extractDocument()" [disabled]="extracting">
+          <button mat-stroked-button (click)="extractDocument()" [disabled]="extracting || summarizing || loadingContent">
             <mat-icon>refresh</mat-icon>Retry extraction
           </button>
         } @else {
@@ -97,7 +97,7 @@
           <div class="panel-scroll summary-text">{{ summary }}</div>
         } @else if (summaryError) {
           <div class="panel-status error-message">{{ summaryError }}</div>
-          <button mat-stroked-button (click)="summarizeDocument()" [disabled]="summarizing">
+          <button mat-stroked-button (click)="summarizeDocument()" [disabled]="summarizing || extracting">
             <mat-icon>refresh</mat-icon>Try again
           </button>
         } @else {
