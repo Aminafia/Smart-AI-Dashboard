@@ -12,5 +12,5 @@ namespace Application.Interfaces;
 
 public interface IAIService
 {
-    Task<AIProviderResponse> ProcessAsync(AIRequest request);
+    Task<AIProviderResponse> ProcessAsync(AIRequest request, CancellationToken cancellationToken = default);
 }

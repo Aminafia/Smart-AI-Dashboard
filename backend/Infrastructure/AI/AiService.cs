@@ -33,7 +33,7 @@ public class AiService : IAIService
         _logger = logger;
     }
 
-    public async Task<AIProviderResponse> ProcessAsync(AIRequest request)
+    public async Task<AIProviderResponse> ProcessAsync(AIRequest request, CancellationToken cancellationToken = default)
     {
         var cacheKey = $"ai:{request.JobType}:{request.Input}";
 
@@ -72,7 +72,9 @@ public class AiService : IAIService
 
         // 2. Call actual AI provider
 
-        var aiResult = await _provider.GenerateAsync(prompt);
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var aiResult = await _provider.GenerateAsync(prompt, cancellationToken);
 
         if (string.IsNullOrWhiteSpace(aiResult))
         {

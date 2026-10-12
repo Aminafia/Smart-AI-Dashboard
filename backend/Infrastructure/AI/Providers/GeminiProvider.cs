@@ -36,7 +36,7 @@ public class GeminiProvider : IAIProvider
         _logger = logger;
     }
 
-    public async Task<string> GenerateAsync(string prompt)
+    public async Task<string> GenerateAsync(string prompt, CancellationToken cancellationToken = default)
     {
         var apiKey = _configuration["Gemini:ApiKey"];
 
@@ -70,7 +70,7 @@ public class GeminiProvider : IAIProvider
                 ]
             };
 
-            using var response = await client.PostAsJsonAsync(url, request);
+            using var response = await client.PostAsJsonAsync(url, request, cancellationToken);
 
             _logger.LogInformation(
                 "Gemini returned HTTP status {StatusCode}",
@@ -78,8 +78,7 @@ public class GeminiProvider : IAIProvider
 
             response.EnsureSuccessStatusCode();
 
-            var result =
-                await response.Content.ReadFromJsonAsync<GeminiResponse>();
+            var result = await response.Content.ReadFromJsonAsync<GeminiResponse>(cancellationToken);
 
             var text = result?.Candidates?
                 .FirstOrDefault()?
@@ -95,6 +94,12 @@ public class GeminiProvider : IAIProvider
             }
 
             return text;
+        }
+
+        catch (OperationCanceledException)
+            when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
         }
         catch (Exception ex)
         {

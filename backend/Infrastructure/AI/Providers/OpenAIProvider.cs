@@ -17,7 +17,7 @@ public class OpenAIProvider : IAIProvider
         _logger = logger;
     }
 
-    public async Task<string> GenerateAsync(string prompt)
+    public async Task<string> GenerateAsync(string prompt, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -29,17 +29,22 @@ public class OpenAIProvider : IAIProvider
                 input = prompt
             };
 
-            var response = await _httpClient.PostAsJsonAsync(url, requestBody);
+            var response = await _httpClient.PostAsJsonAsync(url, requestBody, cancellationToken);
             response.EnsureSuccessStatusCode();
 
-            var json = await response.Content.ReadAsStringAsync();
+            var json = await response.Content.ReadAsStringAsync(cancellationToken);
 
             return $"Processed Response: {json}";
+        }
+        catch (OperationCanceledException)
+    when (cancellationToken.IsCancellationRequested)
+        {
+            throw;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "AI provider failed");
-            return "⚠️ AI service temporarily unavailable. Please retry";  //fallback response          
+            return "⚠️ AI service temporarily unavailable. Please retry";
         }
     }
 }

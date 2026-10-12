@@ -7,5 +7,5 @@ namespace Application.Interfaces;
 
 public interface IAIProvider
 {
-    Task<string> GenerateAsync(string prompt);
+    Task<string> GenerateAsync(string prompt, CancellationToken cancellationToken = default);
 }

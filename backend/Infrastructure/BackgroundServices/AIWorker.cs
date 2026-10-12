@@ -133,13 +133,22 @@ public class AIWorker : BackgroundService
                     JobType = job.JobType
                 };
 
-                var response = await aiService.ProcessAsync(request);
+                var response = await aiService.ProcessAsync(request, stoppingToken);
 
                 job.Result = response.Output;
                 job.Status = AIJobStatus.Completed;
                 job.CompletedAt = DateTime.UtcNow;
 
                 await jobStore.UpdateJobAsync(job);
+            }
+            catch (OperationCanceledException)
+    when (stoppingToken.IsCancellationRequested)
+            {
+                _logger.LogInformation(
+                    "AI job {JobId} processing was cancelled during worker shutdown.",
+                    job.Id);
+
+                break;
             }
             catch (Exception ex)
             {
