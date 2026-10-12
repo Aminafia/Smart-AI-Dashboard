@@ -12,4 +12,6 @@ public interface IAIJobStore
     Task UpdateJobAsync(AIJob job);
     Task<AIStatsResponse> GetStatsAsync(Guid userId);
     Task<AIJob?> GetLatestCompletedSummaryAsync(Guid documentId, Guid userId);
+    Task<List<AIJob>> GetRecoverableJobsAsync();
+
 }

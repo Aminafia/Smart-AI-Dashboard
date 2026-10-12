@@ -79,4 +79,17 @@ public class AIJobStore : IAIJobStore
             .OrderByDescending(x => x.CompletedAt)
             .FirstOrDefaultAsync();
     }
+
+
+    public async Task<List<AIJob>> GetRecoverableJobsAsync()
+    {
+        return await _dbContext.AIJobs
+            .Where(x =>
+                x.Status == AIJobStatus.Pending ||
+                x.Status == AIJobStatus.Processing ||
+                x.Status == AIJobStatus.Retrying)
+            .OrderBy(x => x.CreatedAt)
+            .ToListAsync();
+    }
+
 }

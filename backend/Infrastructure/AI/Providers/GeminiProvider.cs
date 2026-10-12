@@ -38,19 +38,20 @@ public class GeminiProvider : IAIProvider
 
     public async Task<string> GenerateAsync(string prompt)
     {
+        var apiKey = _configuration["Gemini:ApiKey"];
+
+        if (string.IsNullOrWhiteSpace(apiKey))
+        {
+            throw new InvalidOperationException(
+                "Gemini API key is not configured.");
+        }
+
         try
         {
-            var apiKey = _configuration["Gemini:ApiKey"];
-
-            if (string.IsNullOrWhiteSpace(apiKey))
-            {
-                throw new InvalidOperationException(
-                    "Gemini API Key is missing.");
-            }
-
             var client = _httpClientFactory.CreateClient("AIClient");
 
-            var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}";
+            var url =
+                $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}";
 
             var request = new GeminiRequest
             {
@@ -69,35 +70,36 @@ public class GeminiProvider : IAIProvider
                 ]
             };
 
-            var response = await client.PostAsJsonAsync(url, request);
-            var responseBody = await response.Content.ReadAsStringAsync();
+            using var response = await client.PostAsJsonAsync(url, request);
+
             _logger.LogInformation(
-                "Gemini Status Code: {StatusCode}",
-                response.StatusCode);
-            _logger.LogInformation(
-                "Gemini Response: {Response}",
-                responseBody);
+                "Gemini returned HTTP status {StatusCode}",
+                (int)response.StatusCode);
+
             response.EnsureSuccessStatusCode();
 
-            var result = await response.Content.ReadFromJsonAsync<GeminiResponse>();
+            var result =
+                await response.Content.ReadFromJsonAsync<GeminiResponse>();
 
-            var text =
-                result?.Candidates
-                    ?.FirstOrDefault()
-                    ?.Content
-                    ?.Parts
-                    ?.FirstOrDefault()
-                    ?.Text;
+            var text = result?.Candidates?
+                .FirstOrDefault()?
+                .Content?
+                .Parts?
+                .FirstOrDefault()?
+                .Text;
 
-            return string.IsNullOrWhiteSpace(text)
-                ? "No response generated."
-                : text;
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new InvalidOperationException(
+                    "Gemini returned an empty response.");
+            }
+
+            return text;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Gemini provider failed");
-
-            return $"Gemini Error: {ex.Message}";
+            _logger.LogError(ex, "Gemini generation failed.");
+            throw;
         }
     }
 }

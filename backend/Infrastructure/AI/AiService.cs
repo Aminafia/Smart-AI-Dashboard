@@ -71,26 +71,39 @@ public class AiService : IAIService
         };
 
         // 2. Call actual AI provider
+
         var aiResult = await _provider.GenerateAsync(prompt);
 
-        // 3. Store in cache (Fault-tolerant + no fallback caching)
-        if (!aiResult.StartsWith("⚠️"))
+        if (string.IsNullOrWhiteSpace(aiResult))
         {
-            try
-            {
-                await _cache.SetAsync(cacheKey, aiResult, TimeSpan.FromMinutes(10));
-                _logger.LogInformation("Cache SET for key {Key}", cacheKey);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Cache SET failed for key {Key}", cacheKey);
-            }
+            throw new InvalidOperationException(
+                "The AI provider returned an empty result.");
+        }
+
+        try
+        {
+            await _cache.SetAsync(
+                cacheKey,
+                aiResult,
+                TimeSpan.FromMinutes(10));
+
+            _logger.LogInformation(
+                "Cache SET for key {Key}",
+                cacheKey);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "Cache SET failed for key {Key}",
+                cacheKey);
         }
 
         return new AIProviderResponse
         {
             Output = aiResult,
-            IsFallback = aiResult.StartsWith("⚠️")
+            IsFallback = false
         };
+
     }
 }

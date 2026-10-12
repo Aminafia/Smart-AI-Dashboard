@@ -184,7 +184,7 @@
         </div>
 
         @if (summary) {
-          <div class="panel-scroll summary-text">{{ summary }}</div>
+          <div class="panel-scroll summary-text" [innerHTML]="summaryHtml"></div>
         } @else if (summarizing) {
           <div class="panel-status summary-progress">
             <span class="progress-dot"></span>

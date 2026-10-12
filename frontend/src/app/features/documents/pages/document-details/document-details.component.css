@@ -184,12 +184,79 @@
 }
 
 .extracted-text {
-  font-family: inherit;
-  font-size: 13px;
+  font-size: 14px;
+  white-space: pre-wrap;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  tab-size: 4;
 }
 
 .summary-text {
   font-size: 14px;
+  white-space: normal;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+:host ::ng-deep .summary-text h1,
+:host ::ng-deep .summary-text h2,
+:host ::ng-deep .summary-text h3,
+:host ::ng-deep .summary-text h4 {
+  margin: 18px 0 10px;
+  color: var(--mat-sys-on-surface, #30292d);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+:host ::ng-deep .summary-text h1 {
+  font-size: 20px;
+}
+
+:host ::ng-deep .summary-text h2 {
+  font-size: 18px;
+}
+
+:host ::ng-deep .summary-text h3,
+:host ::ng-deep .summary-text h4 {
+  font-size: 15px;
+}
+
+:host ::ng-deep .summary-text p {
+  margin: 0 0 12px;
+}
+
+:host ::ng-deep .summary-text ul,
+:host ::ng-deep .summary-text ol {
+  margin: 8px 0 14px;
+  padding-left: 24px;
+}
+
+:host ::ng-deep .summary-text li {
+  margin-bottom: 6px;
+}
+
+:host ::ng-deep .summary-text strong {
+  font-weight: 700;
+}
+
+:host ::ng-deep .summary-text > :first-child {
+  margin-top: 0;
+}
+
+:host ::ng-deep .summary-text > :last-child {
+  margin-bottom: 0;
+}
+
+:host ::ng-deep .summary-text pre {
+  overflow-x: auto;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--mat-sys-surface-container, #f1ebef);
+}
+
+:host ::ng-deep .summary-text code {
+  overflow-wrap: anywhere;
 }
 
 .panel-status,

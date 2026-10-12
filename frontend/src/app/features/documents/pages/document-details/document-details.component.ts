@@ -1,11 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild
-} from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -19,6 +12,8 @@ import { PageCardComponent } from '../../../../shared/components/page-card/page-
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { marked } from 'marked';
+import DOMPurify from 'dompurify';
 
 @Component({
   selector: 'app-document-details',
@@ -52,6 +47,7 @@ export class DocumentDetailsComponent implements OnInit, OnDestroy {
   summarizing = false;
 
   summary = '';
+  summaryHtml = '';
   contentError = '';
   summaryError = '';
 
@@ -81,8 +77,6 @@ export class DocumentDetailsComponent implements OnInit, OnDestroy {
     }
 
     this.currentDocumentId = id;
-
-    // Start the PDF request immediately.
     this.loadPdfPreview(id);
 
     this.documentService.getDocuments(1, 100).subscribe({
@@ -101,6 +95,7 @@ export class DocumentDetailsComponent implements OnInit, OnDestroy {
         this.document = found;
         this.loadingDocument = false;
         this.cdr.detectChanges();
+        this.loadSavedWorkspace(id);
       },
       error: () => {
         this.loadingDocument = false;
@@ -117,6 +112,79 @@ export class DocumentDetailsComponent implements OnInit, OnDestroy {
       this.previewObjectUrl = null;
     }
   }
+
+  
+private loadSavedWorkspace(id: string): void {
+  this.loadingContent = true;
+
+  this.documentService.getContent(id).subscribe({
+    next: response => {
+      if (this.currentDocumentId !== id) {
+        return;
+      }
+
+      this.content = response;
+      this.loadingContent = false;
+      this.contentError = '';
+
+      if (response.extractedText?.trim()) {
+        this.workspaceVisible = true;
+      }
+
+      this.cdr.detectChanges();
+    },
+    error: (error: { status?: number }) => {
+      if (this.currentDocumentId !== id) {
+        return;
+      }
+
+      this.loadingContent = false;
+
+      if (error.status !== 404) {
+        this.contentError = 'Unable to restore extracted text.';
+        this.workspaceVisible = true;
+      }
+
+      this.cdr.detectChanges();
+    }
+  });
+
+  this.aiService.getDocumentSummary(id).subscribe({
+    next: response => {
+      if (this.currentDocumentId !== id) {
+        return;
+      }
+
+      const savedSummary = response.data?.summary?.trim() ?? '';
+
+      if (savedSummary) {
+        this.summary = savedSummary;
+        this.workspaceVisible = true;
+        void this.renderSummaryMarkdown(savedSummary);
+      }
+
+      this.cdr.detectChanges();
+    },
+    error: () => {
+      if (this.currentDocumentId !== id) {
+        return;
+      }
+
+      this.cdr.detectChanges();
+    }
+  });
+}
+
+private async renderSummaryMarkdown(markdown: string): Promise<void> {
+  const html = await marked.parse(markdown);
+
+  if (this.summary !== markdown) {
+    return;
+  }
+
+  this.summaryHtml = DOMPurify.sanitize(html);
+  this.cdr.detectChanges();
+}
 
   private loadPdfPreview(id: string): void {
     this.loadingPreview = true;
@@ -210,10 +278,7 @@ export class DocumentDetailsComponent implements OnInit, OnDestroy {
       next: () => {
         this.extractionInFlight = false;
         this.extracting = false;
-
         this.cdr.detectChanges();
-
-        // The extraction endpoint has completed. Fetch the saved text.
         this.fetchContent(id, true);
       },
       error: () => {
@@ -331,16 +396,12 @@ export class DocumentDetailsComponent implements OnInit, OnDestroy {
 
     this.documentService.getContent(id).subscribe({
       next: response => {
-        // Store the actual API response.
         this.content = response;
-
         this.contentRequestInFlight = false;
         this.loadingContent = false;
         this.extracting = false;
         this.extractionInFlight = false;
         this.contentError = '';
-
-        // Explicitly refresh the Angular view.
         this.cdr.detectChanges();
 
         if (scrollWhenReady) {
@@ -364,7 +425,6 @@ export class DocumentDetailsComponent implements OnInit, OnDestroy {
         }
 
         if (afterLoad) {
-          // No saved text yet: the caller can initiate extraction.
           afterLoad();
         } else {
           this.contentError =
@@ -376,45 +436,68 @@ export class DocumentDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  private generateSummary(id: string): void {
-    if (this.summaryInFlight || this.summarizing) {
-      return;
-    }
-
-    this.summaryInFlight = true;
-    this.summarizing = true;
-
-    this.summary = '';
-    this.summaryError = '';
-
-    this.cdr.detectChanges();
-
-    this.aiService.summarizeDocument(id).subscribe({
-      next: response => {
-        this.summary = response.data?.output?.trim() ?? '';
-
-        this.summarizing = false;
-        this.summaryInFlight = false;
-
-        if (!this.summary) {
-          this.summaryError =
-            'The summary request completed, but no summary text was returned.';
-        }
-
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.summarizing = false;
-        this.summaryInFlight = false;
-
-        this.summaryError = 'Summary generation failed. Please try again.';
-
-        this.cdr.detectChanges();
-
-        this.snackbarService.error('Unable to summarize document.');
-      }
-    });
+  
+private generateSummary(id: string): void {
+  if (this.summaryInFlight || this.summarizing) {
+    return;
   }
+
+  this.summaryInFlight = true;
+  this.summarizing = true;
+  this.summaryError = '';
+  this.cdr.detectChanges();
+
+  this.aiService.summarizeDocument(id).subscribe({
+    next: async response => {
+      const generatedSummary =
+        response.data?.output?.trim() ?? '';
+
+      this.summarizing = false;
+      this.summaryInFlight = false;
+
+      if (!generatedSummary) {
+        this.summary = '';
+        this.summaryHtml = '';
+        this.summaryError =
+          'The request completed, but no summary text was returned.';
+        this.cdr.detectChanges();
+        return;
+      }
+
+      try {
+        const html = await marked.parse(generatedSummary);
+        const sanitizedHtml = DOMPurify.sanitize(html);
+
+        this.summary = generatedSummary;
+        this.summaryHtml = sanitizedHtml;
+        this.summaryError = '';
+      } catch (error) {
+        console.error('Summary Markdown rendering failed:', error);
+
+        // Preserve the generated content even if rendering fails.
+        this.summary = generatedSummary;
+        this.summaryHtml = '';
+        this.summaryError =
+          'The summary was generated, but its formatting failed.';
+      }
+
+      this.cdr.detectChanges();
+    },
+    error: error => {
+      console.error('Summary generation failed:', error);
+
+      this.summarizing = false;
+      this.summaryInFlight = false;
+      this.summaryError =
+        'Summary generation failed. Please try again.';
+
+      this.cdr.detectChanges();
+      this.snackbarService.error(
+        'Unable to summarize document.'
+      );
+    }
+  });
+}
 
   private revealWorkspace(): void {
     this.workspaceVisible = true;

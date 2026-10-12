@@ -46,9 +46,66 @@ public class AIWorker : BackgroundService
         _logger = logger;
     }
 
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        _logger.LogInformation("AI Worker is starting. Recovering queued jobs.");
+
+        using (var recoveryScope = _scopeFactory.CreateScope())
+        {
+            var jobStore = recoveryScope.ServiceProvider
+                .GetRequiredService<IAIJobStore>();
+
+            var recoverableJobs = await jobStore.GetRecoverableJobsAsync();
+
+            foreach (var job in recoverableJobs)
+            {
+                if (stoppingToken.IsCancellationRequested)
+                {
+                    break;
+                }
+
+
+                if (job.RetryCount >= job.MaxRetries)
+                {
+                    job.Status = AIJobStatus.Failed;
+
+                    job.Error ??=
+                        $"Job exhausted its retry allowance during recovery " +
+                        $"({job.RetryCount}/{job.MaxRetries}).";
+
+                    job.CompletedAt ??= DateTime.UtcNow;
+
+                    await jobStore.UpdateJobAsync(job);
+
+                    _logger.LogWarning(
+                        "Job {JobId} was marked Failed during recovery because " +
+                        "its retry allowance was exhausted ({RetryCount}/{MaxRetries}).",
+                        job.Id,
+                        job.RetryCount,
+                        job.MaxRetries);
+
+                    continue;
+                }
+                if (job.Status == AIJobStatus.Processing)
+                {
+                    job.Status = AIJobStatus.Pending;
+                    await jobStore.UpdateJobAsync(job);
+                }
+
+                _queue.Enqueue(job);
+
+                _logger.LogInformation(
+                    "Recovered AI job {JobId} with status {Status}",
+                    job.Id,
+                    job.Status);
+            }
+        }
+
+        _logger.LogInformation("AI Worker recovery finished.");
+
         while (!stoppingToken.IsCancellationRequested)
+
         {
             var job = _queue.Dequeue();
 
@@ -100,6 +157,21 @@ public class AIWorker : BackgroundService
                     job.Status = AIJobStatus.Retrying;
 
                     await jobStore.UpdateJobAsync(job);
+
+                    var delaySeconds = Math.Pow(2, job.RetryCount);
+
+                    try
+                    {
+                        await Task.Delay(TimeSpan.FromSeconds(delaySeconds), stoppingToken);
+                    }
+                    catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+                    {
+                        _logger.LogInformation(
+                            "Worker shutting down while job {JobId} was waiting to retry.",
+                            job.Id);
+
+                        break;
+                    }
 
                     _queue.Enqueue(job);
                 }
