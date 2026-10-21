@@ -481,6 +481,10 @@ Treat the diagram as a logical ownership map. Confirm exact database foreign-key
 7. Replace local document storage with S3 and in-memory queue with SQS at the planned integration stage; test retries, duplicates and recovery.
 8. Add cloud monitoring, CI/CD and cost controls; expand into RAG/agents/multimodal capabilities only after the base system is stable.
 
+## Diagram maintenance
+
+See [Diagram Maintenance Strategy](DIAGRAM_MAINTENANCE.md) for the planned hybrid approach: generate mechanical inventories/structural maps, retain human-reviewed workflow sequence diagrams, and add automated drift checks. These checks are planned; do not assume they are already running.
+
 ## Current status of the standalone Python AI engine
 
 The repository also contains a top-level `ai-engine/` FastAPI application with a Pegasus XSum Transformers summarizer. In the inspected current API/provider path, the ASP.NET Core application calls Gemini through its provider abstraction; no call from the .NET API to this FastAPI application was identified in the reviewed routes and provider files.
