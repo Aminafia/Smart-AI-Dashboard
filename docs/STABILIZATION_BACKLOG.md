@@ -298,6 +298,17 @@ Then execute STAB-017 through STAB-020 in small increments: S3 behind the storag
 
 **Exit criteria:** deployed workflows pass the same acceptance tests as local; storage and queue failure behavior is understood; no secrets are embedded in source/images; monitoring can distinguish API liveness, database readiness and provider/queue failures; deployment and rollback steps are documented.
 
+## Additional source-trace notes — EF model and host pipeline reconciliation
+
+- **The current EF model snapshot confirms no unique index on `Users.Email`:** `Users` has only its primary key in the snapshot. The `DocumentContent.DocumentId` unique index and cascade-delete FK are represented. Do not assume a live database exactly matches the snapshot until migrations and the target schema are inspected.
+- **AIJob relationship integrity is not configured in the current model:** `AIJob` has `UserId`, nullable `DocumentId`, and required legacy `ProjectId`, but the inspected `AppDbContext` only configures job enum conversions and the `(UserId, CreatedAt)` index. The snapshot likewise has no explicit FK from AIJobs to Users or Documents. Decide whether these are intentional scalar references or should be real foreign keys; validate existing orphaned rows before any migration.
+- **Document ownership is application-enforced, not database-enforced:** the `Documents.UserId` index exists, but no explicit FK to Users is configured in the inspected model. If adding constraints, plan the migration and orphan cleanup rather than assuming application filters alone protect referential integrity.
+- **Rate limiting is layered:** `Program.cs` applies the named `concurrency` limiter (permit limit 2, queue 0) to all mapped controllers. The named fixed-window limiter (5 requests per 10 seconds) is registered but only protects actions that explicitly attach that policy. Confirm this matches the intended throughput and response behavior under load.
+- **Middleware order is deliberate and should be verified in integration tests:** exception handling, correlation ID, and request logging are installed before CORS, authentication, authorization, rate limiting, and controller mapping. Ensure rejected requests and exceptions still return the intended envelope and correlation ID, and that logs don't include sensitive request bodies.
+- **CORS origins are configuration-driven:** if `Cors:AllowedOrigins` is absent, the policy receives an empty origin list. This fails closed for browser origins, but deployment configuration must supply the actual frontend origin; do not use wildcard origins as a quick fix.
+- **Redis is required at startup but not part of the readiness checks:** the host throws if the Redis connection string is missing, while readiness checks only PostgreSQL. A present connection string does not guarantee Redis is reachable, so decide whether Redis should be included in readiness or exposed as a separately protected dependency check.
+- **No model or host code changed:** these are source-level model/pipeline findings. Before any schema change, inspect all migrations and the actual database schema, and run migration tests on a disposable database.
+
 ## Consolidated final verification sequence
 
 1. Restore/build the backend and build the frontend from a clean working tree.
