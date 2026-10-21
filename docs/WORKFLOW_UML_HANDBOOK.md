@@ -610,7 +610,7 @@ The queue is currently in-memory. Database recovery on worker startup mitigates 
 - [ ] Confirm correlation/log fields available for the API request and background processing; do not assume the HTTP correlation ID automatically propagates into the worker.
 - [ ] Test duplicate/restart timing and record any at-least-once processing behavior.
 
-**Status:** architecture traced from source summaries; exact retry transitions and runtime recovery need direct source/runtime verification before marking complete.
+**Status:** main request, queue, worker, retry, recovery, cache/provider and polling paths traced directly from source. Runtime verification remains pending; source-level findings are recorded in Sections 4.6–4.7.
 
 ---
 
@@ -712,7 +712,7 @@ The handler creates and updates an AI job for tracking, but the client receives 
 - [ ] Verify provider failure produces a useful error response and the expected persisted failure state.
 - [ ] Verify the endpoint requires authentication and does not expose another user’s job/result.
 
-**Status:** source path identified; runtime checks pending.
+**Status:** synchronous handler, frontend response rendering, AI service, provider and cache paths traced directly from source. Runtime verification remains pending; findings are recorded in Section 5.5.
 
 ---
 
@@ -1452,16 +1452,16 @@ This list separates facts already observed in source from behavior still to be v
 
 | Workflow | Source traced | Runtime verified | Notes |
 |---|---|---|---|
-| Signup/login | In progress / core files inspected | Pending | Verify duplicate email, JWT, route guards and API authorization |
-| Text generation | Core path identified | Pending | Verify status transitions, polling, retries, restart recovery |
-| Plain-text summary | Core path identified | Pending | Verify immediate UI update and persisted job state |
-| Upload/preview | Core path identified | Pending | Verify file/metadata consistency and ownership |
-| Text extraction | Core path identified | Pending | Verify PDF edge cases and UI update |
-| Document summary | Core path identified | Pending | Verify saved summary reload and immediate rendering |
-| Job history/status/stats | Key store methods inspected | Pending | Verify user isolation and enum contract |
-| Document list/delete | Key ownership paths inspected | Pending | Verify cross-resource failure behavior/cascade |
-| Admin user operations | Controller policy inspected | Pending | Verify each endpoint and returned fields |
-| Health/diagnostics | Registration locations identified | Pending | Inspect checks and exercise dependency failures |
+| Signup/login | Source traced | Pending | Verify duplicate email, JWT, route guards and API authorization |
+| Text generation | Source traced | Pending | Verify status transitions, polling, retries, restart recovery |
+| Plain-text summary | Source traced | Pending | Verify immediate UI update and persisted job state |
+| Upload/preview | Source traced | Pending | Verify file/metadata consistency and ownership |
+| Text extraction | Source traced | Pending | Verify PDF edge cases and UI update |
+| Document summary | Source traced | Pending | Verify saved summary reload and immediate rendering |
+| Job history/status/stats | Source traced | Pending | Verify user isolation and enum contract |
+| Document list/delete | Source traced | Pending | Verify cross-resource failure behavior/cascade |
+| Admin user operations | Source traced | Pending | Verify each endpoint and returned fields |
+| Health/diagnostics | Source traced | Pending | Inspect checks and exercise dependency failures |
 
 ---
 
