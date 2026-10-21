@@ -483,7 +483,7 @@ Treat the diagram as a logical ownership map. Confirm exact database foreign-key
 
 ## 12. Complete tracked-file inventory
 
-This inventory is generated from the repository Git tree at the baseline commit above. Every tracked path appears under one category. It is a discovery index; the file itself remains the source of truth.
+This inventory is a snapshot generated from the repository Git tree at the baseline commit above, not a live listing of the current branch. Documentation files and README updates committed after that baseline may not be reflected in the listed file sizes. Use the current GitHub tree/source files as the source of truth.
 
 ### Root / other (4 files)
 
