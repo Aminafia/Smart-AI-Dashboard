@@ -12,6 +12,8 @@
 
 ## 1. Locked-in product and architecture decisions
 
+**Execution tracking:** the workflow-level source trace is in [`WORKFLOW_UML_HANDBOOK.md`](WORKFLOW_UML_HANDBOOK.md); prioritized fixes and the final verification order are in [`STABILIZATION_BACKLOG.md`](STABILIZATION_BACKLOG.md).
+
 1. This is **one Smart AI Dashboard application** with a shared frontend and backend, not a collection of separately managed AI projects.
 2. `ProjectId` in `AIJob` and the `Project` entity are legacy prototype concepts. Do not add project-management features to justify them. Trace references, then remove obsolete fields/entities with a safe EF Core migration after confirming no functional dependencies.
 3. Text generation is asynchronous because it can take longer: persist job, enqueue, process in `AIWorker`, persist status/result, poll status.
