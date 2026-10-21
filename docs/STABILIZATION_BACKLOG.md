@@ -323,6 +323,17 @@ A follow-up source search found `backend/Application/Features/Documents/Commands
 
 Remaining upload risks are narrower: extension and `IFormFile.ContentType` are client-controlled metadata and do not prove file contents match the claimed type; no magic-byte/content parser validation was found in this validator. Verify request-size limits at the hosting boundary and test malformed/mismatched files. Do not treat the earlier broad statement as proof that no size/type validation exists.
 
+## Additional source-trace notes — cache and worker reliability
+
+- `AiService` constructs Redis cache keys as `ai:{JobType}:{Input}` and logs the full key on GET/SET failures, hits and misses. Because `Input` may contain prompts or extracted document text, logs can disclose user content. Replace raw input in keys/logs with a stable digest and define whether cache sharing across users is acceptable.
+- Successful provider outputs are cached for ten minutes. The key includes job type and input but not user, provider, or model version. Review privacy/isolation and invalidation semantics before production.
+- `GeminiProvider` uses named `AIClient` with retry/circuit-breaker/60-second timeout policies, logs status codes, and rethrows failures. It does not implement automatic OpenAI fallback despite the presence of `OpenAIProvider`; don't describe fallback as active.
+- `AIQueue` is process-local memory; `AIWorker` recovers Pending/Processing/Retrying records at startup and processes one job at a time. A crash after provider success but before result persistence can repeat paid provider work. Retry delay blocks the single worker loop; `MaxRetries = 3` is used as a total-attempt ceiling by the worker.
+- `AIJobStore` filters user-facing get/list/stats/latest-summary queries by `UserId`; recovery intentionally scans recoverable jobs across users. Paging currently accepts page/pageSize without repository-level bounds, and store methods do not accept cancellation tokens.
+- `DocumentRepository.GetPagedAsync` scopes records to the current user and orders newest first, but page/pageSize are not bounded in the repository. Document file retrieval and extracted-content retrieval first verify ownership through `GetByIdAsync(id, userId)`.
+- `TestController` exposes an unauthenticated deliberate error endpoint, plus authenticated/admin diagnostic endpoints. Remove or restrict test routes before production deployment.
+- These are source-only findings; no runtime behavior, database state, or current CI status was verified in this pass.
+
 ## Consolidated final verification sequence
 
 1. Restore/build the backend and build the frontend from a clean working tree.
