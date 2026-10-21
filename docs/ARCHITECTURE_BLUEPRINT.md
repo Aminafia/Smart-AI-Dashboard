@@ -6,6 +6,7 @@
 - Baseline branch: `main`
 - Baseline commit: `1ecdb51be7c74f9a78f664d61110bb45479a1f5e`
 - Tracked files at baseline: **361**
+- **Baseline metadata note:** the commit and file count above are a historical snapshot, not a live `main` status. For current structural inventory, use [`docs/generated/SOURCE_INVENTORY.md`](generated/SOURCE_INVENTORY.md) and [`docs/generated/DOTNET_PROJECT_DEPENDENCIES.md`](generated/DOTNET_PROJECT_DEPENDENCIES.md); regenerate/check them with `python scripts/check_architecture_docs.py --write` and `python scripts/check_architecture_docs.py --check`. The reviewed workflow diagrams below remain human-maintained and must be checked against source after implementation changes.
 - Purpose: map system boundaries, execution paths, dependencies, persistence, and code-file locations.
 - Important limit: diagrams summarize and connect source files; they do not replace source code. The inventory at the end makes tracked files discoverable. Individual implementation details must be verified against each linked source file.
 - End-to-end workflow handbook: [docs/WORKFLOW_UML_HANDBOOK.md](WORKFLOW_UML_HANDBOOK.md) — master walkthrough, shared middleware/security foundation, sequence diagrams, participating-file registers, and verification checklists.
