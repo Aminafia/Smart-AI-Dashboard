@@ -8,6 +8,7 @@
 - Tracked files at baseline: **361**
 - Purpose: map system boundaries, execution paths, dependencies, persistence, and code-file locations.
 - Important limit: diagrams summarize and connect source files; they do not replace source code. The inventory at the end makes tracked files discoverable. Individual implementation details must be verified against each linked source file.
+- End-to-end workflow handbook: [docs/WORKFLOW_UML_HANDBOOK.md](WORKFLOW_UML_HANDBOOK.md) — master walkthrough, shared middleware/security foundation, sequence diagrams, participating-file registers, and verification checklists.
 
 ## 1. Locked-in product and architecture decisions
 
