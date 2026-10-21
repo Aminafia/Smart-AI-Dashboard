@@ -225,6 +225,21 @@ These are source-review observations. The relevant Angular component path and in
 - **Frontend service skips the global loading indicator for polling and document-summary operations:** `AiService` sets `SKIP_LOADING` for status polling, document summarization, and saved-summary retrieval. This appears intentional to avoid overlay flicker, but should be confirmed against the intended UX during manual verification.
 - **No frontend behavior changes made:** the actual GenerateComponent source path was not resolved in this pass. Polling cleanup, error handling, immediate rendering, and component lifecycle remain open verification items rather than confirmed defects.
 
+## Additional source-trace notes — background worker and job persistence
+
+The worker, in-memory queue, and job-store implementations have now been inspected directly.
+
+- **The queue is process-local memory:** `AIQueue` uses `ConcurrentQueue<AIJob>` with no persistence or backpressure. A process crash can discard queued objects, so database-based recovery is essential. Before cloud deployment, replace this with the agreed durable queue when moving to a separate worker or multiple API instances.
+- **Startup recovery is database-driven:** `AIWorker` queries Pending, Processing, and Retrying jobs at startup. Processing jobs are reset to Pending; jobs at or above their retry allowance are marked Failed. This is useful crash recovery, but not a guarantee of exactly-once execution.
+- **Duplicate provider work remains possible:** the worker calls the provider before saving Completed. If the provider succeeds but the process dies before the result is persisted, recovery can call the provider again. Decide whether this cost/duplication is acceptable and consider idempotency/provider request tracking before introducing multiple workers.
+- **Retry count semantics:** the worker increments RetryCount after a failure and re-enqueues only while RetryCount is less than MaxRetries. With the default MaxRetries of 3, this means up to three processing attempts total, not three retries after an initial attempt. Confirm that the UI/docs use this meaning consistently.
+- **Shutdown states rely on next-start recovery:** cancellation during active processing exits the loop without persisting a new state; cancellation during retry delay leaves the job as Retrying. On the next startup these states are selected for recovery. Test graceful shutdown and abrupt process termination separately.
+- **A retry delay blocks this worker's single processing loop:** while waiting between retries, the same worker cannot process another queued job. This is a throughput limitation to document; avoid adding concurrency until job-store scoping, provider limits and duplicate-work behavior are understood.
+- **Store calls lack visible cancellation parameters:** `AIJobStore` calls EF Core operations without forwarding request/worker cancellation tokens. Consider adding tokens consistently to persistence interfaces and implementations.
+- **History paging is unbounded in the store:** `GetJobsAsync` directly uses `Skip((page - 1) * pageSize).Take(pageSize)` and does not clamp or reject invalid values. Add explicit validation/bounds at the request boundary and tests for zero, negative, and very large page sizes.
+- **Job-store ownership is implemented for user-facing reads:** `GetJobAsync`, `GetJobsAsync`, `GetStatsAsync`, and latest-summary lookup filter by user ID where relevant. `GetRecoverableJobsAsync` intentionally returns recoverable jobs across all users for the background worker.
+- **No worker/queue code changed:** these are source-trace findings only. Worker failure, restart, retry, and shutdown scenarios remain for the final verification pass.
+
 ## Consolidated final verification sequence
 
 1. Restore/build the backend and build the frontend from a clean working tree.
