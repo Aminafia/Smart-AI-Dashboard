@@ -155,7 +155,7 @@ Key frontend source areas:
 - Core infrastructure: `frontend/src/app/core/guards/`, `core/interceptors/`, `core/services/`, `core/models/`.
 - Features: `frontend/src/app/features/auth/`, `features/ai/`, `features/dashboard/`, `features/documents/`.
 - Shared presentation: `frontend/src/app/shared/components/`, `frontend/src/app/shared/services/`.
-- Environment/build: `frontend/src/environments/`, `frontend/angular.json`, `frontend/package.json`, `frontend/tsconfig*.json`, `frontend/styles.css`, `frontend/material-theme.scss`.
+- Environment/build: `frontend/src/environments/`, `frontend/angular.json`, `frontend/package.json`, `frontend/tsconfig.json`, `frontend/tsconfig.app.json`, `frontend/tsconfig.spec.json`, `frontend/src/styles.css`, `frontend/src/material-theme.scss`.
 
 ## 4. Level 1 — Backend dependency and request map
 
