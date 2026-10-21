@@ -1338,7 +1338,7 @@ The current source has an AdminOnly policy on `UsersController`. Confirm every a
 
 ---
 
-## 11.5 Source-traced admin findings
+## 11.4 Source-traced admin findings
 
 Direct inspection of UsersController confirms the controller has a class-level [Authorize(Policy = "AdminOnly")] attribute, so both user creation and user listing require the backend admin policy. The client-side route layout is not a substitute for this policy.
 
@@ -1347,7 +1347,7 @@ Direct inspection of UsersController confirms the controller has a class-level [
 - Admin creation reuses the CreateUser command/handler path, so duplicate-email and password-hashing behavior should be consistent with registration. The database unique-email finding from Chapter 3 still applies.
 - The controller’s log messages include user IDs on successful creation, which is useful for audit tracing. Do not add passwords, JWTs, or full sensitive request bodies to logs.
 
-## 11.6 Expanded final verification checklist
+## 11.5 Expanded final verification checklist
 
 - [ ] Call GET /api/users and POST /api/users with no token, a normal User token, and an Admin token.
 - [ ] Verify only an Admin can list users or create users.
@@ -1398,7 +1398,7 @@ Health checks only prove the conditions they actually test. Do not infer Redis, 
 
 ---
 
-## 12.5 Source-traced health and diagnostics findings
+## 12.3 Source-traced health and diagnostics findings
 
 Direct inspection of HealthCheckExtensions and Program.cs confirms:
 
@@ -1410,7 +1410,7 @@ Direct inspection of HealthCheckExtensions and Program.cs confirms:
 - Startup fails fast when the database or Redis connection-string setting is absent. Validate production configuration and secret injection before deploying.
 - Program.cs applies the configured concurrency limiter to mapped controllers and the fixed-window limiter to endpoints explicitly decorated for it. Confirm the desired policies on every expensive endpoint rather than assuming all controllers share the same fixed-window policy.
 
-## 12.6 Expanded final verification checklist
+## 12.4 Expanded final verification checklist
 
 - [ ] Verify /health/live responds when the process is running even if PostgreSQL is unavailable.
 - [ ] Verify /health/ready changes status when PostgreSQL is unavailable.
@@ -1452,7 +1452,7 @@ This list separates facts already observed in source from behavior still to be v
 
 ## 13.3 Final verification tracker
 
-The prioritized remediation plan and final consolidated test sequence are maintained in [`STABILIZATION_BACKLOG.md`](STABILIZATION_BACKLOG.md). This tracker records workflow-level source tracing and runtime verification status; update it only after observing actual test results.
+The developer has manually tested the application multiple times during implementation. Those earlier manual checks are acknowledged, but individual workflow-by-workflow results were not recorded in this tracker, and later source/documentation changes may affect behavior. The prioritized remediation plan and final consolidated verification sequence are maintained in [`STABILIZATION_BACKLOG.md`](STABILIZATION_BACKLOG.md). Keep the final verification status pending until each workflow is deliberately rechecked and its observed result is recorded; do not confuse this final pass with the earlier manual testing.
 
 | Workflow | Source traced | Runtime verified | Notes |
 |---|---|---|---|
