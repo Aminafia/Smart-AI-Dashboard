@@ -31,6 +31,7 @@ The current queue and local storage are development-stage implementation choices
 - [Workflow UML Handbook](docs/WORKFLOW_UML_HANDBOOK.md)
 - [Stabilization Backlog](docs/STABILIZATION_BACKLOG.md)
 - [Diagram Maintenance Strategy](docs/DIAGRAM_MAINTENANCE.md)
+- [Generated Repository Source Inventory](docs/generated/SOURCE_INVENTORY.md)
 
 Read the architecture blueprint first for the overall system map, then use the workflow handbook to follow each request through the frontend, API, application handlers, infrastructure and persistence.
 
