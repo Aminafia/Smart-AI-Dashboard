@@ -112,6 +112,7 @@ Not every workflow uses every component. For example, a health check may not go 
 - **Core:** domain entities and constants/enums.
 - **Infrastructure:** database repositories, local document storage, PDF extraction, AI service/provider, Redis cache, job store, in-memory queue, and background worker.
 - **External/local dependencies:** PostgreSQL, Redis, local file system, and Gemini API.
+- **Separate research prototype:** `ai-engine/` contains a standalone FastAPI/Pegasus summarizer. It is not identified as a dependency of the current .NET request path; keep it outside the current runtime until an explicit integration decision is made.
 
 ---
 
