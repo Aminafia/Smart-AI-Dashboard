@@ -1152,6 +1152,26 @@ Pagination limits the number of records returned per request. The authenticated 
 
 ---
 
+## 9.5 Source-traced job history and statistics findings
+
+Direct inspection of GetAIJobsQueryHandler, GetAIStatsQueryHandler, AIJobStore, and AIController confirms:
+
+- Job history is filtered by the authenticated current user in the handler/store path and ordered newest-first by CreatedAt. Pagination is applied in PostgreSQL using Skip/Take.
+- The history response maps job ID, type, status, prompt, created time and completed time; it does not include the result or error body. The status endpoint is the separate path for result/error retrieval.
+- Statistics are grouped from the current user’s jobs and count total, Completed, Processing and Failed. Pending and Retrying are not separate counters in the current response.
+- The controller accepts page and pageSize without explicit range validation in the inspected action/query handler. Add bounded pagination validation so invalid or excessive page sizes cannot create avoidable database load.
+- The query handler passes the current user ID into the store, but the store method calls do not accept CancellationToken. Cancellation is not currently propagated through these EF queries.
+
+## 9.6 Expanded final verification checklist
+
+- [ ] Verify newest jobs appear first and pagination returns consistent totals.
+- [ ] Test invalid page values and oversized pageSize after validation limits are implemented.
+- [ ] Verify history and statistics contain only the signed-in user’s jobs.
+- [ ] Verify the history page correctly renders string-valued job statuses.
+- [ ] Verify status endpoint results match the history item for the same job.
+- [ ] Verify completed summaries and failed jobs do not leak sensitive full outputs in the history list.
+
+
 # 10. Workflow 08 — Document listing and deletion
 
 ## 10.1 Listing diagram
@@ -1237,6 +1257,26 @@ The deletion workflow spans the file system and database, so partial failure is 
 
 ---
 
+## 10.5 Source-traced document listing/deletion findings
+
+Direct inspection of DocumentsController, GetDocumentsQueryHandler, DocumentRepository, DeleteDocumentCommandHandler, and LocalDocumentStorage confirms:
+
+- Document listing uses the authenticated user ID in DocumentRepository.GetPagedAsync and orders by UploadedAt descending. The API returns paged metadata, not document bytes.
+- DeleteDocumentCommandHandler verifies ownership by resolving the document with both ID and current user ID before attempting deletion.
+- The delete sequence removes the physical file first and then deletes metadata from PostgreSQL. If the database delete fails after the file is removed, metadata can remain while the file is missing. Reversing the order creates the opposite orphan window; a more robust cleanup/reconciliation strategy is a later reliability improvement.
+- DocumentContentRepository and any related AIJob records require deliberate relationship/cascade review. Do not assume deleting document metadata automatically removes extracted content and summary jobs; inspect the current migrations and foreign-key configuration during stabilization.
+- The frontend refreshes the list after a successful delete and asks for confirmation before issuing the DELETE request.
+
+## 10.6 Expanded final verification checklist
+
+- [ ] Verify pagination, ordering and total count across multiple pages.
+- [ ] Verify one user cannot list, download or delete another user’s documents.
+- [ ] Verify confirmation cancellation does not call the delete endpoint.
+- [ ] Verify a successful delete removes the expected file, metadata and related content according to the chosen retention policy.
+- [ ] Simulate a controlled database deletion failure and document the resulting file/metadata consistency behavior.
+- [ ] Verify list state refreshes after upload and deletion, including the last item on a page.
+
+
 # 11. Workflow 09 — Admin user operations
 
 **Goal:** allow only authorized administrators to list users or create users through the administrative endpoints.
@@ -1296,6 +1336,25 @@ The current source has an AdminOnly policy on `UsersController`. Confirm every a
 
 ---
 
+## 11.5 Source-traced admin findings
+
+Direct inspection of UsersController confirms the controller has a class-level [Authorize(Policy = "AdminOnly")] attribute, so both user creation and user listing require the backend admin policy. The client-side route layout is not a substitute for this policy.
+
+- The admin create endpoint accepts CreateUserCommand directly from the request body and sends it through MediatR. It returns a standard ApiResponse<Guid> on success.
+- The GetUsers endpoint returns UserDto objects; inspect the DTO before runtime verification to ensure password hashes, secrets or unnecessary personal fields are not exposed.
+- Admin creation reuses the CreateUser command/handler path, so duplicate-email and password-hashing behavior should be consistent with registration. The database unique-email finding from Chapter 3 still applies.
+- The controller’s log messages include user IDs on successful creation, which is useful for audit tracing. Do not add passwords, JWTs, or full sensitive request bodies to logs.
+
+## 11.6 Expanded final verification checklist
+
+- [ ] Call GET /api/users and POST /api/users with no token, a normal User token, and an Admin token.
+- [ ] Verify only an Admin can list users or create users.
+- [ ] Inspect UserDto fields and confirm no password hash or sensitive authentication data is returned.
+- [ ] Verify admin-created users receive the expected role and password handling.
+- [ ] Verify duplicate-email failure is consistent with public registration.
+- [ ] Verify audit logs are useful without exposing credentials or sensitive request content.
+
+
 # 12. Workflow 10 — Health checks and operational diagnostics
 
 ## 12.1 Diagram
@@ -1336,6 +1395,29 @@ Health checks only prove the conditions they actually test. Do not infer Redis, 
 **Status:** registration/mapping location identified; exact check list and runtime behavior pending.
 
 ---
+
+## 12.5 Source-traced health and diagnostics findings
+
+Direct inspection of HealthCheckExtensions and Program.cs confirms:
+
+- /health/live runs the Self health check and indicates that the process can answer a health request; it does not prove database readiness.
+- /health/ready runs the PostgreSQL readiness check registered through AddNpgSql.
+- /health/details returns a JSON report containing check names/statuses and exception messages. It is mapped separately from the controller rate-limited endpoint mapping.
+- Redis is configured as a required connection string at startup, but the inspected custom health-check registration does not include a Redis health check or Gemini-provider check. A healthy readiness response therefore should not be interpreted as proof that Redis or the external AI provider is healthy.
+- Detailed health output may expose exception messages. Restrict detailed diagnostics appropriately before exposing this endpoint in a public production environment.
+- Startup fails fast when the database or Redis connection-string setting is absent. Validate production configuration and secret injection before deploying.
+- Program.cs applies the configured concurrency limiter to mapped controllers and the fixed-window limiter to endpoints explicitly decorated for it. Confirm the desired policies on every expensive endpoint rather than assuming all controllers share the same fixed-window policy.
+
+## 12.6 Expanded final verification checklist
+
+- [ ] Verify /health/live responds when the process is running even if PostgreSQL is unavailable.
+- [ ] Verify /health/ready changes status when PostgreSQL is unavailable.
+- [ ] Verify /health/details reports expected checks and is not publicly overexposed.
+- [ ] Verify Redis configuration/startup failure behavior and decide whether Redis should have a health check.
+- [ ] Verify missing connection strings and missing AI credentials fail with clear, non-secret-leaking diagnostics.
+- [ ] Verify controller concurrency and fixed-window rate limits under safe local load.
+- [ ] Verify logs contain correlation IDs and do not include tokens, passwords, or raw sensitive prompts.
+
 
 # 13. Verification checklist and known limitations
 
