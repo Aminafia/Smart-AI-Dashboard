@@ -366,6 +366,16 @@ Remaining upload risks are narrower: extension and `IFormFile.ContentType` are c
 - **Dependency target/version alignment needs a deliberate compatibility review:** the API targets .NET 8 while its project references include `AspNetCore.HealthChecks.NpgSql` 9.0.0, `Microsoft.Extensions.Caching.StackExchangeRedis` 10.0.5 and `Serilog.AspNetCore` 10.0.0 alongside several 8.0.4 packages. This may or may not be supported by the full transitive graph; don't infer failure from version numbers alone. Run restore/build, inspect NuGet compatibility warnings and lock down a coherent supported set before deployment.
 - **No Dockerfile or compose manifest surfaced in the repository search.** This is not a blocker for the current local stabilization phase; containerize only after local build/test/runtime baseline is reliable and the deployment architecture is chosen. No application code or tests were changed in this audit pass.
 
+## Additional source-trace notes — frontend authentication and implementation plan
+
+- **Frontend route guards check token presence, not token validity or expiry:** `TokenService.isLoggedIn()` returns whether `localStorage` contains a token. Both `authGuard` and `guestGuard` rely on that check and navigate imperatively before returning `false`. An expired/malformed token can therefore appear logged-in to the UI until the API rejects a request. Consider expiry-aware state and a centralized 401/session-expiry flow; backend authorization remains the security boundary.
+- **JWT is stored in localStorage and attached as a bearer token by the HTTP interceptor.** This is a common SPA pattern but means successful script injection can expose the token. Before production, review XSS prevention, strict HTML/Markdown sanitization, CSP and token/session lifetime. Do not migrate to cookies without deliberately designing CSRF and cookie settings.
+- **AuthService assumes successful login response contains `response.data.token`.** Verify casing and response-envelope behavior against the actual serializer and test success/error responses. Registration does not automatically save a token in the inspected service path; confirm the UI's intended post-registration behavior.
+- **Login handler avoids logging submitted credentials:** it logs general progress and whether a user was found or password verification failed, without logging the email/password value in the inspected templates. Keep this property during observability improvements.
+- **Implementation sprint document is stale/underspecified:** `docs/IMPLEMENTATION_SPRINT.md` references a historical starting commit and broad cloud tasks, but it does not reflect the current agreed gate of source audit → stabilization/security fixes → meaningful tests → full local verification → AWS. Reconcile it with the prioritized backlog before treating it as the active plan.
+- **The handbook's authentication narrative should distinguish UI route gating from backend security:** guards are navigation UX, not an authorization mechanism. API endpoint policies and ownership checks must be tested independently.
+- **No app code was changed and no runtime auth test was performed.** These findings are from source inspection only.
+
 ## Consolidated final verification sequence
 
 1. Restore/build the backend and build the frontend from a clean working tree.
