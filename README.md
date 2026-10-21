@@ -36,6 +36,19 @@ The current queue and local storage are development-stage implementation choices
 
 Read the architecture blueprint first for the overall system map, then use the workflow handbook to follow each request through the frontend, API, application handlers, infrastructure and persistence.
 
+## Architecture documentation maintenance
+
+The repository includes a lightweight Python-standard-library checker and a GitHub Actions workflow. The generated source inventory and .NET project dependency diagram are derived from the working tree and project references; the workflow checks that generated files are current and that documented source paths still exist.
+
+After adding/removing source files or changing .NET project references, run:
+
+```powershell
+python scripts/check_architecture_docs.py --write
+python scripts/check_architecture_docs.py --check
+```
+
+Review the generated-file diff before committing. Sequence diagrams in the UML handbook remain human-reviewed because business semantics, retries, ownership checks and failure branches cannot be inferred reliably from project references alone.
+
 ## Prerequisites
 
 Install and prepare:
