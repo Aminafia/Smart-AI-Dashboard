@@ -1,0 +1,25 @@
+name: Architecture Documentation Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  architecture-docs:
+    name: Validate architecture documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check generated inventory and source references
+        run: python scripts/check_architecture_docs.py --check
