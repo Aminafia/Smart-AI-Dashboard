@@ -940,6 +940,26 @@ PDF text extraction does not guarantee OCR for image-only/scanned PDFs unless th
 
 ---
 
+## 7.5 Source-traced extraction findings
+
+Direct inspection of ExtractDocumentCommandHandler, PdfTextExtractor, and DocumentContentRepository confirms:
+
+- The handler checks document ownership through DocumentRepository.GetByIdAsync(documentId, currentUserId) before opening the stored file. This is the primary ownership gate for extraction.
+- PdfTextExtractor uses PdfPig and ContentOrderTextExtractor to extract selectable PDF text. The contentType parameter is accepted but not used to select an extractor. No OCR path is present in this implementation, so image-only/scanned PDFs may produce little or no text.
+- Extracted text is stored in DocumentContents. Existing content is updated and its ExtractedAt timestamp refreshed; otherwise a new DocumentContent row is inserted.
+- DocumentContentRepository queries by DocumentId alone. The inspected extraction handler performs the document ownership check first; keep that calling convention intact, and consider making the ownership relationship more explicit at the repository/interface boundary during hardening.
+- Extraction is synchronous inside the HTTP request and reads the PDF pages in-process. Large or malformed PDFs may consume request time and memory; upload limits and cancellation behavior should be verified before production.
+
+## 7.6 Expanded final verification checklist
+
+- [ ] Extract text from a normal text-based PDF and verify page text is persisted and returned.
+- [ ] Re-run extraction and verify the existing content row is updated rather than duplicated.
+- [ ] Test a scanned/image-only PDF and record the expected no-OCR limitation.
+- [ ] Test malformed, empty, large and multi-page PDFs with controlled error handling.
+- [ ] Verify a different user cannot extract or read the document content.
+- [ ] Verify the UI updates extracted text immediately and after a page reload.
+- [ ] Confirm cancellation and request-timeout behavior for a long extraction.
+
 # 8. Workflow 06 — Document summarization and saved summary retrieval
 
 **Goal:** summarize text previously extracted from a user-owned document, return the result in the current request, persist the completed result, and allow a later request to retrieve the latest saved summary.
@@ -1040,6 +1060,30 @@ The frontend uses Markdown rendering and sanitization; raw model output must not
 **Status:** key ownership and persistence path identified; live UI behavior and exact response contracts need runtime verification.
 
 ---
+
+## 8.5 Source-traced document-summary findings
+
+Direct inspection of SummarizeDocumentCommandHandler, GetDocumentSummaryQueryHandler, AIJobStore, and DocumentDetailsComponent confirms:
+
+- The summarization handler verifies document ownership before querying extracted content, rejects missing/blank extracted text, creates a Processing AIJob associated with the document and current user, calls the shared AI service, then persists Completed/result or Failed/error.
+- The handler accepts a CancellationToken but does not pass it to IAIService.ProcessAsync, so provider work is not currently linked to the HTTP request cancellation token. Pass it through during stabilization.
+- Saved-summary retrieval searches for the latest completed Summarize job matching both document ID and current user ID, and returns an empty summary response when none exists.
+- The Angular details component explicitly reloads both extracted content and saved summary when opening the document. On a successful summary response it updates local summary state and sanitizes Markdown-generated HTML using DOMPurify.
+- The details page still loads up to 100 document metadata records and searches the page in the browser. This is not a scalable single-document lookup and can falsely behave as though a valid document is missing if it falls outside that page.
+- The handler also assigns a random legacy ProjectId to the summary job. Remove that only with the wider legacy field/schema migration.
+- Because the full extracted text is passed to the same AI service/cache path, the raw-input cache-key/logging concern described in Chapter 5 also applies to document content, which may be more sensitive than ordinary prompts.
+
+## 8.6 Expanded final verification checklist
+
+- [ ] Summarize a document after successful extraction and verify output is returned immediately.
+- [ ] Try summarization before extraction; verify the UI either performs the intended extraction-first path or reports a clear failure.
+- [ ] Verify missing/blank extracted content produces a controlled response.
+- [ ] Verify the summary job is linked to the correct user and document and reaches Completed or Failed.
+- [ ] Verify the summary appears immediately without refreshing and is restored after reopening the document.
+- [ ] Verify a different user cannot summarize or retrieve another user’s document summary.
+- [ ] Verify saved-summary lookup returns the latest completed summary when multiple summaries exist.
+- [ ] Test provider failure, cancellation, large extracted text, and cache behavior safely.
+- [ ] Replace the client-side first-100 metadata search with an ID-specific user-scoped document query during stabilization.
 
 # 9. Workflow 07 — Job history, status, and statistics
 
