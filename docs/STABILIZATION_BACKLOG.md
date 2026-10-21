@@ -176,6 +176,19 @@ Create repeatable Docker builds, inject secrets through an appropriate managed m
 ### STAB-020 — Select managed data/cache and observability services
 Choose PostgreSQL hosting, Redis strategy, CloudWatch logging/metrics/alarms, least-privilege IAM, networking and deployment/rollback. Make decisions based on cost and actual workload rather than adding infrastructure by default.
 
+## Additional source-trace notes — document and data lifecycle
+
+These are source-level observations from the current repository and are not yet runtime-confirmed defects.
+
+- **Document ownership boundary:** `DocumentRepository.GetByIdAsync` filters by both document ID and current user ID, and the delete handler uses that method before deleting. Keep this ownership check at every document-specific API/handler boundary.
+- **Extracted-content repository:** `DocumentContentRepository.GetByDocumentIdAsync` filters only by document ID. The extraction workflow must first prove that the document belongs to the authenticated user; avoid exposing this repository method directly through an endpoint without that ownership gate.
+- **Document/content relationship:** `AppDbContext` configures a one-to-one relationship from `DocumentContent` to `Document` with cascade delete. Confirm the generated migration and live database constraint match this model before relying on cascade behavior.
+- **AI job relationship:** `AIJob` carries `UserId`, nullable `DocumentId`, and legacy non-nullable `ProjectId`. The reviewed `AppDbContext` does not explicitly configure an AIJob-to-Document relationship. Inspect all migrations, model snapshots, and the actual database schema before changing these fields or assuming document deletion will remove associated AI jobs.
+- **File/database consistency:** upload writes the file before inserting metadata and attempts file cleanup if metadata persistence fails. Delete removes the physical file before deleting metadata. Both directions have crash/failure windows because filesystem operations and database transactions are not atomic together. A later hardening decision should favor recoverable cleanup (for example, staged deletion or reconciliation) rather than claiming atomicity.
+- **Storage-path safety:** the current local storage implementation combines a fixed storage root with a stored filename/path. Current uploads generate a GUID-based stored filename, but callers and persisted metadata should not be able to supply arbitrary paths. Preserve the storage abstraction when moving to S3 and validate object keys at the boundary.
+- **Retention and privacy:** deleting a document currently does not, by itself, establish a documented retention policy for linked AI job prompts/results or logs. Decide whether summaries/results should be deleted, retained, or anonymized, and document the policy before production exposure.
+- **No schema changes made:** these observations are documentation only. Do not remove `ProjectId`, add/drop foreign keys, or rewrite historical migrations until the current schema and all references have been audited and a forward migration has been planned.
+
 ## Consolidated final verification sequence
 
 1. Restore/build the backend and build the frontend from a clean working tree.
