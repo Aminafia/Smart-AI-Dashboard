@@ -254,6 +254,16 @@ The current document controller, handlers, repository, and local storage impleme
 - **Deletion semantics still need a data-retention decision:** the document row's deletion may cascade to its content according to EF model configuration, but linked AI jobs/prompts/results and log records need an explicit retention policy. Confirm actual migration/live schema and FK behavior before making schema changes.
 - **No document implementation changed:** these are source-trace findings. File-size limits, invalid MIME/extension cases, traversal defense, failed-write cleanup, cross-user access, and delete failure windows remain verification items.
 
+## Additional source-trace notes — document reads, authentication, and diagnostics
+
+- **Document download and extracted-content retrieval are user-scoped:** both `GetDocumentQueryHandler` and `GetDocumentContentQueryHandler` call `IDocumentRepository.GetByIdAsync(id, currentUserId, cancellationToken)` before opening the stored file or reading extracted text. This closes the ownership question for these two paths at source level. Still verify with two-user tests.
+- **Login/register cancellation is not forwarded from the controller:** `AuthController.Login` and `Register` call `_mediator.Send(command)` without the request cancellation token, despite MediatR handlers supporting it. Pass the controller token through as a consistency improvement.
+- **Authentication logging is currently low-detail but noisy:** login logs endpoint hit, success, and handler milestones. It does not visibly log the submitted password, which is good. Keep that invariant and consider reducing routine per-step logs while retaining structured security-relevant events and correlation IDs.
+- **Email matching is exact in the repository:** duplicate detection and login lookup use `u.Email == email` without an explicit normalization/case policy. Define canonicalization (e.g., trim and case-normalize consistently) and enforce uniqueness at the database level; app-level pre-checks alone can race. Confirm provider/database collation behavior rather than assuming case sensitivity.
+- **The test controller is routed without a class-level authorization requirement:** `GET /api/test/error` intentionally throws a test exception and has no `[Authorize]`; other test routes require authenticated/admin claims. Restrict this controller to Development or remove it from production routing.
+- **Health detail endpoint exposes exception messages:** `/health/details` returns health-check names, statuses, and exception message text. It currently checks registered checks only, including PostgreSQL and Self; do not publish detailed diagnostics publicly. `/health/live` is process liveness and `/health/ready` is PostgreSQL readiness, not proof that Redis or the AI provider is available.
+- **No code changed:** document-read ownership is confirmed by source inspection, while request cancellation, email normalization/unique constraint, diagnostic endpoint exposure, and environment-aware behavior remain backlog work and verification items.
+
 ## Consolidated final verification sequence
 
 1. Restore/build the backend and build the frontend from a clean working tree.
