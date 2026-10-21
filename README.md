@@ -113,7 +113,7 @@ npm test
 npm run build
 ```
 
-Use the current workflow handbook and stabilization backlog for the end-to-end verification sequence. A successful build alone does not establish runtime correctness. Backend automated-test coverage and CI checks still need to be confirmed during the repository audit.
+The application has been manually tested multiple times during development. Intentional automated feature tests have not yet been written for either backend or frontend; the Angular spec files currently in the repository are generated scaffolding, not meaningful coverage. Automated tests are planned for a later phase. Use the workflow handbook and stabilization backlog to guide the eventual consolidated verification pass. A successful build alone does not establish runtime correctness.
 
 ## Current implementation limitations to keep in mind
 
