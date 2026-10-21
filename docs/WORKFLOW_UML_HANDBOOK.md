@@ -9,6 +9,8 @@
 
 ## How to use this handbook
 
+- **Stabilization actions:** see [`docs/STABILIZATION_BACKLOG.md`](STABILIZATION_BACKLOG.md) for prioritized source-level findings, remediation order, and the consolidated final verification sequence.
+
 - Read **Section 1** once to understand the application as a whole.
 - Read **Section 2** once for behavior shared by many workflows.
 - Each workflow chapter then explains its own path, source files, success/failure branches, and only the theory that is necessary.
@@ -1449,6 +1451,8 @@ This list separates facts already observed in source from behavior still to be v
 - That no security defect exists outside the focused ownership paths described here.
 
 ## 13.3 Final verification tracker
+
+The prioritized remediation plan and final consolidated test sequence are maintained in [`STABILIZATION_BACKLOG.md`](STABILIZATION_BACKLOG.md). This tracker records workflow-level source tracing and runtime verification status; update it only after observing actual test results.
 
 | Workflow | Source traced | Runtime verified | Notes |
 |---|---|---|---|
