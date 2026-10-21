@@ -281,6 +281,9 @@ sequenceDiagram
     participant UI as RegisterComponent
     participant AS as AuthService
     participant I as Angular HTTP interceptors
+    participant EX as ExceptionHandlingMiddleware
+    participant CID as CorrelationIdMiddleware
+    participant LOG as RequestLoggingMiddleware
     participant API as AuthController
     participant M as MediatR
     participant V as CreateUserCommandValidator / ValidationBehavior
@@ -291,7 +294,10 @@ sequenceDiagram
     UI->>UI: Reactive form validation
     UI->>AS: register(RegisterRequest)
     AS->>I: POST /api/auth/register
-    I->>API: Request (no bearer token required)
+    I->>EX: Request (no bearer token required)
+    EX->>CID: Enter request pipeline
+    CID->>LOG: Assign/propagate X-Correlation-ID
+    LOG->>API: Log request; continue
     API->>M: Send CreateUserCommand
     M->>V: Run registered validation
     V-->>M: Continue if valid
@@ -300,8 +306,8 @@ sequenceDiagram
     R->>DB: Query Users
     DB-->>R: Exists / does not exist
     alt Email already exists
-        H-->>API: DuplicateEmailException
-        API-->>I: Global exception middleware formats failure
+        H-->>EX: DuplicateEmailException propagates outward
+        EX-->>I: 409 + ApiResponse failure
         I-->>UI: Error response
         UI-->>U: Show registration error
     else Email available
@@ -326,8 +332,12 @@ sequenceDiagram
     participant UI as LoginComponent
     participant AS as AuthService
     participant TS as TokenService
+    participant EX as ExceptionHandlingMiddleware
+    participant CID as CorrelationIdMiddleware
+    participant LOG as RequestLoggingMiddleware
     participant API as AuthController
     participant M as MediatR
+    participant V as LoginCommandValidator / ValidationBehavior
     participant H as LoginCommandHandler
     participant R as IUserRepository / UserRepository
     participant DB as AppDbContext / PostgreSQL
@@ -335,15 +345,20 @@ sequenceDiagram
     U->>UI: Enter email and password
     UI->>UI: Reactive form validation
     UI->>AS: login(LoginRequest)
-    AS->>API: POST /api/auth/login (anonymous)
+    AS->>EX: POST /api/auth/login (anonymous)
+    EX->>CID: Enter request pipeline
+    CID->>LOG: Assign/propagate X-Correlation-ID
+    LOG->>API: Log request; continue
     API->>M: Send LoginCommand
+    M->>V: Validate email/password
+    V-->>M: Continue if valid
     M->>H: Handle(command)
     H->>R: GetUserByEmailAsync(email)
     R->>DB: Query Users by email
     DB-->>R: User or no result
     alt User missing or password invalid
-        H-->>API: UnauthorizedException (same public message)
-        API-->>UI: Standardized unauthorized response
+        H-->>EX: UnauthorizedException propagates outward
+        EX-->>UI: 401 + ApiResponse failure
         UI-->>U: Show login error
     else Credentials valid
         H->>H: BCrypt.Verify(entered password, stored hash)
