@@ -57,7 +57,7 @@ flowchart TB
     USECASES --> PORTS
   end
   subgraph DOMAIN["Core domain"]
-    ENT["User · AIJob · Document · DocumentContent · AIResult · Project (verify legacy usage)"]
+    ENT["User · AIJob · Document · DocumentContent · AIResult · Project (legacy prototype; audit before removal)"]
     ENUMS["AIJobType · AIJobStatus · Roles"]
     ENT --> ENUMS
   end
