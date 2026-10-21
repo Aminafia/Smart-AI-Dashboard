@@ -25,17 +25,17 @@
 
 **Verification:** duplicate registrations with exact-case and different-case email; concurrent registration attempts; confirm only one user row is created.
 
-### STAB-002 — Validate uploaded files on the server
-**Source evidence:** the inspected upload path checks missing/empty files, but an explicit extension/content-type allowlist and maximum upload size were not found in the reviewed path.
+### STAB-002 — Harden uploaded-file validation and handling
+**Source evidence (corrected after tracing the MediatR validation pipeline):** the controller rejects null/empty files. `UploadDocumentCommandValidator` enforces a 10 MB maximum, allows `.pdf`, `.doc`, `.docx`, and `.txt`, and checks that declared content type matches the extension. The validator is registered through the Application assembly and runs via `ValidationBehavior<,>`. This is more than the controller alone shows, but it does not inspect file signatures or prove the content is safe/parseable.
 
 **Plan**
-1. Define allowed formats and maximum file size.
-2. Validate extension and media type as hints, not as the only proof of file type.
-3. Enforce request/body limits and reject unsupported files before writing to disk.
-4. Generate safe storage names; do not trust client file paths.
+1. Preserve the existing server-side limits and test boundary behavior.
+2. Verify actual bytes/file signatures and parser behavior; safely reject malformed or mismatched files.
+3. Confirm effective hosting/request-body limits are consistent with the 10 MB command limit.
+4. Keep generated storage names and harden local storage path boundaries.
 5. Keep document ownership checks on preview, download, extraction, summary and delete paths.
 
-**Verification:** empty, oversized, wrong-extension, wrong-content-type, malformed PDF and valid PDF cases.
+**Verification:** empty, boundary/oversized, wrong-extension, mismatched declared content type, spoofed signature, malformed PDF/DOCX, valid supported file, and two-user ownership cases.
 
 ### STAB-003 — Remove raw prompt/document text from cache keys and cache logs
 **Source evidence:** the inspected AI service constructs a cache key using operation type plus full input text and emits cache-related logs containing that key. This may expose prompts or extracted document content in logs and creates large keys.
