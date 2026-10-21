@@ -213,6 +213,18 @@ These findings are from source inspection; runtime behavior and the full worker 
 - **Cache semantics:** successful provider outputs are cached for ten minutes. Confirm that cache keys account for model/provider/config changes when necessary and that no cross-user data or sensitive document content can be recovered through a shared-key design.
 - **No AI code changed:** this is an audit record only. The AI worker source path was not resolved in this pass, so do not treat queue recovery/retry behavior as fully revalidated here.
 
+## Additional source-trace notes — frontend contracts and job queries
+
+These are source-review observations. The relevant Angular component path and infrastructure job-store implementation were not located under the initially guessed paths, so those parts remain unverified.
+
+- **API response envelopes:** Angular `AiService` declares `ApiResponse<T>` wrappers for generation, status, history, summaries and stats, matching the controller's `ApiResponse<T>.SuccessResponse(...)` pattern in the inspected actions. During final verification, capture the actual network payload and component assignment to diagnose the previously reported summary-rendering-after-refresh issue; do not assume the wrapper or Markdown renderer is the cause without observing the value at each boundary.
+- **Job status is user-scoped at the handler boundary:** `GetAIStatusQueryHandler` passes both the requested job ID and `ICurrentUserService.UserId` to `IAIJobStore.GetJobAsync`. Confirm the implementation applies both filters.
+- **Job history and stats are also requested for the current user:** the handlers pass the current user ID into the store. Verify store queries preserve that filter and ensure paging values are bounded at the API/validation/store boundary.
+- **Job history exposes prompts:** `GetAIJobsQueryHandler` returns each job's prompt but omits its result/error. Review whether the history UI needs the complete prompt or whether a preview/redaction policy is more appropriate for long or sensitive document-derived input.
+- **Cancellation is not consistently propagated:** the handlers receive a MediatR cancellation token but the calls to `IAIJobStore` shown here do not pass it. This can allow database work to continue after the request is cancelled; confirm interface signatures and add cancellation where supported during the implementation phase.
+- **Frontend service skips the global loading indicator for polling and document-summary operations:** `AiService` sets `SKIP_LOADING` for status polling, document summarization, and saved-summary retrieval. This appears intentional to avoid overlay flicker, but should be confirmed against the intended UX during manual verification.
+- **No frontend behavior changes made:** the actual GenerateComponent source path was not resolved in this pass. Polling cleanup, error handling, immediate rendering, and component lifecycle remain open verification items rather than confirmed defects.
+
 ## Consolidated final verification sequence
 
 1. Restore/build the backend and build the frontend from a clean working tree.
