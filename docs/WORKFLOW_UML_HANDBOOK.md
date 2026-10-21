@@ -614,6 +614,38 @@ The queue is currently in-memory. Database recovery on worker startup mitigates 
 
 ---
 
+## 4.6 Source-traced implementation findings
+
+The current source was checked directly for the Angular component, API controller, command handler, queue, worker, job store, status handler, AI service, and dependency-injection registration. The following are implementation facts or source-level findings, not runtime test results.
+
+- **Retry count:** AIJob defaults MaxRetries to 3. AIWorker increments RetryCount on failure; it retries while RetryCount is less than MaxRetries, using a delay of 2 raised to RetryCount seconds. This normally permits up to three processing attempts total when failures reach the standard retry branch.
+- **Startup recovery:** the worker queries Pending, Processing, and Retrying jobs. It resets recovered Processing jobs to Pending, re-enqueues eligible jobs, and marks jobs Failed during recovery when RetryCount is already at or above MaxRetries.
+- **Ownership:** GetAIStatusQueryHandler passes the authenticated user ID to AIJobStore.GetJobAsync; the EF query filters by both job ID and user ID. A job that does not match the caller is returned as Not Found.
+- **Prompt validation gap:** no GenerateTextCommandValidator.cs exists at the expected feature path in the current repository, and the inspected GenerateComponent form has no visible required/minimum-length validator. Decide prompt constraints and add server-side validation during stabilization.
+- **Polling lifecycle:** GenerateComponent uses interval(2000), which waits two seconds before its first emission. The polling subscription has no explicit error callback and is not retained for cleanup when the component is destroyed. These should be addressed during stabilization.
+- **Shutdown behavior:** cancellation during worker processing exits the current loop path without explicitly persisting a replacement status in that catch block. Startup recovery may handle a job left Processing; confirm this through the consolidated runtime test pass.
+- **Legacy ProjectId:** GenerateTextCommandHandler still sets ProjectId to a newly generated GUID. This is a leftover prototype field, not a meaningful product project relationship, and must be removed only after auditing every source/schema/migration reference.
+- **Provider resilience:** dependency injection configures retry, circuit-breaker, and timeout policies on a named AIClient. Do not assume GeminiProvider uses that configured client until its implementation is traced.
+- **Cache behavior:** AiService treats Redis get/set failures as non-fatal and caches successful output for ten minutes. PostgreSQL job state remains separate from the cache.
+
+These findings are recorded for the final stabilization backlog. No local build, API call, or runtime test was executed as part of this source-tracing update.
+
+## 4.7 Expanded final verification checklist
+
+- [ ] Submit a valid prompt and verify the API returns a job ID and initial status.
+- [ ] Verify the job row is persisted for the authenticated user before processing starts.
+- [ ] Verify the worker persists Processing, then Completed and the output.
+- [ ] Verify the UI displays the result without refreshing.
+- [ ] Verify Pending, Processing, Retrying, Completed and Failed render correctly.
+- [ ] Verify another user cannot read the job status/result by using the job ID.
+- [ ] Test blank and very long prompts after prompt constraints are agreed.
+- [ ] Cause a safe provider failure in development; observe retry count, exponential backoff and eventual Failed state.
+- [ ] Restart the API/worker with Pending, Processing and Retrying jobs and record recovery behavior.
+- [ ] Navigate away during polling and confirm no polling continues after component destruction once cleanup is implemented.
+- [ ] Simulate a status endpoint failure and confirm the UI reports it intentionally.
+- [ ] Check logs for job ID and correlation ID; do not assume the HTTP correlation ID propagates automatically into worker logs.
+- [ ] Record whether duplicate provider calls can occur around process-restart/crash boundaries.
+
 # 5. Workflow 03 — Plain-text summarization
 
 **Goal:** submit text for a summary and return the output synchronously within the HTTP request.
