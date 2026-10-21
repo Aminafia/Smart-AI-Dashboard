@@ -150,6 +150,18 @@
 
 **Verification:** run tests and builds from a clean checkout; capture the actual commands and outcomes in the handbook tracker.
 
+### STAB-022 — Review and restrict the test-only API controller
+**Source evidence:** `backend/API/Controllers/TestController.cs` exposes `GET /api/test/error` without an authorization attribute and intentionally throws an exception. It also exposes authenticated and AdminOnly test routes. The controller appears intended for middleware/authentication testing, not as a product feature.
+
+**Plan:** before any production deployment, remove the test-only controller or place it behind an explicit Development-only registration/route condition. Do not rely on obscurity. Preserve the middleware/authentication test scenarios in the later test plan instead of leaving a deliberate error endpoint in the production surface.
+
+**Priority:** P1 for production readiness; no need to disrupt the current local development flow before the final verification phase.
+
+### STAB-023 — Decide the role of the standalone Python AI engine
+**Source evidence:** the repository contains a top-level `ai-engine/` directory with a FastAPI endpoint, a Pegasus XSum Transformers model loaded at process startup, and pinned Python dependencies. The inspected .NET API/provider path calls Gemini through the shared AI provider abstraction; no integration from the .NET API to this FastAPI service was found in the inspected controller/provider paths. Treat the Python engine as a separate prototype/research component unless further source tracing proves otherwise.
+
+**Plan:** keep it in the repository for now because the project's long-term purpose includes learning and integrating multiple AI approaches. Document its current isolation, decide later whether it should become a supported model-provider service or remain a research sandbox, and only then plan deployment, API contracts, model resource sizing, health checks, and security. Do not introduce another runtime into the current deployment merely because the directory exists.
+
 ## P3 — AWS transition (after local stabilization)
 
 ### STAB-017 — Replace local file storage with S3 behind the existing abstraction
