@@ -317,6 +317,12 @@ Then execute STAB-017 through STAB-020 in small increments: S3 behind the storag
 - **Migration maintenance notes are ambiguous/stale:** `backend/Infrastructure/Migrations/README.md` only says “Temporary migration note.” and adjacent notes instruct regenerating an ownership migration. Clarify which migration is authoritative and how to safely validate it. The source inventory references `20260828210000_AddOwnership.Designer.cs`, but the corresponding `.cs` path was not found in this fetch; reconcile the inventory and migration directory before relying on that filename.
 - **No migrations or data were changed:** the next safe step is read-only inspection of the actual migration history and row counts in a disposable/local database, followed by a documented migration correction plan. Do not drop `ProjectId` or add constraints until data implications and migration status are known.
 
+## Audit correction — upload validation is present
+
+A follow-up source search found `backend/Application/Features/Documents/Commands/UploadDocument/UploadDocumentCommandValidator.cs`, which is registered through `AddValidatorsFromAssembly(...)` and executed by `ValidationBehavior<,>`. The earlier note that upload validation was not visible must therefore be narrowed: the controller itself only checks for a missing/empty file, **but the command pipeline also validates** a 10 MB maximum, a filename extension allowlist (`pdf`, `doc`, `docx`, `txt`), and a matching declared content type.
+
+Remaining upload risks are narrower: extension and `IFormFile.ContentType` are client-controlled metadata and do not prove file contents match the claimed type; no magic-byte/content parser validation was found in this validator. Verify request-size limits at the hosting boundary and test malformed/mismatched files. Do not treat the earlier broad statement as proof that no size/type validation exists.
+
 ## Consolidated final verification sequence
 
 1. Restore/build the backend and build the frontend from a clean working tree.
