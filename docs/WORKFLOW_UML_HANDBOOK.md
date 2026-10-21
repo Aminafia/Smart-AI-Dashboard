@@ -828,6 +828,32 @@ The storage interface is the intended replacement point for a future S3 implemen
 
 ---
 
+## 6.5 Source-traced upload and preview findings
+
+Direct inspection of DocumentsController, UploadDocumentCommandHandler, LocalDocumentStorage, DocumentRepository, DocumentService, and DocumentListComponent confirms:
+
+- The upload endpoint currently rejects only a missing or zero-length file at the controller boundary. No explicit extension/content-type allowlist or maximum file size was found in the inspected upload path. Because ContentType and FileName originate from the client, define and enforce upload limits and accepted formats on the server before production.
+- The handler saves the physical file first, then writes metadata to PostgreSQL. If metadata persistence fails, it attempts to delete the saved file as compensation. This does not cover every process-crash window between file write and database insert.
+- LocalDocumentStorage stores files under a Storage/Documents folder rooted at Directory.GetCurrentDirectory(). This is appropriate only while the deployment layout guarantees that path is writable and persistent; the future storage abstraction is the seam for S3.
+- The original-file GET endpoint returns a file stream from the metadata/content-type data. It is protected by the controller-level Authorize attribute, and the GetDocument query must continue to scope metadata lookup to the current user before opening the stored file.
+- DocumentListComponent calls router.navigate(['/documents', documentModel.id]) and then has a separate object literal containing state that is not passed to navigate. Therefore that state object has no effect. If document details expects navigation state, fix it or remove the dead expression during stabilization.
+- The document-list upload handler refreshes the list after upload; it does not automatically open the uploaded document. That is distinct from the desired preview behavior after the user opens a document.
+- The list’s file-size formatter currently uses two decimal places and includes a space between value and unit. Align the display with the preferred concise formatting during UI polish if that remains the desired standard.
+
+These findings are source-level only. Validate accepted file types, maximum size, preview/download behavior, and rollback paths in the final test pass.
+
+## 6.6 Expanded final verification checklist
+
+- [ ] Upload a valid PDF and verify both the physical file and metadata row exist.
+- [ ] Verify an unsupported file type and oversized file are rejected after server-side constraints are implemented.
+- [ ] Upload an empty file and confirm the API returns a controlled client error.
+- [ ] Verify one user cannot preview, download, extract or delete another user’s document.
+- [ ] Verify a metadata-save failure triggers file cleanup, and document the crash window that compensation cannot cover.
+- [ ] Verify preview and download return the expected content type and filename.
+- [ ] Verify storage survives application restarts in the intended local environment.
+- [ ] Verify document-list refresh, pagination, opening details, and navigation state.
+- [ ] Confirm local storage path and writable permissions are explicit configuration assumptions.
+
 # 7. Workflow 05 — Document text extraction
 
 **Goal:** read the uploaded file, extract text from the PDF, persist extracted text, and return it to the UI.
