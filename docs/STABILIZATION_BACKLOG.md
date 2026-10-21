@@ -142,9 +142,9 @@
 **Plan:** retain explicit DTO mapping; ensure logs avoid passwords, tokens, raw document text and sensitive request bodies; ensure production uses a non-Development environment and supplies strong JWT/database/Redis/provider settings through environment-specific secret injection.
 
 ### STAB-021 — Establish a repeatable automated test/build gate
-**Source evidence:** the current GitHub code searches did not locate a test project or CI workflow, but search results alone do not prove that none exists. Confirm the full repository tree before deciding whether to create them.
+**Source evidence:** `frontend/package.json` defines `npm test` as `ng test` and includes Vitest, so a frontend test runner is configured. GitHub code searches did not locate a dedicated backend test project or CI workflow; search results alone do not prove those files are absent. The current `README.md` is only a heading and does not provide setup instructions.
 
-**Plan:** identify existing backend/frontend test projects and GitHub Actions workflows. If absent, add a minimal test foundation for registration/login, user ownership, AI job status transitions, document ownership, and API error contracts, plus repeatable backend/frontend build checks. Keep tests aligned with the real architecture; do not create a large test framework before the first useful tests.
+**Plan:** inspect the full repository tree and existing frontend specs before creating anything. Identify whether backend tests and GitHub Actions workflows exist. If absent, add a minimal test foundation for registration/login, user ownership, AI job status transitions, document ownership, and API error contracts, plus repeatable backend/frontend build checks. Add a concise root README with prerequisites, local configuration, database migration, Redis, backend/frontend startup, and safe test commands. Keep tests aligned with the real architecture; do not create a large test framework before the first useful tests.
 
 **Verification:** run tests and builds from a clean checkout; capture the actual commands and outcomes in the handbook tracker.
 
