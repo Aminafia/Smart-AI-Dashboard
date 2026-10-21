@@ -201,6 +201,18 @@ These observations are based on the current controller/host source and still req
 - **Controller access boundary:** `DocumentsController` has class-level `[Authorize]`; actual per-document ownership still depends on each query/command handler, so verify all file/content/extraction/delete paths individually rather than treating authentication alone as sufficient.
 - **No code or deployment changes:** this pass records source-level concerns only; no application code was changed and no endpoint has been runtime-tested during this audit.
 
+## Additional source-trace notes — AI request and cache path
+
+These findings are from source inspection; runtime behavior and the full worker implementation still need a separate verification pass.
+
+- **Cache keys include raw input:** `AiService` constructs `ai:{JobType}:{Input}` and logs the key on cache get/set failures, hits and misses. This makes prompt or extracted document text part of the cache key and potentially log output. Replace this with a stable digest of normalized operation/input plus any model/configuration dimensions that affect results; log only the opaque key or operation metadata. This supports STAB-003.
+- **Cancellation support is uneven:** `AiService.ProcessAsync` accepts and passes a cancellation token to the provider, but the plain-text summary and document-summary handlers must be checked for whether they actually pass their token to `ProcessAsync`. The generate controller/handler path shown here does not explicitly forward request cancellation to MediatR/queue persistence. Verify the complete path before changing signatures.
+- **Generate request validation:** `AIController.Generate` accepts `GenerateTextRequest` and copies `Prompt` into a command. No explicit validation is visible in this controller action; confirm validator registration and a command validator exist before relying on server-side validation.
+- **Rate limit coverage:** `POST /api/AI/generate` explicitly uses the fixed-window policy. Other AI actions do not have that attribute in this controller, although the host applies a concurrency limiter to mapped controllers. Confirm whether that overall concurrency cap is intended and whether costly synchronous summary routes need a distinct policy.
+- **Job authorization:** the status, history and statistics actions require authentication; verify their query handlers and store queries always scope data to the current user, not just the supplied job ID.
+- **Cache semantics:** successful provider outputs are cached for ten minutes. Confirm that cache keys account for model/provider/config changes when necessary and that no cross-user data or sensitive document content can be recovered through a shared-key design.
+- **No AI code changed:** this is an audit record only. The AI worker source path was not resolved in this pass, so do not treat queue recovery/retry behavior as fully revalidated here.
+
 ## Consolidated final verification sequence
 
 1. Restore/build the backend and build the frontend from a clean working tree.
