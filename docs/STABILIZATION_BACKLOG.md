@@ -189,6 +189,18 @@ These are source-level observations from the current repository and are not yet 
 - **Retention and privacy:** deleting a document currently does not, by itself, establish a documented retention policy for linked AI job prompts/results or logs. Decide whether summaries/results should be deleted, retained, or anonymized, and document the policy before production exposure.
 - **No schema changes made:** these observations are documentation only. Do not remove `ProjectId`, add/drop foreign keys, or rewrite historical migrations until the current schema and all references have been audited and a forward migration has been planned.
 
+## Additional source-trace notes — API boundary and operations
+
+These observations are based on the current controller/host source and still require environment-aware verification.
+
+- **Test controller exposure:** `TestController` includes `GET /api/test/error` without an authorization attribute, deliberately throws an exception, and exposes separate authenticated/admin diagnostic routes. Restrict the controller to Development or remove it from production routing before release. This is already tracked by STAB-022.
+- **Health endpoint distinction:** `/health/live` runs only the in-process Self check; `/health/ready` checks PostgreSQL. Neither currently proves Redis or the configured AI provider is available. `/health/details` returns check names and exception messages, so keep it private or restrict it before production exposure.
+- **Rate limiting:** `Program.cs` applies the named concurrency limiter to mapped controllers; the fixed-window limiter is registered but must be checked for actual endpoint policy attachment. Do not assume the fixed-window limit is active just because it is registered.
+- **Request validation:** API behavior suppresses the automatic model-state invalid filter, so validators and exception mapping must be traced for each request model. Upload currently rejects null/empty files at the controller boundary, but explicit size/type/extension validation was not visible in this action.
+- **Logging discipline:** the admin user controller logs operation milestones and a newly created user ID, not the password. Continue reviewing handlers and AI/cache logging for raw prompt/document text and avoid logging tokens, credentials, or extracted document content.
+- **Controller access boundary:** `DocumentsController` has class-level `[Authorize]`; actual per-document ownership still depends on each query/command handler, so verify all file/content/extraction/delete paths individually rather than treating authentication alone as sufficient.
+- **No code or deployment changes:** this pass records source-level concerns only; no application code was changed and no endpoint has been runtime-tested during this audit.
+
 ## Consolidated final verification sequence
 
 1. Restore/build the backend and build the frontend from a clean working tree.
