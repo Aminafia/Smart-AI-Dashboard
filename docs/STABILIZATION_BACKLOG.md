@@ -50,12 +50,12 @@
 
 ## P1 — Functional and reliability gates
 
-### STAB-004 — Add explicit server-side prompt validation
-**Source evidence:** no validator was found at the expected GenerateText feature path, and the inspected frontend form has no clear required/minimum-length policy.
+### STAB-004 — Complete and align server-side AI input validation
+**Source evidence (corrected after tracing the validator assembly):** `GenerateTextCommandValidator` exists in `backend/Application/Features/AI/AIRequestValidator.cs` and enforces a non-empty prompt with a 5–1000 character range. `SummarizeCommandValidator` exists and checks non-empty/minimum length, but has no explicit maximum. No `SummarizeDocumentCommandValidator` was found in the inspected source. The validators are registered from the Application assembly and invoked by the MediatR validation behavior. Earlier wording implying there was no GenerateText validator was incorrect because the file name differs from the feature folder's expected convention.
 
-**Plan:** define empty/whitespace rules and practical input limits for text generation, plain-text summarization and document summarization; implement server-side validators and align the UI.
+**Plan:** preserve and test the existing generation validator; add explicit maximum size/token limits for plain-text and document summarization; ensure whitespace handling is intentional; align Angular form feedback with server-side rules.
 
-**Verification:** empty, whitespace-only, Unicode, normal, and oversized input for each relevant endpoint.
+**Verification:** exercise empty, whitespace-only, Unicode, normal, boundary-length and oversized inputs for each endpoint through the API; confirm invalid requests do not call the provider or create unintended jobs.
 
 ### STAB-005 — Make polling lifecycle-safe
 **Source evidence:** the generation component uses a two-second interval, does not retain/cancel the polling subscription on destruction, and has no explicit polling error handler.
