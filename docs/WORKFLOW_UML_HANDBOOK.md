@@ -1471,7 +1471,7 @@ The developer has manually tested the application multiple times during implemen
 
 # 14. Workflow source-file index
 
-This index is deliberately broad; the workflow tables above identify the files that participate in a particular execution path.
+This index is deliberately broad; the workflow tables above identify the files that participate in a particular execution path. The [generated repository source inventory](generated/SOURCE_INVENTORY.md) lists every tracked file and is refreshed by the documentation checker.
 
 ## API / host
 - `backend/API/Program.cs`
