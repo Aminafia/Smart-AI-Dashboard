@@ -306,7 +306,11 @@ sequenceDiagram
     R->>DB: Query Users
     DB-->>R: Exists / does not exist
     alt Email already exists
-        H-->>EX: DuplicateEmailException propagates outward
+        H-->>M: DuplicateEmailException
+        M-->>API: Exception propagates out of Send
+        API-->>LOG: Exception bubbles out of controller
+        LOG-->>CID: Log failure and rethrow
+        CID-->>EX: Exception reaches outer handler
         EX-->>I: 409 + ApiResponse failure
         I-->>UI: Error response
         UI-->>U: Show registration error
@@ -318,7 +322,10 @@ sequenceDiagram
         R-->>H: Complete
         H-->>M: Return new user ID
         M-->>API: User ID
-        API-->>I: 200 + ApiResponse<Guid>
+        API-->>LOG: 200 + ApiResponse<Guid>
+        LOG-->>CID: Log response status and duration
+        CID-->>EX: Return response with correlation header
+        EX-->>I: HTTP response
         I-->>UI: Account created
         UI-->>U: Show success; navigate to login
     end
@@ -357,7 +364,11 @@ sequenceDiagram
     R->>DB: Query Users by email
     DB-->>R: User or no result
     alt User missing or password invalid
-        H-->>EX: UnauthorizedException propagates outward
+        H-->>M: UnauthorizedException
+        M-->>API: Exception propagates out of Send
+        API-->>LOG: Exception bubbles out of controller
+        LOG-->>CID: Log failure and rethrow
+        CID-->>EX: Exception reaches outer handler
         EX-->>UI: 401 + ApiResponse failure
         UI-->>U: Show login error
     else Credentials valid
@@ -367,7 +378,10 @@ sequenceDiagram
         JWT-->>H: JWT string
         H-->>M: LoginResponse(token, email)
         M-->>API: LoginResponse
-        API-->>AS: ApiResponse<LoginResponse>
+        API-->>LOG: ApiResponse<LoginResponse>
+        LOG-->>CID: Log response status and duration
+        CID-->>EX: Return response with correlation header
+        EX-->>AS: HTTP response
         AS->>TS: Save token in localStorage
         AS->>AS: Refresh current-user state
         AS-->>UI: Login observable succeeds
