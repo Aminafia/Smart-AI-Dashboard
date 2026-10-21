@@ -240,6 +240,20 @@ The worker, in-memory queue, and job-store implementations have now been inspect
 - **Job-store ownership is implemented for user-facing reads:** `GetJobAsync`, `GetJobsAsync`, `GetStatsAsync`, and latest-summary lookup filter by user ID where relevant. `GetRecoverableJobsAsync` intentionally returns recoverable jobs across all users for the background worker.
 - **No worker/queue code changed:** these are source-trace findings only. Worker failure, restart, retry, and shutdown scenarios remain for the final verification pass.
 
+## Additional source-trace notes — document upload, retrieval, and deletion
+
+The current document controller, handlers, repository, and local storage implementation were inspected directly.
+
+- **Authentication is present at the controller boundary:** `DocumentsController` has class-level `[Authorize]`. Upload, content retrieval, extraction, download and delete still depend on their handlers/queries enforcing per-document ownership. Extraction and deletion explicitly use the user-scoped repository lookup; verify the `GetDocument` and `GetDocumentContent` query handlers similarly.
+- **Upload validation is incomplete in the visible controller path:** it rejects a missing or empty file, but does not visibly enforce an allowlist of extensions/content types or an explicit maximum size. The filename extension is preserved on a GUID-based stored filename, while client-provided content type and original filename are persisted as metadata. Add server-side size/type/extension and content validation before exposing upload more broadly.
+- **Storage paths are generated but not independently constrained on read/delete:** `LocalDocumentStorage` combines its storage root with the supplied path. The upload handler currently stores the generated filename as `StoragePath`, which reduces immediate exposure, but storage operations should still reject rooted paths, separators, and traversal segments so a corrupt or manipulated database value cannot target files outside the storage directory. S3 migration should use validated object keys, not filesystem paths.
+- **Upload and delete are not atomic across filesystem and PostgreSQL:** upload writes the file before saving metadata and attempts cleanup on metadata failure. Delete removes the file before deleting metadata. A crash or second-operation failure can leave orphaned files or metadata pointing to a missing file. Plan a reconciliation/cleanup strategy; avoid a larger storage abstraction rewrite until the recovery behavior is specified.
+- **Pagination needs bounds here too:** `DocumentRepository.GetPagedAsync` directly applies `Skip((page - 1) * pageSize).Take(pageSize)`. Validate page >= 1 and cap page size at the query boundary.
+- **Cancellation is propagated on document paths:** the controller passes its token to MediatR, and the upload/extract/delete handlers pass it into storage and repository operations where shown. Preserve this as other service paths are standardized.
+- **Content extraction verifies ownership before document-content lookup:** the extraction handler first retrieves the document by both ID and current user ID, then looks up extracted content by document ID. This is the correct ownership-check ordering; retain it if repository interfaces are refactored.
+- **Deletion semantics still need a data-retention decision:** the document row's deletion may cascade to its content according to EF model configuration, but linked AI jobs/prompts/results and log records need an explicit retention policy. Confirm actual migration/live schema and FK behavior before making schema changes.
+- **No document implementation changed:** these are source-trace findings. File-size limits, invalid MIME/extension cases, traversal defense, failed-write cleanup, cross-user access, and delete failure windows remain verification items.
+
 ## Consolidated final verification sequence
 
 1. Restore/build the backend and build the frontend from a clean working tree.
