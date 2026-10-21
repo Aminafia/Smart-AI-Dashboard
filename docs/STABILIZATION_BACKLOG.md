@@ -264,6 +264,40 @@ The current document controller, handlers, repository, and local storage impleme
 - **Health detail endpoint exposes exception messages:** `/health/details` returns health-check names, statuses, and exception message text. It currently checks registered checks only, including PostgreSQL and Self; do not publish detailed diagnostics publicly. `/health/live` is process liveness and `/health/ready` is PostgreSQL readiness, not proof that Redis or the AI provider is available.
 - **No code changed:** document-read ownership is confirmed by source inspection, while request cancellation, email normalization/unique constraint, diagnostic endpoint exposure, and environment-aware behavior remain backlog work and verification items.
 
+## Execution gates — recommended implementation order and exit criteria
+
+This order resolves dependencies between backlog items. Do not start the next gate until the current gate's exit criteria are met and recorded. These are planned acceptance criteria, not claims that the work has already passed.
+
+### Gate A — Secure the public API and data boundary (P0)
+
+Implement STAB-001, STAB-002, STAB-003, STAB-011, STAB-022, plus the Python-engine decision in STAB-023 if that service is intended to run outside a trusted local environment.
+
+**Exit criteria:** email normalization is consistent across registration/login and a database unique constraint prevents duplicate accounts under concurrent requests; invalid/oversized uploads are rejected server-side; storage paths cannot escape the configured root; cache keys/logs contain no raw prompts or extracted text; detailed health output and test-only routes are not publicly exposed; any externally reachable AI engine has an explicit authentication/network boundary and restrictive CORS.
+
+### Gate B — Make core workflows predictable (P1)
+
+Implement STAB-004 through STAB-010 and STAB-015 where needed to close request validation, polling, cancellation, document navigation, data deletion, job recovery and paging gaps.
+
+**Exit criteria:** invalid prompts and paging values return defined client errors; polling stops on completion, failure, navigation and component destruction; user-scoped job/document reads are verified; document upload/delete failure windows have a documented recovery behavior; retries and restarts produce known job states; generated summaries appear without requiring a page refresh.
+
+### Gate C — Remove prototype leftovers and confirm contracts (P2)
+
+Implement STAB-012 through STAB-016 and STAB-021. Before removing Project/ProjectId, search the entire repository, inspect every historical migration and the current model snapshot, and inspect the actual disposable/test database schema. Never rewrite applied historical migrations; use a new migration if schema changes are justified.
+
+**Exit criteria:** each remaining domain field has a clear purpose; document navigation and file-size display match the intended UX; API envelopes and DTOs are documented and confirmed against real responses; safe logging is reviewed; automated backend/frontend tests and build checks run reproducibly in CI.
+
+### Gate D — Final local verification and evidence
+
+Run the consolidated verification sequence below on a clean working tree and disposable/test database. Record exact commands, environment prerequisites, pass/fail results and any remaining limitations in the handbook. A successful build is necessary but not sufficient; include authorization, restart/failure and document lifecycle cases.
+
+**Exit criteria:** all P0 items are closed; P1 workflow tests pass or remaining exceptions are explicitly accepted with rationale; critical workflows have repeatable automated coverage; the handbook accurately reflects tested behavior; diagram/documentation checks pass on the final commit.
+
+### Gate E — AWS deployment (only after Gates A–D)
+
+Then execute STAB-017 through STAB-020 in small increments: S3 behind the storage abstraction, SQS for durable work dispatch, API/worker containerization and externalized secrets/configuration, then managed database/cache and observability choices. Apply least-privilege IAM, private networking where appropriate, health/readiness checks, logging/metrics and cost controls as part of each step.
+
+**Exit criteria:** deployed workflows pass the same acceptance tests as local; storage and queue failure behavior is understood; no secrets are embedded in source/images; monitoring can distinguish API liveness, database readiness and provider/queue failures; deployment and rollback steps are documented.
+
 ## Consolidated final verification sequence
 
 1. Restore/build the backend and build the frontend from a clean working tree.
