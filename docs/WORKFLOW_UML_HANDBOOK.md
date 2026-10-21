@@ -625,7 +625,7 @@ The current source was checked directly for the Angular component, API controlle
 - **Polling lifecycle:** GenerateComponent uses interval(2000), which waits two seconds before its first emission. The polling subscription has no explicit error callback and is not retained for cleanup when the component is destroyed. These should be addressed during stabilization.
 - **Shutdown behavior:** cancellation during worker processing exits the current loop path without explicitly persisting a replacement status in that catch block. Startup recovery may handle a job left Processing; confirm this through the consolidated runtime test pass.
 - **Legacy ProjectId:** GenerateTextCommandHandler still sets ProjectId to a newly generated GUID. This is a leftover prototype field, not a meaningful product project relationship, and must be removed only after auditing every source/schema/migration reference.
-- **Provider resilience:** dependency injection configures retry, circuit-breaker, and timeout policies on a named AIClient. Do not assume GeminiProvider uses that configured client until its implementation is traced.
+- **Provider resilience:** GeminiProvider was traced and does create the named AIClient through IHttpClientFactory, so the retry, circuit-breaker, and timeout handlers registered on that named client are in its request path.
 - **Cache behavior:** AiService treats Redis get/set failures as non-fatal and caches successful output for ten minutes. PostgreSQL job state remains separate from the cache.
 
 These findings are recorded for the final stabilization backlog. No local build, API call, or runtime test was executed as part of this source-tracing update.
@@ -715,6 +715,32 @@ The handler creates and updates an AI job for tracking, but the client receives 
 **Status:** source path identified; runtime checks pending.
 
 ---
+
+## 5.5 Source-traced implementation findings
+
+Direct inspection of SummarizeCommandHandler, SummarizeComponent, AiService, GeminiProvider, and Infrastructure dependency injection confirms:
+
+- The handler creates a Processing AIJob before calling the AI service, then persists Completed/result on success. On exceptions it records Failed/error/CompletedAt and rethrows so the shared API exception middleware can format the HTTP failure.
+- The handler has a CancellationToken parameter but does not pass it into IAIService.ProcessAsync. The call therefore uses the interface’s default token rather than the request token. Pass the token through during stabilization.
+- No SummarizeCommandValidator.cs exists at the expected feature path, and the inspected form has no visible required/minimum-length validation. Define and enforce server-side text-size/empty-input rules.
+- The handler still assigns a random ProjectId, which is a legacy prototype field to remove only after a repository-wide schema/migration audit.
+- GeminiProvider calls IHttpClientFactory.CreateClient("AIClient"), so it uses the named client configured with retry, circuit-breaker, and 60-second timeout policies in Infrastructure dependency injection.
+- AiService constructs the cache key by concatenating the operation type and full input text, then includes that key in cache-related log messages. This can expose user-provided text in logs and create very large cache keys. Replace raw input in keys/logs with a stable digest and review log data handling.
+- The frontend assigns response.data.output to resultText and renders it immediately through MarkdownService. The source path itself is wired for immediate rendering; if a runtime display defect is observed, capture the actual response envelope and component state before changing this code.
+
+These are source-level observations. They have not been verified through a local runtime test in this documentation pass.
+
+## 5.6 Expanded final verification checklist
+
+- [ ] Submit non-empty text and confirm the summary appears without a page refresh.
+- [ ] Test empty, whitespace-only, very long and Unicode input after limits are decided.
+- [ ] Verify the API requires authentication and the request reaches the intended handler.
+- [ ] Verify an AIJob is persisted as Processing before the provider call and Completed with output on success.
+- [ ] Force a safe provider failure in development; verify Failed/error state is persisted and the HTTP response is consistent.
+- [ ] Confirm the provider request uses the named AIClient policies and observe timeout/retry behavior safely.
+- [ ] Verify cache hit/miss behavior without exposing raw user text in application logs.
+- [ ] Confirm cancellation of an HTTP request is propagated to the AI provider after the cancellation-token fix.
+- [ ] Confirm output is rendered via the existing Markdown sanitization path.
 
 # 6. Workflow 04 — Document upload and PDF preview
 
