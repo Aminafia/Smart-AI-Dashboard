@@ -5,10 +5,11 @@ This file is generated from `git ls-files` so it reflects tracked files at the c
 It is a discovery index, not a substitute for reading source code. Regenerate with
 `python scripts/check_architecture_docs.py --write` and verify with `python scripts/check_architecture_docs.py --check`.
 
-Tracked files indexed: **367**
+Tracked files indexed: **368**
 
 ## Root files and configuration
 
+- `.github/workflows/architecture-docs.yml`
 - `.gitignore`
 - `global.json`
 - `README.md`
