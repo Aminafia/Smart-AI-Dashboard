@@ -394,38 +394,60 @@ sequenceDiagram
 | Ref | File | Responsibility |
 |---|---|---|
 | [AUTH-01] | `frontend/src/app/app.routes.ts` | Routes for login/register and guest/auth guards |
-| [AUTH-02] | `frontend/src/app/features/auth/register/register.component.ts` | Signup form and success/error UI |
-| [AUTH-03] | `frontend/src/app/features/auth/login/login.component.ts` | Login form and success/error UI |
+| [AUTH-02] | `frontend/src/app/features/auth/register/register.component.ts`, `register.component.html`, `register.component.css` | Signup form behavior, rendered fields, validation messages, success/error UI |
+| [AUTH-03] | `frontend/src/app/features/auth/login/login.component.ts`, `login.component.html`, `login.component.css` | Login form behavior, rendered fields, validation messages, success/error UI |
 | [AUTH-04] | `frontend/src/app/core/services/auth.service.ts` | Calls login/register endpoints; saves token after login |
 | [AUTH-05] | `frontend/src/app/core/services/token.service.ts` | Reads/writes/removes JWT in localStorage |
 | [AUTH-06] | `frontend/src/app/core/services/current-user.service.ts` | Refreshes frontend current-user state |
 | [AUTH-07] | `frontend/src/app/core/interceptors/auth.interceptor.ts` | Adds bearer token when available |
 | [AUTH-08] | `frontend/src/app/core/guards/auth.guard.ts` | Blocks protected route navigation without token |
 | [AUTH-09] | `frontend/src/app/core/guards/guest.guard.ts` | Redirects signed-in browser away from guest routes |
-| [AUTH-10] | `backend/API/Controllers/AuthController.cs` | Anonymous login/register HTTP endpoints |
+| [AUTH-10] | `backend/API/Controllers/AuthController.cs` | Anonymous login/register HTTP endpoints; maps request to MediatR commands |
+| [AUTH-10a] | `backend/API/Program.cs` | Registers middleware, Application/Infrastructure DI, controllers, rate limiting, auth |
+| [AUTH-10b] | `backend/API/Middlewares/ExceptionHandlingMiddleware.cs` | Maps validation/business/unhandled exceptions to JSON API responses |
+| [AUTH-10c] | `backend/API/Middlewares/CorrelationIdMiddleware.cs` | Adds/propagates `X-Correlation-ID` and logging scope |
+| [AUTH-10d] | `backend/API/Middlewares/RequestLoggingMiddleware.cs` | Logs request outcome and elapsed time |
+| [AUTH-10e] | `backend/API/Extensions/AuthExtensions.cs` | Configures JWT bearer validation and role policies |
+| [AUTH-10f] | `backend/Application/Common/Models/ApiResponse.cs` | Standard success/failure response envelope |
 | [AUTH-11] | `backend/Application/Features/Users/Commands/CreateUser/CreateUserCommand.cs` | Signup request command |
 | [AUTH-12] | `backend/Application/Features/Users/Commands/CreateUser/CreateUserCommandValidator.cs` | Server-side validation for signup input |
+| [AUTH-12a] | `backend/Application/Features/Auth/Commands/Login/LoginCommandValidator.cs` | Server-side login email/password validation through MediatR pipeline |
 | [AUTH-13] | `backend/Application/Features/Users/Commands/CreateUser/CreateUserCommandHandler.cs` | Duplicate email check, BCrypt hash, role assignment, persistence request |
 | [AUTH-14] | `backend/Application/Features/Auth/Commands/Login/LoginCommand.cs` | Login command contract |
 | [AUTH-15] | `backend/Application/Features/Auth/Commands/Login/LoginCommandHandler.cs` | Fetch user, verify BCrypt hash, request JWT |
-| [AUTH-16] | `backend/Application/DTOs/Auth/LoginRequest.cs` and `LoginResponse.cs` | Login API contract types |
+| [AUTH-16] | `backend/Application/DTOs/Auth/LoginRequest.cs` | Login HTTP request DTO |
+| [AUTH-16a] | `backend/Application/Features/Auth/Commands/Login/LoginResponse.cs` | Login handler response contract |
+| [AUTH-16b] | `frontend/src/app/core/models/auth/login-request.ts`, `login-response.ts`, `register-request.ts` | Angular request/response types |
+| [AUTH-16c] | `frontend/src/app/core/constants/jwt-claims.ts`, `frontend/src/app/core/models/auth/jwt-payload.ts` | Claim names expected when decoding the token in the UI |
 | [AUTH-17] | `backend/Application/Interfaces/IUserRepository.cs` | Application-facing user persistence abstraction |
 | [AUTH-18] | `backend/Infrastructure/Repositories/UserRepository.cs` | EF Core implementation of user repository |
 | [AUTH-19] | `backend/Core/Entities/User.cs` | User domain model |
 | [AUTH-20] | `backend/Infrastructure/Data/AppDbContext.cs` | User DbSet and database mapping |
 | [AUTH-21] | `backend/Infrastructure/Auth/JwtTokenService.cs` | Builds and signs JWT |
 | [AUTH-22] | `backend/API/Extensions/AuthExtensions.cs` | JWT bearer validation and role policies |
-| [AUTH-23] | [BASE-01], [BASE-02], [BASE-05], [BASE-08], [BASE-09] | Middleware, validation, MediatR and DI cross-cutting behavior |
+| [AUTH-23] | `backend/Infrastructure/Auth/JwtSettings.cs`, `backend/API/appsettings.json` | JWT issuer, audience, expiry, and secret configuration shape; never commit real secrets |
+| [AUTH-24] | `backend/Application/DependencyInjection.cs` | Registers MediatR handlers, validators, and validation pipeline |
+| [AUTH-25] | `backend/Infrastructure/DependencyInjection.cs` | Registers repositories, DbContext, token service, and current-user service |
+| [AUTH-26] | `backend/Application/Common/Behaviors/ValidationBehavior.cs` | Runs validators before the selected handler |
+| [AUTH-27] | `backend/Infrastructure/Services/CurrentUserService.cs` | Resolves authenticated user ID from request claims for protected workflows |
+| [AUTH-28] | `backend/Infrastructure/Migrations/AppDbContextModelSnapshot.cs` | Snapshot used to inspect the currently modelled Users schema/indexes |
+| [AUTH-29] | `frontend/src/app/core/services/current-user.service.ts`, `frontend/src/app/core/guards/auth.guard.ts`, `guest.guard.ts`, `frontend/src/app/core/interceptors/auth.interceptor.ts` | Frontend claim state, route gating, and bearer-token attachment |
+| [AUTH-30] | [BASE-01], [BASE-02], [BASE-05], [BASE-08], [BASE-09] | Shared cross-cutting behavior documented in Chapter 2 |
 
-## 3.5 Necessary theory and implementation notes
+## 3.5 Necessary theory, linked to source references
 
-- **Password storage:** signup hashes the password with BCrypt. The raw password must not be persisted. Login verifies the submitted password against the stored hash; it does not decrypt a stored password.
-- **JWT:** the token contains claims including subject/user ID, email, full name, and role, and is signed with the configured secret. The API validates issuer, audience, expiry, and signing key.
-- **Anonymous endpoints:** login and registration use `[AllowAnonymous]`; they must be callable before a token exists.
-- **Duplicate email:** the handler checks whether the email exists and throws a dedicated exception when it does. The database schema should also enforce uniqueness if that is not already guaranteed; verify the current migration and index before claiming it is enforced at the database level.
-- **Role assignment:** public signup assigns the standard User role. Admin user creation is a separate, protected workflow in Chapter 09.
-- **Frontend guard vs backend security:** a browser route guard is not authorization. An attacker can call the API directly, so backend attributes/policies and data-ownership checks remain essential.
-- **Token storage:** the current implementation uses localStorage. This is an implementation fact, not a claim that localStorage is the strongest possible token-storage strategy. Revisit token handling as a separate security-hardening decision.
+Use the bracketed IDs in the source register as the references for this chapter. They are documentation labels only; no numbered comments are being added to application code.
+
+- **[THEORY-01 — Request validation]** The Angular forms provide immediate feedback, but they are not a security boundary. The API's MediatR validation behavior runs the matching FluentValidation validator before the handler ([AUTH-12], [AUTH-12a], [AUTH-24], [AUTH-26]). Invalid signup/login input should fail before any repository lookup or insert.
+- **[THEORY-02 — Password handling]** Signup hashes the password with BCrypt before constructing the persisted user ([AUTH-13]). The raw password must never be stored. Login verifies the submitted password against the saved hash; it does not decrypt the hash ([AUTH-15]).
+- **[THEORY-03 — Duplicate email and database integrity]** The signup handler performs an existence check before insert ([AUTH-13], [AUTH-18]). The current EF model snapshot shows no unique index on `Users.Email` ([AUTH-20], [AUTH-28]). Therefore, duplicate prevention is currently application-level; concurrent registrations can race. Add a database uniqueness constraint in a deliberate stabilization change and handle its database exception, after checking existing data.
+- **[THEORY-04 — JWT]** The token carries subject/user ID, email, full name, and role claims ([AUTH-21]). The API validates signature, issuer, audience, and lifetime and maps the role claim for policy checks ([AUTH-22], [AUTH-23]). A decoded token in the browser is only client-side state; the API is the authority that validates it.
+- **[THEORY-05 — Anonymous vs protected access]** Login and registration are explicitly anonymous ([AUTH-10]). Angular route guards only control navigation in the browser ([AUTH-08], [AUTH-09]); backend authentication/authorization remains mandatory for protected endpoints ([AUTH-22]).
+- **[THEORY-06 — Shared request behavior]** For each HTTP request, the global exception handler surrounds the downstream pipeline; correlation middleware assigns or accepts `X-Correlation-ID`; request logging records duration/status; authentication builds a principal from a valid bearer token; authorization checks endpoint policies ([AUTH-10a]–[AUTH-10e], Chapter 2). MediatR validation runs only when the controller sends a command/query through MediatR.
+- **[THEORY-07 — Response contract]** Successful auth endpoints return `ApiResponse<T>`; validation and domain failures are formatted by the global exception middleware ([AUTH-10b], [AUTH-10f]). The frontend currently reads `error.error?.message`, so response-shape consistency is important.
+- **[THEORY-08 — Current-user state]** After login, Angular stores the JWT in `localStorage` and decodes claims to populate current-user UI state ([AUTH-04]–[AUTH-06], [AUTH-16c]). This is the current implementation, not a claim that localStorage is the strongest token-storage option. Review token storage as a separate security-hardening decision.
+- **[THEORY-09 — Email normalization]** The current existence lookup compares the supplied email directly with the stored email ([AUTH-18]). No normalization/case-folding is visible in this path. Decide on a consistent case-insensitive email policy and enforce it at both application and database levels before production.
+- **[THEORY-10 — Runtime evidence]** Source tracing establishes the intended control flow, but does not prove the running database schema, live API status codes, CORS setup, JWT secret quality, or actual logs. The verification checklist below must be run against the local application and its real PostgreSQL database before marking this chapter verified.
 
 ## 3.6 Verification checklist
 
@@ -439,7 +461,7 @@ sequenceDiagram
 - [ ] Verify the response contains `X-Correlation-ID` and that matching backend log events can be found.
 - [ ] Verify role-restricted endpoints reject a normal User token.
 
-**Status:** source traced for the main registration/login path. Runtime verification is pending until the checklist is executed and results are recorded.
+**Status:** source traced for the main registration/login path and shared middleware/configuration references. Runtime verification is pending. Two concrete hardening findings are recorded: no unique `Users.Email` index appears in the EF model snapshot, and email comparison/normalization policy is not explicit. Do not silently change these as part of diagram writing; resolve them in the stabilization backlog with a migration and tests.
 
 ---
 
