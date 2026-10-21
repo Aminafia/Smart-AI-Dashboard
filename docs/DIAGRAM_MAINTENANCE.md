@@ -57,4 +57,4 @@ Do not mix generated output and hand-authored workflow explanations in a way tha
 
 ## Current status
 
-This document records the agreed direction. The first implementation step is a deterministic repository/source inventory and diagram-reference validator. No source-code-derived diagram generator or CI check should be considered active until its script exists in the repository and its workflow run has been observed to pass.
+This document records the agreed direction. The first implementation step now exists: `scripts/check_architecture_docs.py` can regenerate the tracked source inventory and check Markdown fence balance and inline source-path references. `.github/workflows/architecture-docs.yml` runs the checker on pushes to `main` and on pull requests. The first workflow runs are still pending/in progress; do not call the checks passed until a completed run confirms that result. The current automation does not generate semantic sequence diagrams or infer runtime behavior.
