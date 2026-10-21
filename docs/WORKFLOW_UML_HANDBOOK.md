@@ -1479,6 +1479,7 @@ This index is deliberately broad; the workflow tables above identify the files t
 - `backend/API/Controllers/UsersController.cs`
 - `backend/API/Controllers/AIController.cs`
 - `backend/API/Controllers/DocumentsController.cs`
+- `backend/API/Controllers/TestController.cs` — development diagnostic endpoints; the deliberate error route must be restricted/removed before production
 - `backend/API/Middlewares/ExceptionHandlingMiddleware.cs`
 - `backend/API/Middlewares/CorrelationIdMiddleware.cs`
 - `backend/API/Middlewares/RequestLoggingMiddleware.cs`
@@ -1522,6 +1523,12 @@ This index is deliberately broad; the workflow tables above identify the files t
 - `backend/Infrastructure/AI/Providers/GeminiProvider.cs`
 - `backend/Infrastructure/AI/Providers/OpenAIProvider.cs`
 - `backend/Infrastructure/Resilience/AIResiliencePolicy.cs`
+
+## Separate AI research prototype
+- `ai-engine/app.py` — standalone FastAPI endpoint for Pegasus summarization; not identified as part of the current .NET request path
+- `ai-engine/inference.py` — loads Pegasus XSum Transformers model at process startup
+- `ai-engine/requirements.txt` — Python runtime dependencies
+- `ai-engine/utils.py` — sentence-splitting helper
 
 ## Frontend
 - `frontend/src/main.ts`
