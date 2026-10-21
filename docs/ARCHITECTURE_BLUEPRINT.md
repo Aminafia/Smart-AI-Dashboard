@@ -481,6 +481,14 @@ Treat the diagram as a logical ownership map. Confirm exact database foreign-key
 7. Replace local document storage with S3 and in-memory queue with SQS at the planned integration stage; test retries, duplicates and recovery.
 8. Add cloud monitoring, CI/CD and cost controls; expand into RAG/agents/multimodal capabilities only after the base system is stable.
 
+## Current status of the standalone Python AI engine
+
+The repository also contains a top-level `ai-engine/` FastAPI application with a Pegasus XSum Transformers summarizer. In the inspected current API/provider path, the ASP.NET Core application calls Gemini through its provider abstraction; no call from the .NET API to this FastAPI application was identified in the reviewed routes and provider files.
+
+For now, treat `ai-engine/` as a separate research/prototype component—not as a required dependency of the current Smart AI Dashboard runtime. Keep it because multi-model AI experimentation is part of the broader learning goal, but make an explicit product/architecture decision before integrating or deploying it. If it becomes an active service, define its API contract, authentication/network boundary, model download/startup behavior, resource requirements, health checks, logging and failure handling.
+
+The API also currently contains `backend/API/Controllers/TestController.cs`, including a deliberately throwing `GET /api/test/error` endpoint without an authorization attribute. This is a development diagnostic, not a product feature; remove it or restrict it to Development before production deployment.
+
 ## 12. Complete tracked-file inventory
 
 This inventory is a snapshot generated from the repository Git tree at the baseline commit above, not a live listing of the current branch. Documentation files and README updates committed after that baseline may not be reflected in the listed file sizes. Use the current GitHub tree/source files as the source of truth.
