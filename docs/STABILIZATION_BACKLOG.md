@@ -137,7 +137,16 @@
 **Plan:** during final testing capture HTTP status, actual response envelope, service mapping and component state before changing implementation.
 
 ### STAB-016 — Verify user-facing DTOs and logs
-**Plan:** inspect admin/user response DTOs for password hashes or unnecessary fields; ensure logs avoid passwords, tokens, raw document text and sensitive request bodies.
+**Source evidence:** the inspected `UserDto` exposes only ID, email, full name and role; the `GetUsersQueryHandler` maps those fields explicitly and does not return PasswordHash. The Development settings file contains a development-only JWT secret and a placeholder database password; these must never be reused as production values or treated as secure credentials.
+
+**Plan:** retain explicit DTO mapping; ensure logs avoid passwords, tokens, raw document text and sensitive request bodies; ensure production uses a non-Development environment and supplies strong JWT/database/Redis/provider settings through environment-specific secret injection.
+
+### STAB-021 — Establish a repeatable automated test/build gate
+**Source evidence:** the current GitHub code searches did not locate a test project or CI workflow, but search results alone do not prove that none exists. Confirm the full repository tree before deciding whether to create them.
+
+**Plan:** identify existing backend/frontend test projects and GitHub Actions workflows. If absent, add a minimal test foundation for registration/login, user ownership, AI job status transitions, document ownership, and API error contracts, plus repeatable backend/frontend build checks. Keep tests aligned with the real architecture; do not create a large test framework before the first useful tests.
+
+**Verification:** run tests and builds from a clean checkout; capture the actual commands and outcomes in the handbook tracker.
 
 ## P3 — AWS transition (after local stabilization)
 
