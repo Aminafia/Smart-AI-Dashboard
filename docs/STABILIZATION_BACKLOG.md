@@ -109,7 +109,7 @@
 ## P2 — Consistency, maintainability and UI polish
 
 ### STAB-012 — Remove legacy Project/ProjectId prototype concepts
-**Source evidence:** `AIJob.ProjectId` remains in the entity, three AI handlers assign random GUIDs, and historical EF migrations/model snapshots contain the field. A `Project` entity also exists.
+**Source evidence:** `AIJob.ProjectId` remains in the entity, and the generation, plain-text-summary, and document-summary handlers assign random GUIDs. Historical EF migrations/model snapshots contain the field. `backend/Core/Entities/Project.cs` exists, but the directly inspected `AppDbContext` has no `DbSet<Project>` and no explicit Project mapping. This strongly suggests the entity is unused in the current model, but the full source tree and database schema must still be searched before removal.
 
 **Plan**
 1. Search all current source, tests, notes, migrations and database mappings for `Project`, `ProjectId`, and relationships.
