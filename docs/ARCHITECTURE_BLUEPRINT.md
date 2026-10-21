@@ -498,6 +498,7 @@ The API also currently contains `backend/API/Controllers/TestController.cs`, inc
 The original inventory snapshot has been replaced by a generated, current-branch index so new files do not leave this blueprint stale:
 
 - [Generated Repository Source Inventory](generated/SOURCE_INVENTORY.md)
+- [Generated .NET Project Dependency Map](generated/DOTNET_PROJECT_DEPENDENCIES.md)
 - Generator and validator: `scripts/check_architecture_docs.py`
 - GitHub Actions check: `.github/workflows/architecture-docs.yml`
 
