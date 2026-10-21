@@ -8,6 +8,7 @@ Uses only the Python standard library.
 from __future__ import annotations
 
 import argparse
+import glob
 import re
 import subprocess
 import sys
@@ -101,7 +102,13 @@ def validate_backtick_paths(path: Path, content: str) -> list[str]:
         if not token.startswith(prefixes):
             continue
         candidate = token.rstrip(".,;:!?)]}").rstrip("/")
-        if candidate and not (ROOT / candidate).exists():
+        if not candidate:
+            continue
+        if any(char in candidate for char in "*?[]"):
+            exists = bool(glob.glob(str(ROOT / candidate), recursive=True))
+        else:
+            exists = (ROOT / candidate).exists()
+        if not exists:
             errors.append(
                 f"{path.relative_to(ROOT)}: referenced path does not exist: {BT}{candidate}{BT}"
             )
