@@ -4,7 +4,7 @@
 >
 > **Repository:** [Aminafia/Smart-AI-Dashboard](https://github.com/Aminafia/Smart-AI-Dashboard)  
 > **Branch:** `main`  
-> **Documentation status:** v1 — master walkthrough and workflow inventory established; chapters must be verified against the current source and runtime tests as they are completed.  
+> **Documentation status:** source-tracing pass completed for the major listed workflows; runtime verification is intentionally deferred to the consolidated final test pass. Findings and priorities are tracked in `docs/STABILIZATION_BACKLOG.md`.  
 > **Code policy:** do not add explanatory comments to application code for this documentation. Use the reference IDs in this handbook to navigate to files and methods.
 
 ## How to use this handbook
@@ -1061,7 +1061,7 @@ The frontend uses Markdown rendering and sanitization; raw model output must not
 
 ---
 
-## 8.5 Source-traced document-summary findings
+## 8.6 Source-traced document-summary findings
 
 Direct inspection of SummarizeDocumentCommandHandler, GetDocumentSummaryQueryHandler, AIJobStore, and DocumentDetailsComponent confirms:
 
@@ -1073,7 +1073,7 @@ Direct inspection of SummarizeDocumentCommandHandler, GetDocumentSummaryQueryHan
 - The handler also assigns a random legacy ProjectId to the summary job. Remove that only with the wider legacy field/schema migration.
 - Because the full extracted text is passed to the same AI service/cache path, the raw-input cache-key/logging concern described in Chapter 5 also applies to document content, which may be more sensitive than ordinary prompts.
 
-## 8.6 Expanded final verification checklist
+## 8.7 Expanded final verification checklist
 
 - [ ] Summarize a document after successful extraction and verify output is returned immediately.
 - [ ] Try summarization before extraction; verify the UI either performs the intended extraction-first path or reports a clear failure.
@@ -1257,7 +1257,7 @@ The deletion workflow spans the file system and database, so partial failure is 
 
 ---
 
-## 10.5 Source-traced document listing/deletion findings
+## 10.6 Source-traced document listing/deletion findings
 
 Direct inspection of DocumentsController, GetDocumentsQueryHandler, DocumentRepository, DeleteDocumentCommandHandler, and LocalDocumentStorage confirms:
 
@@ -1267,7 +1267,7 @@ Direct inspection of DocumentsController, GetDocumentsQueryHandler, DocumentRepo
 - DocumentContentRepository and any related AIJob records require deliberate relationship/cascade review. Do not assume deleting document metadata automatically removes extracted content and summary jobs; inspect the current migrations and foreign-key configuration during stabilization.
 - The frontend refreshes the list after a successful delete and asks for confirmation before issuing the DELETE request.
 
-## 10.6 Expanded final verification checklist
+## 10.7 Expanded final verification checklist
 
 - [ ] Verify pagination, ordering and total count across multiple pages.
 - [ ] Verify one user cannot list, download or delete another user’s documents.
