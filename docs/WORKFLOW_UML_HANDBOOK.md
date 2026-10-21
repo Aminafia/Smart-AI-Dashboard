@@ -1248,7 +1248,7 @@ This index is deliberately broad; the workflow tables above identify the files t
 - `backend/Infrastructure/Repositories/DocumentContentRepository.cs`
 - `backend/Infrastructure/Services/AIJobStore.cs`
 - `backend/Infrastructure/Services/AIQueue.cs`
-- `backend/Infrastructure/Services/AiService.cs` (actual path/name should be confirmed from the tree; class is `AiService`)
+- `backend/Infrastructure/AI/AiService.cs` (class name: `AiService`)
 - `backend/Infrastructure/Services/CacheService.cs`
 - `backend/Infrastructure/Services/CurrentUserService.cs`
 - `backend/Infrastructure/BackgroundServices/AIWorker.cs`
