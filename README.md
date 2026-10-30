@@ -28,6 +28,7 @@ The current queue and local storage are development-stage implementation choices
 ## Documentation
 
 - [Architecture Blueprint](docs/ARCHITECTURE_BLUEPRINT.md)
+- [AWS Deployment Blueprint](docs/AWS_DEPLOYMENT_BLUEPRINT.md)
 - [Workflow UML Handbook](docs/WORKFLOW_UML_HANDBOOK.md)
 - [Stabilization Backlog](docs/STABILIZATION_BACKLOG.md)
 - [Diagram Maintenance Strategy](docs/DIAGRAM_MAINTENANCE.md)
