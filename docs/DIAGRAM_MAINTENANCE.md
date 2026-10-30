@@ -18,6 +18,23 @@ The diagrams are part of the engineering workflow. They should explain both the 
 | Sequence diagrams for signup, generation, document workflows, retries and failure handling | Maintain Mermaid diagrams alongside the implementation; use source-file references and verification checklists | Human-reviewed, with automated drift checks |
 | High-level system architecture and future AWS target | Maintain explicit current-state and target-state diagrams | Human-reviewed |
 
+## Human-readable workflow diagram standard
+
+Every important workflow must be understandable without opening several source files just to reconstruct the execution. A workflow chapter should combine a concise human-readable walkthrough, a Mermaid diagram, a participating-source register, and a verification checklist.
+
+For each relevant step, document:
+
+1. **Layer and responsibility:** identify the API, Application, Core, Infrastructure, frontend, database or external-service boundary, and explain what the component does in this use case.
+2. **Actual interaction:** show the real class/interface and method names, including meaningful parameters and return types. Distinguish an Application interface from its Infrastructure implementation.
+3. **Data movement:** label important commands, DTOs, entities, results and response envelopes. Explain meaningful transformations such as request DTO → command → entity → response.
+4. **Decision points:** show validation, authorization/ownership checks, success/failure branches, retries, cancellation and asynchronous hand-offs where they exist in the implementation.
+5. **Persistence and external calls:** explain which component issues the operation, what the database/provider/storage returns, and how that result is mapped back into application types.
+6. **Source navigation and verification:** link the diagram to the relevant source-file register and clearly distinguish source-traced behavior from runtime-verified behavior.
+
+Keep explanations precise and non-repetitive. Explain shared infrastructure once in the shared-foundation section and reference it from individual workflows. Do not repeat generic Clean Architecture or middleware theory in every chapter. Do not invent a call, validation step, fallback, transaction, return type or runtime guarantee that the source does not implement.
+
+The Login workflow in Section 3.2 is the reference example for this level of detail. Its sequence makes the interface/implementation boundary, database-to-entity mapping, credential decision and JWT return path explicit. Apply the same standard to the other workflows where the current diagrams or prose leave those responsibilities implicit.
+
 ## Why sequence diagrams should not be blindly generated
 
 A source scanner can find method calls, route attributes and dependencies, but it generally cannot produce a trustworthy business-level sequence diagram for asynchronous work, retries, ownership checks, cancellation, conditional error paths or future architecture. Those diagrams need to preserve intent and explain why a call happens, not just which method calls another method.
@@ -44,7 +61,8 @@ Do not mix generated output and hand-authored workflow explanations in a way tha
 4. **Generate structural views:** add a .NET project dependency diagram from `.csproj` references and a route inventory from the current API/frontend route declarations.
 5. **Add CI checks:** run the generator in check mode on pushes to `main`. A mismatch should fail with an actionable message telling the developer which command refreshes the generated files.
 6. **Maintain behavioral diagrams:** whenever a route, handler, provider, persistence relationship, status transition, middleware order or error branch changes, update the affected Mermaid diagram and checklist in the same change.
-7. **Review after stabilization:** add stronger Mermaid rendering and OpenAPI-based checks only after the initial deterministic checks are reliable.
+7. **Strengthen diagram validation:** add Mermaid syntax/render validation to CI without replacing human review of business semantics.
+8. **Review after stabilization:** add OpenAPI-based checks once the local baseline and existing deterministic checks are reliable.
 
 ## Rules
 
@@ -57,4 +75,4 @@ Do not mix generated output and hand-authored workflow explanations in a way tha
 
 ## Current status
 
-This document records the agreed direction. The first implementation now exists: `scripts/check_architecture_docs.py` regenerates the source inventory and a Mermaid project dependency map by reading .NET `ProjectReference` entries. It also checks Markdown fence balance and inline source-path references. `.github/workflows/architecture-docs.yml` runs the checker on pushes to `main` and on pull requests. The workflow previously completed successfully after the first runs exposed three stale Angular file references in the architecture blueprint; those paths were corrected before the check passed. The generated dependency map and refreshed inventory have since passed the GitHub Actions check on the latest source/documentation baseline. Later changes will trigger the same check again. The current automation does not generate semantic sequence diagrams or infer runtime behavior.
+This document records the agreed direction. The first implementation now exists: `scripts/check_architecture_docs.py` regenerates the source inventory and a Mermaid project dependency map by reading .NET `ProjectReference` entries. It also checks Markdown fence balance and inline source-path references. `.github/workflows/architecture-docs.yml` runs the checker on pushes to `main` and on pull requests. The workflow previously completed successfully after the first runs exposed three stale Angular file references in the architecture blueprint; those paths were corrected before the check passed. The generated dependency map and refreshed inventory have since passed the GitHub Actions check on the latest source/documentation baseline. Later changes will trigger the same check again. The current automation does not generate semantic sequence diagrams or infer runtime behavior. The workflow handbook uses a human-readable, implementation-level standard: exact method calls and data contracts, layer responsibilities, decision branches, and the distinction between source-traced and runtime-verified behavior. Mermaid syntax/render validation is a separate tooling improvement; a successful render must never be mistaken for behavioral verification.
