@@ -471,6 +471,10 @@ Treat the diagram as a logical ownership map. Confirm exact database foreign-key
 - **Current storage boundary:** `IDocumentStorage` / `LocalDocumentStorage` is the replacement point for future S3 implementation.
 - **Current queue boundary:** `IAIQueue` / `AIQueue` is the replacement point for future SQS integration.
 
+## AWS target-state design
+
+The proposed AWS topology, current-to-cloud component mapping, trust boundaries, cost guardrails and incremental deployment gates are maintained separately in [AWS Deployment Blueprint](AWS_DEPLOYMENT_BLUEPRINT.md). That document is a proposed target, not a description of deployed resources.
+
 ## 11. Stabilization and cloud sequence
 
 1. Complete file-by-file dependency and endpoint mapping; confirm no unaccounted runtime path.
