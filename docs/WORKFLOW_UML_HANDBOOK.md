@@ -334,63 +334,112 @@ sequenceDiagram
     end
 ```
 
-## 3.2 Login — sequence diagram
+## 3.2 Login — detailed execution sequence
+
+**Read this as an execution story, not just a dependency map.** The labels identify the architectural layer, the arrows show the actual method calls or returned data, and the notes explain what each component does.
+
+### What happens, step by step
+
+1. **Browser / Angular:** the user submits email and password. `LoginComponent` calls `AuthService.login(LoginRequest)`, which sends `POST /api/auth/login`. Login is anonymous, so no bearer token is required.
+2. **API:** `AuthController.Login(LoginRequest)` maps the transport DTO into `LoginCommand(Email, Password)` and sends it through MediatR. The controller does not authenticate the user itself.
+3. **Application validation:** MediatR runs `LoginCommandValidator` through the registered validation behavior. It checks that email and password are present, that the email has a valid format, and that the password meets the six-character minimum. A validation failure exits before the handler runs.
+4. **Application use case:** `LoginCommandHandler.Handle` receives the command. It calls the Application abstraction `IUserRepository.GetUserByEmailAsync(email, cancellationToken)`. The handler does not know which database or ORM implements that interface.
+5. **Infrastructure implementation:** dependency injection maps `IUserRepository` to `UserRepository`. The repository uses its injected `AppDbContext` and runs `Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken)`.
+6. **Database / EF Core:** EF Core translates the LINQ query into SQL for PostgreSQL. PostgreSQL returns the matching row, if one exists; EF Core materializes that row as the Core domain type `Core.Entities.User`. The repository returns `User?` to the handler.
+7. **Application authentication decision:** if no user is found, the handler throws `UnauthorizedException`. Otherwise it compares the submitted password with `User.PasswordHash` using `BCrypt.Verify`. A mismatch produces the same unauthorized response; the raw password is never compared with or stored as the database value.
+8. **JWT generation:** after a successful password check, the handler calls the Application abstraction `IJwtTokenService.GenerateToken(user)`. Infrastructure's `JwtTokenService` builds claims from the user's ID, email, full name and role, signs the token with the configured secret using HMAC-SHA256, and applies the configured issuer, audience and expiry.
+9. **Return path:** the handler creates `LoginResponse(Token, Email)`. MediatR returns it to the controller, which wraps it in `ApiResponse<LoginResponse>`. Angular receives the response, saves the token through `TokenService`, refreshes current-user state and navigates to the dashboard.
+
+### Mermaid sequence diagram
 
 ```mermaid
 sequenceDiagram
     actor U as User
     participant UI as LoginComponent
     participant AS as AuthService
-    participant TS as TokenService
-    participant EX as ExceptionHandlingMiddleware
-    participant CID as CorrelationIdMiddleware
-    participant LOG as RequestLoggingMiddleware
     participant API as AuthController
-    participant M as MediatR
-    participant V as LoginCommandValidator / ValidationBehavior
-    participant H as LoginCommandHandler
-    participant R as IUserRepository / UserRepository
-    participant DB as AppDbContext / PostgreSQL
-    participant JWT as JwtTokenService
-    U->>UI: Enter email and password
-    UI->>UI: Reactive form validation
+
+    box Application
+        participant M as MediatR + ValidationBehavior
+        participant V as LoginCommandValidator
+        participant H as LoginCommandHandler
+        participant IR as IUserRepository
+        participant IT as IJwtTokenService
+    end
+
+    box Infrastructure
+        participant R as UserRepository
+        participant DBCTX as AppDbContext
+        participant JWT as JwtTokenService
+    end
+
+    participant DB as PostgreSQL Users table
+    participant TS as TokenService
+
+    U->>UI: Submit email + password
     UI->>AS: login(LoginRequest)
-    AS->>EX: POST /api/auth/login (anonymous)
-    EX->>CID: Enter request pipeline
-    CID->>LOG: Assign/propagate X-Correlation-ID
-    LOG->>API: Log request; continue
-    API->>M: Send LoginCommand
-    M->>V: Validate email/password
-    V-->>M: Continue if valid
-    M->>H: Handle(command)
-    H->>R: GetUserByEmailAsync(email)
-    R->>DB: Query Users by email
-    DB-->>R: User or no result
-    alt User missing or password invalid
-        H-->>M: UnauthorizedException
-        M-->>API: Exception propagates out of Send
-        API-->>LOG: Exception bubbles out of controller
-        LOG-->>CID: Log failure and rethrow
-        CID-->>EX: Exception reaches outer handler
-        EX-->>UI: 401 + ApiResponse failure
-        UI-->>U: Show login error
-    else Credentials valid
-        H->>H: BCrypt.Verify(entered password, stored hash)
-        H->>JWT: GenerateToken(user)
-        JWT->>JWT: Create claims + sign JWT + set issuer/audience/expiry
-        JWT-->>H: JWT string
-        H-->>M: LoginResponse(token, email)
-        M-->>API: LoginResponse
-        API-->>LOG: ApiResponse<LoginResponse>
-        LOG-->>CID: Log response status and duration
-        CID-->>EX: Return response with correlation header
-        EX-->>AS: HTTP response
-        AS->>TS: Save token in localStorage
-        AS->>AS: Refresh current-user state
-        AS-->>UI: Login observable succeeds
-        UI->>UI: Navigate to /dashboard
+    AS->>API: POST /api/auth/login
+    Note over API: Anonymous endpoint; maps LoginRequest to LoginCommand
+    API->>M: Send(LoginCommand)
+    M->>V: Validate command
+    V->>V: Email required + valid format; password required + min. 6 chars
+    V-->>M: Validation succeeds
+    M->>H: Handle(LoginCommand, cancellationToken)
+
+    Note over H,IR: Application depends on the interface, not the database implementation
+    H->>IR: GetUserByEmailAsync(email, cancellationToken)
+    Note over IR,R: Dependency injection resolves IUserRepository to UserRepository
+    IR->>R: Invoke repository implementation
+    R->>DBCTX: Users.FirstOrDefaultAsync(email predicate)
+    DBCTX->>DB: Execute translated SQL SELECT
+    DB-->>DBCTX: Matching row or no row
+    DBCTX->>DBCTX: EF Core materializes Core.Entities.User
+    DBCTX-->>R: User? entity
+    R-->>IR: Return User?
+    IR-->>H: Return User?
+
+    alt User not found
+        H-->>M: Throw UnauthorizedException
+        M-->>API: Exception propagates
+        API-->>AS: 401 ApiResponse failure
+        AS-->>UI: Login error
+        UI-->>U: Display generic invalid-credentials message
+    else User found
+        H->>H: BCrypt.Verify(submitted password, User.PasswordHash)
+        alt Password invalid
+            H-->>M: Throw UnauthorizedException
+            M-->>API: Exception propagates
+            API-->>AS: 401 ApiResponse failure
+            AS-->>UI: Login error
+            UI-->>U: Display generic invalid-credentials message
+        else Password valid
+            H->>IT: GenerateToken(User)
+            IT->>JWT: Invoke token implementation
+            JWT->>JWT: Build claims + signing key + HMAC-SHA256 credentials
+            JWT->>JWT: Apply issuer, audience and expiry
+            JWT-->>IT: Signed JWT string
+            IT-->>H: Token
+            H->>H: Create LoginResponse(Token, Email)
+            H-->>M: LoginResponse
+            M-->>API: LoginResponse
+            API->>API: Wrap in ApiResponse<LoginResponse>
+            API-->>AS: 200 success response
+            AS->>TS: Save token in localStorage
+            AS->>AS: Refresh current-user state
+            AS-->>UI: Login succeeds
+            UI->>UI: Navigate to /dashboard
+        end
     end
 ```
+
+### Important implementation distinctions
+
+- **The interface and implementation are in different layers:** `IUserRepository` and `IJwtTokenService` are Application abstractions; `UserRepository` and `JwtTokenService` are Infrastructure implementations registered through dependency injection.
+- **The handler owns the authentication decision:** the repository only retrieves a user. It does not validate the password or generate the token.
+- **The database does not return a C# object directly:** PostgreSQL returns data rows; EF Core maps the result into the Core `User` entity before the repository returns it.
+- **The token is generated after password verification:** `LoginResponse` is created only after `BCrypt.Verify` succeeds.
+- **Comment reconciliation:** an older explanatory comment in `AuthController.cs` refers to `GetByEmailAsync`; the actual interface and implementation method is `GetUserByEmailAsync`. The diagram follows the current source signature.
+- **Verification status:** this is source-traced from the current handler, validator, interfaces, repository, DbContext, DI registration, token service and controller. It is not labelled runtime-verified until the consolidated login test is executed.
 
 ## 3.3 What happens on the next protected API request?
 
