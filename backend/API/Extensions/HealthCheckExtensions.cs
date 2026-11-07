@@ -5,19 +5,15 @@ namespace API.Extensions;
 
 public static class HealthCheckExtensions
 {
-    public static IServiceCollection AddCustomHealthChecks(
-        this IServiceCollection services,
-        string connectionString)
+    public static IServiceCollection AddCustomHealthChecks(this IServiceCollection services, string connectionString)
     {
         services.AddHealthChecks()
-            .AddNpgSql(connectionString, name: "PostgreSQL", tags: new[] { "ready" })
-            .AddCheck("Self", () => HealthCheckResult.Healthy(), tags: new[] { "live" });
-
+                .AddNpgSql(connectionString, name: "PostgreSQL", tags: new[] { "ready" })
+                .AddCheck("Self", () => HealthCheckResult.Healthy(), tags: new[] { "live" });
         return services;
     }
 
-    public static IEndpointRouteBuilder MapCustomHealthChecks(
-        this IEndpointRouteBuilder endpoints)
+    public static IEndpointRouteBuilder MapCustomHealthChecks(this IEndpointRouteBuilder endpoints)
     {
         endpoints.MapHealthChecks("/health/live", new HealthCheckOptions
         {
@@ -34,17 +30,16 @@ public static class HealthCheckExtensions
             ResponseWriter = async (context, report) =>
             {
                 context.Response.ContentType = "application/json";
-
                 var result = new
-                {
-                    status = report.Status.ToString(),
-                    checks = report.Entries.Select(e => new
-                    {
-                        name = e.Key,
-                        status = e.Value.Status.ToString(),
-                        error = e.Value.Exception?.Message
-                    })
-                };
+                            {
+                            status = report.Status.ToString(),
+                            checks = report.Entries.Select(e => new 
+                                                                { 
+                                                                    name = e.Key,
+                                                                    status = e.Value.Status.ToString(),
+                                                                    error = e.Value.Exception?.Message
+                                                                })
+                            };
 
                 await context.Response.WriteAsJsonAsync(result);
             }

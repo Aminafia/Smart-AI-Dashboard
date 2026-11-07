@@ -48,20 +48,13 @@ public class AIJobStore : IAIJobStore
         var stats = await query
             .GroupBy(_ => 1)
             .Select(g => new AIStatsResponse
-            {
-                TotalJobs = g.Count(),
-
-                CompletedJobs = g.Count(
-                    x => x.Status == AIJobStatus.Completed),
-
-                ProcessingJobs = g.Count(
-                    x => x.Status == AIJobStatus.Processing),
-
-                FailedJobs = g.Count(
-                    x => x.Status == AIJobStatus.Failed)
-            })
+                                {
+                                    TotalJobs = g.Count(),
+                                    CompletedJobs = g.Count(x => x.Status == AIJobStatus.Completed),
+                                    ProcessingJobs = g.Count(x => x.Status == AIJobStatus.Processing),
+                                    FailedJobs = g.Count(x => x.Status == AIJobStatus.Failed)
+                                })
             .FirstOrDefaultAsync();
-
         return stats ?? new AIStatsResponse();
     }
 
@@ -85,9 +78,9 @@ public class AIJobStore : IAIJobStore
     {
         return await _dbContext.AIJobs
             .Where(x =>
-                x.Status == AIJobStatus.Pending ||
-                x.Status == AIJobStatus.Processing ||
-                x.Status == AIJobStatus.Retrying)
+                    x.Status == AIJobStatus.Pending ||
+                    x.Status == AIJobStatus.Processing ||
+                    x.Status == AIJobStatus.Retrying)
             .OrderBy(x => x.CreatedAt)
             .ToListAsync();
     }

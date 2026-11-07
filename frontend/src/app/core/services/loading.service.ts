@@ -21,7 +21,6 @@ export class LoadingService {
     if (this.requestCount > 0) {
       this.requestCount--; }
     if (this.requestCount === 0) {
-      this.loadingSubject.next(false);
-    }
+      this.loadingSubject.next(false); }
   }
 }

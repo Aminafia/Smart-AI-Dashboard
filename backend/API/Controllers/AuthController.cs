@@ -76,14 +76,12 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login(LoginRequest request)
     {
         Log.Information("[Controller] Login endpoint hit");
-        var command = new LoginCommand
-        {
-            Email = request.Email,
-            Password = request.Password
-        };
-
+        var command = new LoginCommand 
+                          {
+                            Email = request.Email,
+                            Password = request.Password
+                          };
         var result = await _mediator.Send(command);
-
         Log.Information("[Controller] Login successful, returning response");
 
         return Ok(ApiResponse<LoginResponse>.SuccessResponse(result, "Login successful"));
@@ -95,11 +93,9 @@ public class AuthController : ControllerBase
     [FromBody] CreateUserCommand command)
     {
         Log.Information("[Controller] Register endpoint hit");
-
         var userId = await _mediator.Send(command);
 
         Log.Information("[Controller] User registered with ID: {UserId}", userId);
-
         return Ok(ApiResponse<Guid>.SuccessResponse(userId, "Account created successfully"));
     }
 }

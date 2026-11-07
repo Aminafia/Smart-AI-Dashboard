@@ -40,18 +40,17 @@ public class ApiResponse<T>
     public T? Data { get; set; }
     public List<string>? Errors { get; set; }
     public static ApiResponse<T> SuccessResponse(T data, string message = "")
-        => new ApiResponse<T>
-        {
-            Success = true,
-            Message = message,
-            Data = data
-        };
-
+                                    => new ApiResponse<T>
+                                    {
+                                        Success = true,
+                                        Message = message,
+                                        Data = data
+                                    };
     public static ApiResponse<T> Failure(string message, List<string>? errors = null)
-        => new ApiResponse<T>
-        {
-            Success = false,
-            Message = message,
-            Errors = errors
-        };
+                                    => new ApiResponse<T>
+                                    {
+                                        Success = false,
+                                        Message = message,
+                                        Errors = errors
+                                    };
 }

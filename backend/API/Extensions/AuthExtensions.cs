@@ -18,61 +18,38 @@ public static class AuthExtensions
     /// <summary>
     /// Registers JWT Authentication and Role-based Authorization policies.
     /// </summary>
-    public static IServiceCollection AddAuth(
-        this IServiceCollection services,
-        IConfiguration configuration)
+    public static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
     {
-        // Get strongly typed settings
-        var jwtSettings = configuration
-            .GetSection("JwtSettings")
-            .Get<JwtSettings>();
+        var jwtSettings = configuration.GetSection("JwtSettings")
+                                       .Get<JwtSettings>();
+        services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
-        // Bind for DI
-        services.Configure<JwtSettings>(
-            configuration.GetSection("JwtSettings")
-        );
-
-        // ----------------------
-        // Authentication
-        // ----------------------
         services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddJwtBearer(options =>
-        {
-            options.RequireHttpsMetadata = false;
-            options.SaveToken = true;
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = jwtSettings!.Issuer,
+                        ValidAudience = jwtSettings.Audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret)),
+                        RoleClaimType = ClaimTypes.Role
+                    };
+                });
 
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-
-                ValidIssuer = jwtSettings!.Issuer,
-                ValidAudience = jwtSettings.Audience,
-
-                IssuerSigningKey = new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(jwtSettings.Secret)
-                ),
-
-                RoleClaimType = ClaimTypes.Role
-            };
-        });
-
-        // ----------------------
-        // Authorization (Policies)
-        // ----------------------
         services.AddAuthorization(options =>
         {
-            options.AddPolicy("AdminOnly", policy =>
-                policy.RequireRole(Roles.Admin));
-
-            options.AddPolicy("UserOnly", policy =>
-                policy.RequireRole(Roles.User));
+            options.AddPolicy("AdminOnly", policy => policy.RequireRole(Roles.Admin));
+            options.AddPolicy("UserOnly", policy => policy.RequireRole(Roles.User));
         });
 
         return services;

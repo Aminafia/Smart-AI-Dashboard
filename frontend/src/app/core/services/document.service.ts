@@ -2,26 +2,22 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SKIP_LOADING } from '../constants/loading-context';
-
 import { environment } from '../../../environments/environment';
-
 import { DocumentModel } from '../models/documents/document.model';
 import { PagedResponse } from '../models/shared/paged-response.model';
 import { DocumentContentResponse } from '../models/documents/document-content-response.model';
 
 @Injectable({
-    providedIn: 'root'
-})
+    providedIn: 'root' })
+
 export class DocumentService {
 
     private readonly apiUrl = `${environment.apiUrl}/Documents`;
-
     constructor(private readonly http: HttpClient) { }
 
     upload(file: File): Observable<DocumentModel> {
         const formData = new FormData();
         formData.append('file', file);
-
         return this.http.post<DocumentModel>(this.apiUrl, formData);
     }
 
@@ -37,11 +33,9 @@ export class DocumentService {
     download(id: string): Observable<Blob> {
         return this.http.get(
             `${this.apiUrl}/${id}`,
-            {
-                responseType: 'blob',
-                context: new HttpContext().set(SKIP_LOADING, true)
-
-            });
+            { responseType: 'blob',
+              context: new HttpContext().set(SKIP_LOADING, true) }
+            );
     }
 
     delete(id: string): Observable<void> {

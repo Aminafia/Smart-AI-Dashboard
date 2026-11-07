@@ -49,28 +49,27 @@ export class SummarizeComponent {
 
   summarize(): void {
 
-  this.errorMessage = '';
-  this.resultText = '';
-  this.renderedResult = '';
+    this.errorMessage = '';
+    this.resultText = '';
+    this.renderedResult = '';
 
-  const request: SummarizeRequest = {
-    text: this.summarizeForm.controls.text.value
-  };
+    const request: SummarizeRequest = {
+      text: this.summarizeForm.controls.text.value
+    };
 
-  this.aiService.summarize(request)
-    .subscribe({
-      next: (response) => {
-        const data = response.data!;
-
-        this.resultText = data.output;
-        this.renderedResult = this.markdownService.render(data.output);
-        this.snackbarService.success(response.message);
-      },
-      error: () => {
-        this.errorMessage = 'Failed to generate summary';
-        this.snackbarService.error(this.errorMessage);
-      }
-    });
+    this.aiService.summarize(request)
+      .subscribe({
+        next: (response) => {
+          const data = response.data!;
+          this.resultText = data.output;
+          this.renderedResult = this.markdownService.render(data.output);
+          this.snackbarService.success(response.message);
+        },
+        error: () => {
+          this.errorMessage = 'Failed to generate summary';
+          this.snackbarService.error(this.errorMessage);
+        }
+      });
 
   }
 

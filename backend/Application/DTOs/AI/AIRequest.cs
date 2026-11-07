@@ -12,6 +12,5 @@ namespace Application.DTOs.AI;
 public class AIRequest
 {
     public string Input { get; set; } = string.Empty;
-
     public AIJobType JobType { get; set; }
 }

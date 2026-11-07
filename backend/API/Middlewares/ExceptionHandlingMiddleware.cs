@@ -30,12 +30,10 @@ public class ExceptionHandlingMiddleware
     private readonly ILogger<ExceptionHandlingMiddleware> _logger; // Logger instance used to log warnings/errors, Injected via Dependency Injection.
 
     // Constructor — ASP.NET injects dependencies automatically.
-    public ExceptionHandlingMiddleware(
-        RequestDelegate next,
-        ILogger<ExceptionHandlingMiddleware> logger)
+    public ExceptionHandlingMiddleware(RequestDelegate next,  ILogger<ExceptionHandlingMiddleware> logger)
     {
-        _next = next;       // Points to next middleware in pipeline
-        _logger = logger;   // Logging service
+        _next = next;       
+        _logger = logger;   
     }
 
     /// <summary>
@@ -44,12 +42,7 @@ public class ExceptionHandlingMiddleware
     public async Task InvokeAsync(HttpContext context)
     {
         try
-        {
-            /// <summary>
-            /// Pass control to the NEXT middleware in pipeline.
-            /// This is where the entire request (controller, DB, etc.) executes.
-            /// If ANY exception happens later, it will come back here.
-            /// </summary>
+        { // Pass control to the next middleware in the pipeline (or controller if this is the last middleware).
             await _next(context);
         }
 
@@ -66,19 +59,14 @@ public class ExceptionHandlingMiddleware
         {
             var correlationId = context.Items["X-Correlation-ID"];
 
-            _logger.LogWarning(ex,
-                "Validation error | Path: {Path} | CorrelationId: {CorrelationId}",
-                context.Request.Path, correlationId);
-
+            _logger.LogWarning(ex, 
+                               "Validation error | Path: {Path} | CorrelationId: {CorrelationId}",
+                               context.Request.Path, correlationId);
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
             context.Response.ContentType = "application/json";
 
-            var errors = ex.Errors
-                .Select(e => e.ErrorMessage)
-                .ToList();
-
+            var errors = ex.Errors.Select(e => e.ErrorMessage).ToList();
             var apiResponse = ApiResponse<string>.Failure("Validation failed", errors);
-
             await context.Response.WriteAsync(JsonSerializer.Serialize(apiResponse));
         }
 
@@ -92,10 +80,9 @@ public class ExceptionHandlingMiddleware
             var correlationId = context.Items["X-Correlation-ID"];
 
             _logger.LogError(ex,
-                "Unhandled exception | Path: {Path} | CorrelationId: {CorrelationId}",
-                context.Request.Path,
-                correlationId);
-
+                            "Unhandled exception | Path: {Path} | CorrelationId: {CorrelationId}",
+                            context.Request.Path,
+                            correlationId);
             await HandleExceptionAsync(context, ex);
         }
     }
@@ -113,11 +100,9 @@ public class ExceptionHandlingMiddleware
         /// 4. Declare variable to hold standardized API response object.
         /// </summary>
         var response = context.Response;
-
         response.ContentType = "application/json";
-
+        
         var correlationId = context.Items["X-Correlation-ID"];
-
         ApiResponse<string> apiResponse;
 
         /// <summary>
@@ -125,35 +110,21 @@ public class ExceptionHandlingMiddleware
         /// </summary>
         (response.StatusCode, apiResponse) = ex switch
         {
-            BadRequestException =>
-                (
-                    StatusCodes.Status400BadRequest,
-                    ApiResponse<string>.Failure(ex.Message)
-                ),
-
-            UnauthorizedException =>
-                (
-                    StatusCodes.Status401Unauthorized,
-                    ApiResponse<string>.Failure(ex.Message)
-                ),
-
-            NotFoundException =>
-                (
-                    StatusCodes.Status404NotFound,
-                    ApiResponse<string>.Failure(ex.Message)
-                ),
-
-            DuplicateEmailException =>
-                (
-                    StatusCodes.Status409Conflict,
-                    ApiResponse<string>.Failure(ex.Message)
-                ),
-
-            _ =>
-                (
-                    StatusCodes.Status500InternalServerError,
-                    ApiResponse<string>.Failure("Internal Server Error")
-                )
+            BadRequestException => (
+                   StatusCodes.Status400BadRequest,
+                    ApiResponse<string>.Failure(ex.Message)     ),
+            UnauthorizedException => (                                     
+                    StatusCodes.Status401Unauthorized,                 
+                    ApiResponse<string>.Failure(ex.Message)     ),
+            NotFoundException =>  (                                  
+                    StatusCodes.Status404NotFound,                   
+                    ApiResponse<string>.Failure(ex.Message)     ), 
+            DuplicateEmailException => (                               
+                    StatusCodes.Status409Conflict,                   
+                    ApiResponse<string>.Failure(ex.Message)     ),
+            _ => (
+                  StatusCodes.Status500InternalServerError,
+                  ApiResponse<string>.Failure("Internal Server Error")  )
         };
 
         /// <summary>
@@ -164,12 +135,11 @@ public class ExceptionHandlingMiddleware
         /// 3. Send JSON response back to client.
         /// </summary>
         _logger.LogError(ex,
-            "[ExceptionHandler] Processed exception | StatusCode: {StatusCode} | CorrelationId: {CorrelationId}",
-            response.StatusCode,
-            correlationId);
+                         "[ExceptionHandler] Processed exception | StatusCode: {StatusCode} | CorrelationId: {CorrelationId}",
+                         response.StatusCode,
+                         correlationId);
 
         var json = JsonSerializer.Serialize(apiResponse);
-
         await response.WriteAsync(json);
     }
 }

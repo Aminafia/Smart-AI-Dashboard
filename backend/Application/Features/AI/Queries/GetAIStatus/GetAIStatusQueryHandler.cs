@@ -22,9 +22,14 @@ public class GetAIStatusQueryHandler : IRequestHandler<GetAIStatusQuery, AIStatu
 
         return new AIStatusResponse
         {
-            Id = job.Id, JobType = job.JobType.ToString(), Prompt = job.Prompt,
-            Status = job.Status, Result = job.Result, Error = job.Error,
-            CreatedAt = job.CreatedAt, CompletedAt = job.CompletedAt
+            Id = job.Id, 
+            JobType = job.JobType.ToString(), 
+            Prompt = job.Prompt,
+            Status = job.Status, 
+            Result = job.Result, 
+            Error = job.Error,
+            CreatedAt = job.CreatedAt, 
+            CompletedAt = job.CompletedAt
         };
     }
 }

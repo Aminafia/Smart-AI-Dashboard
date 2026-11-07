@@ -11,9 +11,7 @@ import { AppJwtPayload } from '../models/auth/jwt-payload';
 })
 export class CurrentUserService {
 
-  constructor(
-    private tokenService: TokenService
-  ) {
+  constructor(private tokenService: TokenService) {
     this.loadCurrentUser();
   }
 
@@ -23,18 +21,12 @@ export class CurrentUserService {
   readonly email = computed(() => this._currentUser()?.email ?? '');
   readonly role = computed(() => this._currentUser()?.role ?? '');
 
-
   private loadCurrentUser(): void {
-
     const token = this.tokenService.getToken();
-
     if (!token) {
       this._currentUser.set(null);
-      return;
-    }
-
+      return; }
     const decoded = jwtDecode<AppJwtPayload>(token);
-
     this._currentUser.set({
       userId: decoded[JwtClaims.UserId],
       email: decoded[JwtClaims.Email],

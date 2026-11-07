@@ -55,10 +55,7 @@ export class JobHistoryComponent implements OnInit {
 
   private pollingSubscription?: Subscription;
 
-  constructor(
-    private aiService: AiService,
-    private dialog: MatDialog
-  ) { }
+  constructor(private aiService: AiService, private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.loadJobs();
@@ -71,11 +68,9 @@ export class JobHistoryComponent implements OnInit {
         this.totalCount = response.data.totalCount;
 
         if (this.hasRunningJobs()) {
-          this.startPolling();
-        }
+          this.startPolling(); }
         else {
-          this.stopPolling();
-        }
+          this.stopPolling(); }
       }
     });
   }
@@ -90,19 +85,15 @@ export class JobHistoryComponent implements OnInit {
 
   private startPolling(): void {
     if (this.pollingSubscription) {
-      return;
-    }
-
+      return; }
     this.pollingSubscription = interval(5000)
-      .pipe(
-        switchMap(() => this.aiService.getJobs(this.page, this.pageSize)))
+      .pipe(switchMap(() => this.aiService.getJobs(this.page, this.pageSize)))
       .subscribe({
         next: (response) => {
           this.jobs = response.data.items;
           this.totalCount = response.data.totalCount;
           if (!this.hasRunningJobs()) {
-            this.stopPolling();
-          }
+            this.stopPolling(); }
         }
       });
   }
@@ -116,14 +107,9 @@ export class JobHistoryComponent implements OnInit {
     this.stopPolling();
   }
 
-  
   viewJob(job: AIJob): void {
     this.dialog.open(JobDetailsDialogComponent,
-      {
-        width: '900px',
-        maxHeight: '85vh',
-        data: job.id
-      });
+      { width: '900px', maxHeight: '85vh', data: job.id});
   }
 
   onPageChange(event: PageEvent): void {
@@ -131,14 +117,13 @@ export class JobHistoryComponent implements OnInit {
     this.pageSize = event.pageSize;
     this.loadJobs();
   }
+
   get startItem(): number {
-  return this.totalCount === 0
-    ? 0
-    : (this.page - 1) * this.pageSize + 1;
+  return this.totalCount === 0 ? 0 : (this.page - 1) * this.pageSize + 1;
   }
 
   get endItem(): number {
-    return Math.min(this.page * this.pageSize, this.totalCount);
+    return Math.min(this.page * this.pageSize, this.totalCount); 
   }
 
 }

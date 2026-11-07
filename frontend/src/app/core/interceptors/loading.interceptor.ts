@@ -8,8 +8,7 @@ import { SKIP_LOADING } from '../constants/loading-context';
 export const loadingInterceptor: HttpInterceptorFn = (req, next) => {
 
   if (req.context.get(SKIP_LOADING)) {
-    return next(req);
-  }
+    return next(req); }
   
   const loadingService = inject(LoadingService);
 

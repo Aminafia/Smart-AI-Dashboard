@@ -26,10 +26,7 @@ public class GeminiProvider : IAIProvider
     private readonly IConfiguration _configuration;
     private readonly ILogger<GeminiProvider> _logger;
 
-    public GeminiProvider(
-        IHttpClientFactory httpClientFactory,
-        IConfiguration configuration,
-        ILogger<GeminiProvider> logger)
+    public GeminiProvider(IHttpClientFactory httpClientFactory, IConfiguration configuration, ILogger<GeminiProvider> logger)
     {
         _httpClientFactory = httpClientFactory;
         _configuration = configuration;
@@ -39,65 +36,43 @@ public class GeminiProvider : IAIProvider
     public async Task<string> GenerateAsync(string prompt, CancellationToken cancellationToken = default)
     {
         var apiKey = _configuration["Gemini:ApiKey"];
-
-        if (string.IsNullOrWhiteSpace(apiKey))
-        {
-            throw new InvalidOperationException(
-                "Gemini API key is not configured.");
-        }
+        if (string.IsNullOrWhiteSpace(apiKey)) {
+            throw new InvalidOperationException("Gemini API key is not configured."); }
 
         try
         {
             var client = _httpClientFactory.CreateClient("AIClient");
-
-            var url =
-                $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}";
-
+            var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={apiKey}";
             var request = new GeminiRequest
             {
-                Contents =
-                [
-                    new GeminiContent
-                    {
-                        Parts =
-                        [
-                            new GeminiPart
-                            {
-                                Text = prompt
-                            }
-                        ]
-                    }
-                ]
+                Contents = [ new GeminiContent
+                                  {
+                                    Parts = [ new GeminiPart
+                                                  {
+                                                    Text = prompt
+                                                  }
+                                            ]
+                                }
+                            ]
             };
 
             using var response = await client.PostAsJsonAsync(url, request, cancellationToken);
-
-            _logger.LogInformation(
-                "Gemini returned HTTP status {StatusCode}",
-                (int)response.StatusCode);
-
+            _logger.LogInformation("Gemini returned HTTP status {StatusCode}", (int)response.StatusCode);
             response.EnsureSuccessStatusCode();
 
             var result = await response.Content.ReadFromJsonAsync<GeminiResponse>(cancellationToken);
-
             var text = result?.Candidates?
                 .FirstOrDefault()?
                 .Content?
                 .Parts?
                 .FirstOrDefault()?
                 .Text;
-
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new InvalidOperationException(
-                    "Gemini returned an empty response.");
-            }
-
+            if (string.IsNullOrWhiteSpace(text))  {
+                throw new InvalidOperationException("Gemini returned an empty response."); }
             return text;
         }
 
-        catch (OperationCanceledException)
-            when (cancellationToken.IsCancellationRequested)
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
             throw;
         }

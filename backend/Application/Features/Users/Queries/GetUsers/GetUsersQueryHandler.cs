@@ -14,18 +14,15 @@ public class GetUsersQueryHandler
         _userRepository = userRepository;
     }
 
-    public async Task<List<UserDto>> Handle(
-        GetUsersQuery request,
-        CancellationToken cancellationToken)
+    public async Task<List<UserDto>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
     {
         var users = await _userRepository.GetAllUsersAsync(cancellationToken);
-
         return users.Select(user => new UserDto
-        {
-            Id = user.Id,
-            Email = user.Email,
-            FullName = user.FullName,
-            Role = user.Role
-        }).ToList();
+                                        {
+                                            Id = user.Id,
+                                            Email = user.Email,
+                                            FullName = user.FullName,
+                                            Role = user.Role
+                                        }).ToList();
     }
 }

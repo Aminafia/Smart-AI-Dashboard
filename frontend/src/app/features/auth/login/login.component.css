@@ -10,71 +10,36 @@
   box-sizing: border-box;
   overflow: hidden;
   padding: 30px 42px;
-
   display: flex;
   flex-direction: column;
-
   background:
-    radial-gradient(
-      circle at 8% 12%,
-      rgba(202, 116, 145, 0.28),
-      transparent 28%
-    ),
-    radial-gradient(
-      circle at 92% 16%,
-      rgba(214, 157, 177, 0.28),
-      transparent 30%
-    ),
-    radial-gradient(
-      circle at 10% 92%,
-      rgba(230, 173, 191, 0.24),
-      transparent 30%
-    ),
-    radial-gradient(
-      circle at 92% 90%,
-      rgba(190, 126, 153, 0.20),
-      transparent 30%
-    ),
-    linear-gradient(
-      135deg,
-      #f6e7ec 0%,
-      #fdf9fa 48%,
-      #f4e3e9 100%
-    );
+    radial-gradient(circle at 8% 12%, rgba(202, 116, 145, 0.28), transparent 28%),
+    radial-gradient(circle at 92% 16%, rgba(214, 157, 177, 0.28), transparent 30%),
+    radial-gradient(circle at 10% 92%, rgba(230, 173, 191, 0.24), transparent 30%),
+    radial-gradient(circle at 92% 90%,rgba(190, 126, 153, 0.20), transparent 30%),
+    linear-gradient(135deg, #f6e7ec 0%,#fdf9fa 48%,#f4e3e9 100%);
 }
 
 .brand {
   position: relative;
   z-index: 5;
-
   color: #30292d;
-
-  font-family:
-    "Inter",
-    "Helvetica Neue",
-    Arial,
-    sans-serif;
-
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
   font-size: 18px;
   font-weight: 600;
   letter-spacing: -0.035em;
-
   padding: 4px 6px;
 }
 
 .login-content {
   position: relative;
   z-index: 3;
-
   width: 100%;
   flex: 1;
-
   display: flex;
   flex-direction: column;
-
   align-items: center;
   justify-content: center;
-
   transform: translateY(-10px);
 }
 
@@ -85,14 +50,8 @@
 
 .login-intro h1 {
   margin: 0;
-
   color: #211d20;
-
-  font-family:
-    Georgia,
-    "Times New Roman",
-    serif;
-
+  font-family: Georgia, "Times New Roman", serif;
   font-size: 46px;
   line-height: 1;
   font-weight: 400;
@@ -101,15 +60,8 @@
 
 .login-intro p {
   margin: 10px 0 0;
-
   color: #756d72;
-
-  font-family:
-    "Inter",
-    "Helvetica Neue",
-    Arial,
-    sans-serif;
-
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
   font-size: 12px;
   line-height: 1.5;
 }
@@ -117,34 +69,19 @@
 .login-card {
   width: 100%;
   max-width: 410px;
-
   box-sizing: border-box;
-
   padding: 28px 31px 24px;
-
   background: rgba(255, 255, 255, 0.97);
-
   border: 1px solid rgba(224, 210, 216, 0.95);
-
   border-radius: 15px;
-
-  box-shadow:
-    0 22px 60px rgba(77, 47, 58, 0.12);
+  box-shadow: 0 22px 60px rgba(77, 47, 58, 0.12);
 }
 
 .login-card h2 {
   margin: 0 0 19px;
-
   text-align: center;
-
   color: #29252a;
-
-  font-family:
-    "Inter",
-    "Helvetica Neue",
-    Arial,
-    sans-serif;
-
+  font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
   font-size: 17px;
   line-height: 1.2;
   font-weight: 600;
@@ -197,15 +134,11 @@
   display: flex;
   align-items: flex-start;
   gap: 7px;
-
   padding: 8px 10px;
-
   border: 1px solid #edc9d3;
   border-radius: 7px;
-
   background: #fff5f7;
   color: #a7465e;
-
   font-size: 11px;
   line-height: 1.4;
 }
@@ -225,28 +158,19 @@
   --mdc-filled-button-container-color: #b95774;
   --mdc-filled-button-label-text-color: #ffffff;
   --mat-filled-button-state-layer-color: #ffffff;
-
   width: 100%;
   height: 44px;
-
   margin-top: 3px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   gap: 7px;
-
   border-radius: 22px;
-
   font-size: 11px;
   font-weight: 600;
-
   letter-spacing: 0.09em;
   text-transform: uppercase;
-
   box-shadow: none;
-
   transition: transform 0.15s ease;
 }
 
@@ -274,24 +198,17 @@
   display: flex;
   align-items: center;
   gap: 10px;
-
   margin: 2px 0;
-
   color: #aaa1a6;
-
   font-size: 8px;
   font-weight: 600;
   letter-spacing: 0.13em;
 }
 
-.divider::before,
-.divider::after {
+.divider::before, .divider::after {
   content: "";
-
   flex: 1;
-
   height: 1px;
-
   background: #eee5e8;
 }
 
@@ -302,25 +219,18 @@
 .google-button {
   width: 100%;
   height: 42px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   gap: 8px;
-
   border: 1px solid #d5cfd3;
   border-radius: 21px;
-
   background: #ffffff;
   color: #3f393e;
-
   font-size: 10px;
   font-weight: 600;
-
   letter-spacing: 0.065em;
   text-transform: uppercase;
-
   cursor: not-allowed;
 }
 
@@ -331,13 +241,10 @@
 .google-icon {
   width: 17px;
   height: 17px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   color: #4285f4;
-
   font-family: Arial, sans-serif;
   font-size: 14px;
   font-weight: 700;
@@ -345,11 +252,8 @@
 
 .google-note {
   margin: -4px 0 0;
-
   text-align: center;
-
   color: #aaa1a6;
-
   font-size: 8px;
 }
 
@@ -360,26 +264,19 @@
 .register-link {
   position: relative;
   z-index: 4;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   gap: 4px;
-
   margin-top: 12px;
-
   color: #6f676c;
-
   font-size: 11px;
 }
 
 .register-link button {
   min-width: auto;
   padding: 0 3px;
-
   color: #af4e6a;
-
   font-size: 11px;
   font-weight: 600;
 }
@@ -395,15 +292,10 @@
 .login-footer {
   position: relative;
   z-index: 4;
-
   margin: 8px 0 0;
-
   color: #aaa0a5;
-
   font-size: 8px;
-
   letter-spacing: 0.03em;
-
   text-align: center;
 }
 

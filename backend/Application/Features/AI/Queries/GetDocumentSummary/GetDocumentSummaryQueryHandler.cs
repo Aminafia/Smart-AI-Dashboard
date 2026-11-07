@@ -22,23 +22,21 @@ public class GetDocumentSummaryQueryHandler
         GetDocumentSummaryQuery request,
         CancellationToken cancellationToken)
     {
-        var job = await _jobStore.GetLatestCompletedSummaryAsync(
-            request.DocumentId,
-            _currentUser.UserId);
+        var job = await _jobStore.GetLatestCompletedSummaryAsync(request.DocumentId, _currentUser.UserId);
 
         if (job is null)
         {
             return new DocumentSummaryResponse
-            {
-                DocumentId = request.DocumentId
-            };
+                        {
+                            DocumentId = request.DocumentId
+                        };
         }
 
         return new DocumentSummaryResponse
-        {
-            DocumentId = request.DocumentId,
-            Summary = job.Result,
-            GeneratedAt = job.CompletedAt
-        };
+                    {
+                        DocumentId = request.DocumentId,
+                        Summary = job.Result,
+                        GeneratedAt = job.CompletedAt
+                    };
     }
 }
