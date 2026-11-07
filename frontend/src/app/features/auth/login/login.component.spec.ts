@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 
 import { AuthService } from '../../../core/services/auth.service';
@@ -13,15 +13,17 @@ describe('LoginComponent', () => {
 
   beforeEach(async () => {
     authService = { login: vi.fn() };
-    router = { navigate: vi.fn().mockResolvedValue(true) };
 
     await TestBed.configureTestingModule({
       imports: [LoginComponent],
       providers: [
         { provide: AuthService, useValue: authService },
-        { provide: Router, useValue: router }
+        provideRouter([])
       ]
     }).compileComponents();
+
+    router = TestBed.inject(Router) as unknown as { navigate: ReturnType<typeof vi.fn> };
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
 
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
