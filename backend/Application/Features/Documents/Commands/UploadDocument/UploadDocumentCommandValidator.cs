@@ -1,6 +1,5 @@
-using FluentValidation;
-using System.IO;
 using Application.DTOs.Documents;
+using FluentValidation;
 
 namespace Application.Features.Documents.Commands.UploadDocument;
 
@@ -34,9 +33,12 @@ public class UploadDocumentCommandValidator
                 .NotNull()
                 .WithMessage("File content is required.");
 
-            RuleFor(x => x.Document.Content.Length)
-                .LessThanOrEqualTo(MaxFileSize)
-                .WithMessage("Maximum file size is 10 MB.");
+            When(x => x.Document.Content != null, () =>
+            {
+                RuleFor(x => x.Document.Content.Length)
+                    .LessThanOrEqualTo(MaxFileSize)
+                    .WithMessage("Maximum file size is 10 MB.");
+            });
 
             RuleFor(x => x.Document.FileName)
                 .Must(HaveAllowedExtension)
@@ -51,20 +53,13 @@ public class UploadDocumentCommandValidator
     private static bool HaveAllowedExtension(string fileName)
     {
         var extension = Path.GetExtension(fileName);
-
         return AllowedFileTypes.ContainsKey(extension);
     }
 
     private static bool HaveMatchingContentType(DocumentUpload document)
     {
         var extension = Path.GetExtension(document.FileName);
-
-        return AllowedFileTypes.TryGetValue(
-            extension,
-            out var expectedContentType)
-            && string.Equals(
-                document.ContentType,
-                expectedContentType,
-                StringComparison.OrdinalIgnoreCase);
+        return AllowedFileTypes.TryGetValue(extension, out var expectedContentType)
+            && string.Equals(document.ContentType, expectedContentType, StringComparison.OrdinalIgnoreCase);
     }
 }
