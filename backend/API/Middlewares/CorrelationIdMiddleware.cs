@@ -30,8 +30,8 @@ public class CorrelationIdMiddleware
     // Constructor to inject dependencies (RequestDelegate and ILogger)
     public CorrelationIdMiddleware(RequestDelegate next, ILogger<CorrelationIdMiddleware> logger)
     {
-        _next = next; // Points to next middleware in pipeline
-        _logger = logger;  // Logging service
+        _next = next; 
+        _logger = logger; 
     }
 
     /// <summary>
@@ -47,15 +47,11 @@ public class CorrelationIdMiddleware
                             ?? Guid.NewGuid().ToString();
 
         context.Items[HeaderName] = correlationId;
-
         context.Response.Headers[HeaderName] = correlationId;
 
         using (LogContext.PushProperty("CorrelationId", correlationId))
         {
-            _logger.LogInformation(
-                "[Correlation] Assigned CorrelationId: {CorrelationId}",
-                correlationId);
-
+            _logger.LogInformation("[Correlation] Assigned CorrelationId: {CorrelationId}", correlationId);
             await _next(context);
         }
     }

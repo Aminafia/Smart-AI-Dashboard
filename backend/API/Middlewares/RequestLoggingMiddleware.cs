@@ -19,7 +19,6 @@ namespace API.Middlewares;
 public class RequestLoggingMiddleware
 {
     private readonly RequestDelegate _next; // Next middleware in the pipeline
-    // Constructor to inject the next middleware
     public RequestLoggingMiddleware(RequestDelegate next)
     {
         _next = next;
@@ -40,35 +39,27 @@ public class RequestLoggingMiddleware
     {
         var stopwatch = Stopwatch.StartNew();
 
-        Log.Information(
-            "[Middleware] Incoming Request: {Method} {Path}",
-            context.Request.Method,
-            context.Request.Path
-        );
-
+        Log.Information("[Middleware] Incoming Request: {Method} {Path}",
+                        context.Request.Method,
+                        context.Request.Path);
         try
         {
             await _next(context);
             stopwatch.Stop();
-
-            Log.Information(
-                "[Middleware] Response: {StatusCode} in {Duration} ms",
-                context.Response.StatusCode,
-                stopwatch.ElapsedMilliseconds
-            );
+            Log.Information("[Middleware] Response: {StatusCode} in {Duration} ms",
+                            context.Response.StatusCode,
+                            stopwatch.ElapsedMilliseconds);
         }
 
         catch (Exception ex)
         {
             stopwatch.Stop();
-
             Log.Error(ex,
-                "[Middleware] FAILED: {Method} {Path} in {Duration} ms",
-                context.Request.Method,
-                context.Request.Path,
-                stopwatch.ElapsedMilliseconds
+                      "[Middleware] FAILED: {Method} {Path} in {Duration} ms",
+                      context.Request.Method,
+                      context.Request.Path,
+                      stopwatch.ElapsedMilliseconds
             );
-
             throw; // Thrown to be caught by ExceptionHandlingMiddleware, which will return standardized error response to client. 
         }
     }

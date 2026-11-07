@@ -25,7 +25,6 @@ public class UserRepository : IUserRepository
 {
     //The UserRespository class needs access to Database, so it takes DbContext as input and stores it for later use. 
     private readonly AppDbContext _context;
-
     public UserRepository(AppDbContext context)
     {
         _context = context;

@@ -10,7 +10,6 @@ public class OpenAIProvider : IAIProvider
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger<OpenAIProvider> _logger;
-
     public OpenAIProvider(IHttpClientFactory factory, ILogger<OpenAIProvider> logger)
     {
         _httpClient = factory.CreateClient("AIClient");
@@ -25,19 +24,17 @@ public class OpenAIProvider : IAIProvider
             var url = "https://postman-echo.com/post";
 
             var requestBody = new
-            {
-                input = prompt
-            };
+                                {
+                                    input = prompt
+                                };
 
             var response = await _httpClient.PostAsJsonAsync(url, requestBody, cancellationToken);
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadAsStringAsync(cancellationToken);
-
             return $"Processed Response: {json}";
         }
-        catch (OperationCanceledException)
-    when (cancellationToken.IsCancellationRequested)
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
             throw;
         }

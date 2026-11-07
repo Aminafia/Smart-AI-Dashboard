@@ -32,11 +32,7 @@ public class AIController : ControllerBase
     [HttpPost("generate")]
     public async Task<IActionResult> Generate(GenerateTextRequest request)
     {
-        var result = await _mediator.Send(new GenerateTextCommand
-        {
-            Prompt = request.Prompt
-        });
-
+        var result = await _mediator.Send(new GenerateTextCommand { Prompt = request.Prompt } );
         return Ok(ApiResponse<AIOperationResponse>
             .SuccessResponse(result, "AI generation job created successfully."));
     }
@@ -45,27 +41,16 @@ public class AIController : ControllerBase
     [HttpGet("status/{jobId}")]
     public async Task<IActionResult> GetStatus(Guid jobId)
     {
-        var result = await _mediator.Send(new GetAIStatusQuery
-        {
-            JobId = jobId
-        });
-
+        var result = await _mediator.Send(new GetAIStatusQuery { JobId = jobId });
         return Ok(ApiResponse<AIStatusResponse>
             .SuccessResponse(result, "AI job status retrieved successfully."));
     }
 
     [Authorize]
     [HttpGet("jobs")]
-    public async Task<IActionResult> GetJobs(
-        [FromQuery] int page = 1,
-        [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetJobs([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var result = await _mediator.Send(new GetAIJobsQuery
-        {
-            Page = page,
-            PageSize = pageSize
-        });
-
+        var result = await _mediator.Send(new GetAIJobsQuery { Page = page, PageSize = pageSize } );
         return Ok(ApiResponse<PagedResponse<GetAIJobsResponse>>
             .SuccessResponse(result, "AI jobs retrieved successfully."));
     }
@@ -74,26 +59,17 @@ public class AIController : ControllerBase
     [HttpPost("summarize")]
     public async Task<IActionResult> Summarize([FromBody] SummarizeRequest request)
     {
-        var result = await _mediator.Send(new SummarizeCommand
-        {
-            Text = request.Text
-        });
-
+        var result = await _mediator.Send(new SummarizeCommand { Text = request.Text });
         return Ok(ApiResponse<AIOperationResponse>
             .SuccessResponse(result, "Summary generated successfully."));
     }
 
     [Authorize]
     [HttpPost("documents/{documentId:guid}/summarize")]
-    public async Task<IActionResult> SummarizeDocument(
-        Guid documentId,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> SummarizeDocument(Guid documentId, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(new SummarizeDocumentCommand
-        {
-            DocumentId = documentId
-        }, cancellationToken);
-
+        var result = await _mediator.Send(new SummarizeDocumentCommand { DocumentId = documentId },
+                                          cancellationToken);
         return Ok(ApiResponse<AIOperationResponse>
             .SuccessResponse(result, "Document summary generated successfully."));
     }
@@ -104,30 +80,17 @@ public class AIController : ControllerBase
     {
         var result = await _mediator.Send(new GetAIStatsQuery());
 
-        return Ok(
-            ApiResponse<AIStatsResponse>
-                .SuccessResponse(
-                    result,
-                    "AI job statistics retrieved successfully."));
+        return Ok(ApiResponse<AIStatsResponse>
+                .SuccessResponse(result, "AI job statistics retrieved successfully."));
     }
 
     [Authorize]
     [HttpGet("documents/{documentId:guid}/summary")]
-    public async Task<IActionResult> GetDocumentSummary(
-    Guid documentId,
-    CancellationToken cancellationToken)
+    public async Task<IActionResult> GetDocumentSummary(Guid documentId, CancellationToken cancellationToken)
     {
-        var result = await _mediator.Send(
-            new GetDocumentSummaryQuery
-            {
-                DocumentId = documentId
-            },
-            cancellationToken);
-
-        return Ok(
-            ApiResponse<DocumentSummaryResponse>
-                .SuccessResponse(
-                    result,
-                    "Document summary retrieved successfully."));
+        var result = await _mediator.Send(new GetDocumentSummaryQuery { DocumentId = documentId },
+                                          cancellationToken);
+        return Ok(ApiResponse<DocumentSummaryResponse>
+                .SuccessResponse(result, "Document summary retrieved successfully."));
     }
 }

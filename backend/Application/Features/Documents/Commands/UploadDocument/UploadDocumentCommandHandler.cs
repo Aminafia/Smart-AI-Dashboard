@@ -26,13 +26,23 @@ public class UploadDocumentCommandHandler : IRequestHandler<UploadDocumentComman
             var document = new Document
             {
                 Id = Guid.NewGuid(), UserId = _currentUser.UserId,
-                FileName = request.Document.FileName, StoredFileName = storedFileName,
-                StoragePath = storedFileName, ContentType = request.Document.ContentType,
-                FileSize = request.Document.Content.Length, UploadedAt = DateTime.UtcNow
+                FileName = request.Document.FileName, 
+                StoredFileName = storedFileName,
+                StoragePath = storedFileName, 
+                ContentType = request.Document.ContentType,
+                FileSize = request.Document.Content.Length, 
+                UploadedAt = DateTime.UtcNow
             };
 
             await _documentRepository.AddAsync(document, cancellationToken);
-            return new DocumentResponse { Id = document.Id, FileName = document.FileName, ContentType = document.ContentType, FileSize = document.FileSize, UploadedAt = document.UploadedAt };
+            return new DocumentResponse 
+                        {
+                            Id = document.Id, 
+                            FileName = document.FileName, 
+                            ContentType = document.ContentType, 
+                            FileSize = document.FileSize, 
+                            UploadedAt = document.UploadedAt
+                        };
         }
         catch
         {

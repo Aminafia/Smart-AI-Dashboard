@@ -13,9 +13,7 @@ namespace Application.DTOs.AI;
 public class AIOperationResponse
 {
     public Guid? JobId { get; set; }
-
     public AIJobStatus Status { get; set; }
-
     public string Output { get; set; } = string.Empty;
     public bool IsFallback { get; set; }
 }

@@ -57,9 +57,7 @@ export class AiService {
     );
   }
 
-  getDocumentSummary(
-    documentId: string
-  ): Observable<ApiResponse<DocumentSummaryResponse>> {
+  getDocumentSummary(documentId: string): Observable<ApiResponse<DocumentSummaryResponse>> {
     return this.http.get<ApiResponse<DocumentSummaryResponse>>(
       `${this.apiUrl}/documents/${documentId}/summary`,
       { context: new HttpContext().set(SKIP_LOADING, true) }

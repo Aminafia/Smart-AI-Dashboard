@@ -30,10 +30,7 @@ public class LoginCommandHandler
     private readonly IJwtTokenService _jwtTokenService;
     private readonly ILogger<LoginCommandHandler> _logger;
 
-    public LoginCommandHandler(
-        IUserRepository userRepository,
-        IJwtTokenService jwtTokenService,
-        ILogger<LoginCommandHandler> logger)
+    public LoginCommandHandler(IUserRepository userRepository, IJwtTokenService jwtTokenService, ILogger<LoginCommandHandler> logger)
     {
         _userRepository = userRepository;
         _jwtTokenService = jwtTokenService;
@@ -56,7 +53,6 @@ public class LoginCommandHandler
         CancellationToken cancellationToken)
     {
         _logger.LogInformation("[MediatR] Handling LoginCommand");
-
         _logger.LogInformation("[Handler] Fetching user from DB");
         var user = await _userRepository.GetUserByEmailAsync(request.Email, cancellationToken);
         if (user is null)
@@ -66,10 +62,7 @@ public class LoginCommandHandler
         }
 
         _logger.LogInformation("[Handler] Verifying password");
-
-        var isPasswordValid = BCrypt.Net.BCrypt.Verify(
-            request.Password,
-            user.PasswordHash);
+        var isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
         if (!isPasswordValid)
         {
             _logger.LogWarning("[Handler] Invalid password");

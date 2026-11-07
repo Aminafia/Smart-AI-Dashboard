@@ -23,10 +23,7 @@ public class AiService : IAIService
     private readonly ICacheService _cache;
     private readonly ILogger<AiService> _logger;
 
-    public AiService(
-        IAIProvider provider,
-        ICacheService cache,
-        ILogger<AiService> logger)
+    public AiService(IAIProvider provider, ICacheService cache, ILogger<AiService> logger)
     {
         _provider = provider;
         _cache = cache;
@@ -51,10 +48,10 @@ public class AiService : IAIService
         {
             _logger.LogInformation("Cache HIT for key {Key}", cacheKey);
             return new AIProviderResponse
-            {
-                Output = cachedResult,
-                IsFallback = false
-            };
+                        {
+                            Output = cachedResult,
+                            IsFallback = false
+                        };
         }
 
         _logger.LogInformation("Cache MISS for key {Key}", cacheKey);
@@ -62,12 +59,8 @@ public class AiService : IAIService
         string prompt = request.JobType switch
         {
             AIJobType.GenerateText => request.Input,
-
-            AIJobType.Summarize =>
-                $"Summarize the following text:\n\n{request.Input}",
-
-            _ => throw new NotSupportedException(
-                $"Unsupported task {request.JobType}")
+            AIJobType.Summarize => $"Summarize the following text:\n\n{request.Input}",
+                              _ => throw new NotSupportedException($"Unsupported task {request.JobType}")
         };
 
         // 2. Call actual AI provider
@@ -76,36 +69,24 @@ public class AiService : IAIService
 
         var aiResult = await _provider.GenerateAsync(prompt, cancellationToken);
 
-        if (string.IsNullOrWhiteSpace(aiResult))
-        {
-            throw new InvalidOperationException(
-                "The AI provider returned an empty result.");
-        }
+        if (string.IsNullOrWhiteSpace(aiResult)) {
+            throw new InvalidOperationException("The AI provider returned an empty result."); }
 
         try
         {
-            await _cache.SetAsync(
-                cacheKey,
-                aiResult,
-                TimeSpan.FromMinutes(10));
-
-            _logger.LogInformation(
-                "Cache SET for key {Key}",
-                cacheKey);
+            await _cache.SetAsync(cacheKey, aiResult, TimeSpan.FromMinutes(10));
+            _logger.LogInformation("Cache SET for key {Key}", cacheKey);
         }
         catch (Exception ex)
         {
-            _logger.LogError(
-                ex,
-                "Cache SET failed for key {Key}",
-                cacheKey);
+            _logger.LogError(ex, "Cache SET failed for key {Key}", cacheKey);
         }
 
         return new AIProviderResponse
-        {
-            Output = aiResult,
-            IsFallback = false
-        };
+                    {
+                        Output = aiResult,
+                        IsFallback = false
+                    };
 
     }
 }

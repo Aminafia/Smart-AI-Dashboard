@@ -10,17 +10,13 @@ public class GetAIStatsQueryHandler
     private readonly IAIJobStore _jobStore;
     private readonly ICurrentUserService _currentUser;
 
-    public GetAIStatsQueryHandler(
-        IAIJobStore jobStore,
-        ICurrentUserService currentUser)
+    public GetAIStatsQueryHandler(IAIJobStore jobStore, ICurrentUserService currentUser)
     {
         _jobStore = jobStore;
         _currentUser = currentUser;
     }
 
-    public async Task<AIStatsResponse> Handle(
-        GetAIStatsQuery request,
-        CancellationToken cancellationToken)
+    public async Task<AIStatsResponse> Handle(GetAIStatsQuery request, CancellationToken cancellationToken)
     {
         return await _jobStore.GetStatsAsync(_currentUser.UserId);
     }

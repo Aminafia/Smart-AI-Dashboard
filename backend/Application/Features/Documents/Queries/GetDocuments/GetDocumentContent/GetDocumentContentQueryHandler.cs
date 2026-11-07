@@ -26,6 +26,11 @@ public class GetDocumentContentQueryHandler : IRequestHandler<GetDocumentContent
         var content = await _documentContentRepository.GetByDocumentIdAsync(request.DocumentId, cancellationToken);
         if (content == null) throw new NotFoundException("Extracted content not found for this document.");
 
-        return new DocumentContentResponse { DocumentId = content.DocumentId, ExtractedText = content.ExtractedText, ExtractedAt = content.ExtractedAt };
+        return new DocumentContentResponse 
+                    { 
+                        DocumentId = content.DocumentId, 
+                        ExtractedText = content.ExtractedText, 
+                        ExtractedAt = content.ExtractedAt 
+                    };
     }
 }
