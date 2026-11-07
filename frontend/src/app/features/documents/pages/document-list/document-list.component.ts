@@ -82,12 +82,7 @@ export class DocumentListComponent implements OnInit {
   }
 
   viewDocument(documentModel: DocumentModel): void {
-    this.router.navigate(['/documents', documentModel.id]);
-    {
-      state: {
-        document: documentModel;
-      }
-    }
+    void this.router.navigate(['/documents', documentModel.id]);
   }
 
   downloadDocument(documentModel: DocumentModel): void {

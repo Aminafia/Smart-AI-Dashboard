@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of, throwError } from 'rxjs';
+import { NEVER, of, throwError } from 'rxjs';
 
 import { AIJobStatus } from '../../../core/models/ai/ai-job-status.model';
 import { AiService } from '../../../core/services/ai.service';
@@ -117,6 +117,22 @@ describe('GenerateComponent', () => {
     expect(component.currentStatus).toBe(AIJobStatus.Failed);
     expect(component.resultText).toBe('Provider failed');
     expect(markdown.render).toHaveBeenCalledWith('Provider failed');
+    vi.useRealTimers();
+  });
+
+  it('stops polling when the component is destroyed', () => {
+    vi.useFakeTimers();
+    aiService.getStatus.mockReturnValue(NEVER);
+    component.jobId = 'job-3';
+
+    component.pollJobStatus();
+    vi.advanceTimersByTime(2000);
+    expect(aiService.getStatus).toHaveBeenCalledOnce();
+
+    component.ngOnDestroy();
+    vi.advanceTimersByTime(4000);
+
+    expect(aiService.getStatus).toHaveBeenCalledOnce();
     vi.useRealTimers();
   });
 

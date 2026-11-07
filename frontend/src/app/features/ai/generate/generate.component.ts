@@ -39,7 +39,7 @@ Displayed to UI through generated.component.html
 */
 
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
@@ -50,7 +50,7 @@ import { PageHeaderComponent } from '../../../shared/components/page-header/page
 import { ResultViewerComponent } from '../../../shared/components/result-viewer/result-viewer.component';
 import { WorkspaceSectionComponent } from '../../../shared/components/workspace-section/workspace-section.component';
 
-import { interval } from 'rxjs';
+import { interval, Subscription } from 'rxjs';
 import { switchMap, takeWhile } from 'rxjs/operators';
 
 import { AIJobStatus } from '../../../core/models/ai/ai-job-status.model';
@@ -75,7 +75,8 @@ import { SnackbarService } from '../../../shared/services/snackbar.service';
   templateUrl: './generate.component.html',
   styleUrl: './generate.component.css',
 })
-export class GenerateComponent {
+export class GenerateComponent implements OnDestroy {
+  private pollingSubscription?: Subscription;
   errorMessage = '';
 
   resultText = '';
@@ -122,7 +123,9 @@ export class GenerateComponent {
   }
 
   pollJobStatus(): void {
-    interval(2000)
+    this.pollingSubscription?.unsubscribe();
+
+    this.pollingSubscription = interval(2000)
       .pipe(
         switchMap(() => this.aiService.getStatus(this.jobId)),
         takeWhile(
@@ -150,6 +153,11 @@ export class GenerateComponent {
           this.cdr.detectChanges();
         },
       });
+  }
+
+  ngOnDestroy(): void {
+    this.pollingSubscription?.unsubscribe();
+    this.pollingSubscription = undefined;
   }
 
   getStatusText(status: AIJobStatus): string {
