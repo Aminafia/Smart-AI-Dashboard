@@ -26,18 +26,13 @@ describe('PageHeaderComponent', () => {
   });
 
   it('renders a supplied subtitle', () => {
-    component.subtitle = 'Manage your uploaded files';
+    fixture.componentRef.setInput('subtitle', 'Manage your uploaded files');
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('p')?.textContent).toContain('Manage your uploaded files');
   });
 
-  it('projects caller-provided actions', () => {
-    const projected = document.createElement('button');
-    projected.textContent = 'Upload';
-    fixture.nativeElement.appendChild(projected);
-    fixture.detectChanges();
-
-    expect(fixture.nativeElement.textContent).toContain('Upload');
+  it('provides a dedicated action projection container', () => {
+    expect(fixture.nativeElement.querySelector('.page-header-actions')).toBeTruthy();
   });
 });

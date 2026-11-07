@@ -26,13 +26,13 @@ describe('WorkspaceSectionComponent', () => {
   });
 
   it('renders a supplied subtitle', () => {
-    component.subtitle = 'Create AI-generated content';
+    fixture.componentRef.setInput('subtitle', 'Create AI-generated content');
     fixture.detectChanges();
 
     expect(fixture.nativeElement.textContent).toContain('Create AI-generated content');
   });
 
-  it('projects content into the workspace card', () => {
+  it('renders the shared page card container', () => {
     expect(fixture.nativeElement.querySelector('app-page-card')).toBeTruthy();
   });
 });

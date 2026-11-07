@@ -30,7 +30,7 @@ describe('EmptyStateComponent', () => {
   it('renders the action button only when action text is provided', () => {
     expect(fixture.nativeElement.querySelector('button')).toBeNull();
 
-    component.actionText = 'Upload';
+    fixture.componentRef.setInput('actionText', 'Upload');
     fixture.detectChanges();
 
     expect(fixture.nativeElement.querySelector('button')?.textContent).toContain('Upload');
@@ -39,7 +39,7 @@ describe('EmptyStateComponent', () => {
   it('emits the action event when the action button is clicked', () => {
     const action = vi.fn();
     component.action.subscribe(action);
-    component.actionText = 'Retry';
+    fixture.componentRef.setInput('actionText', 'Retry');
     fixture.detectChanges();
 
     fixture.nativeElement.querySelector('button').click();
