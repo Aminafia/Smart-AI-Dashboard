@@ -1,4 +1,5 @@
 using API.Middlewares;
+
 using Microsoft.AspNetCore.Http;
 
 namespace Application.Tests.API;
