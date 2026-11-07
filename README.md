@@ -122,15 +122,32 @@ Open the local URL printed by Angular CLI (normally `http://localhost:4200`).
 
 ## Tests and verification
 
-The frontend package defines these scripts:
+The repository now includes automated unit-test suites for both application layers.
+
+**Backend (.NET 8 / xUnit)**
+
+From the repository root:
+
+```powershell
+dotnet test backend/BackendSmartAIDashboard.sln --configuration Release
+```
+
+The `backend/Tests/Application.Tests` project covers request validation, authentication and user creation, AI job generation and summarization, job queries, document upload/storage rollback, document extraction, ownership checks, and document retrieval.
+
+**Frontend (Angular 21 / Vitest)**
+
+From the repository root:
 
 ```powershell
 cd frontend
-npm test
+npm ci
+npm test -- --watch=false
 npm run build
 ```
 
-The application has been manually tested multiple times during development. Intentional automated feature tests have not yet been written for either backend or frontend; the Angular spec files currently in the repository are generated scaffolding, not meaningful coverage. Automated tests are planned for a later phase. Use the workflow handbook and stabilization backlog to guide the eventual consolidated verification pass. A successful build alone does not establish runtime correctness.
+Frontend tests cover HTTP service requests and failures, authentication state and guards, request interceptors, loading and snackbar services, Markdown sanitization, AI generation/summarization flows, document workflows, and shared UI components.
+
+The `Application Quality Gates` GitHub Actions workflow runs the backend tests, frontend unit tests, and frontend production build for relevant pushes and pull requests. A green workflow confirms these automated checks only; it does not replace integration tests against PostgreSQL/Redis, browser-level end-to-end tests, or manual verification of external AI provider behavior.
 
 ## Current implementation limitations to keep in mind
 
