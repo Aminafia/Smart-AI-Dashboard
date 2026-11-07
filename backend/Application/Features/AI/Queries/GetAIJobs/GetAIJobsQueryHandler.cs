@@ -1,5 +1,6 @@
-using Application.Interfaces;
 using Application.Common.Models;
+using Application.Interfaces;
+
 using MediatR;
 
 namespace Application.Features.AI.Queries.GetAIJobs;
@@ -21,16 +22,16 @@ public class GetAIJobsQueryHandler : IRequestHandler<GetAIJobsQuery, PagedRespon
         return new PagedResponse<GetAIJobsResponse>
         {
             Items = pagedJobs.Items.Select(job => new GetAIJobsResponse
-                                                        {
-                                                            Id = job.Id, 
-                                                            JobType = job.JobType.ToString(), 
-                                                            Status = job.Status,
-                                                            Prompt = job.Prompt, 
-                                                            CreatedAt = job.CreatedAt, 
-                                                            CompletedAt = job.CompletedAt
-                                                        }).ToList(),
-            Page = pagedJobs.Page, 
-            PageSize = pagedJobs.PageSize, 
+            {
+                Id = job.Id,
+                JobType = job.JobType.ToString(),
+                Status = job.Status,
+                Prompt = job.Prompt,
+                CreatedAt = job.CreatedAt,
+                CompletedAt = job.CompletedAt
+            }).ToList(),
+            Page = pagedJobs.Page,
+            PageSize = pagedJobs.PageSize,
             TotalCount = pagedJobs.TotalCount
         };
     }

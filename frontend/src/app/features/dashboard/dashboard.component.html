@@ -1,12 +1,7 @@
 <div class="dashboard-page">
-
-  <app-page-header
-    title="Dashboard"
-    subtitle="Monitor AI jobs and platform activity"
-  />
+  <app-page-header title="Dashboard" subtitle="Monitor AI jobs and platform activity" />
 
   <section class="stats-grid">
-
     <app-page-card>
       <div class="stat-card">
         <div class="stat-header">
@@ -19,12 +14,9 @@
 
         <div class="stat-value">{{ stats.totalJobs }}</div>
 
-        <span class="stat-description">
-          All AI jobs
-        </span>
+        <span class="stat-description"> All AI jobs </span>
       </div>
     </app-page-card>
-
 
     <app-page-card>
       <div class="stat-card">
@@ -38,12 +30,9 @@
 
         <div class="stat-value">{{ stats.completedJobs }}</div>
 
-        <span class="stat-description">
-          Successfully completed
-        </span>
+        <span class="stat-description"> Successfully completed </span>
       </div>
     </app-page-card>
-
 
     <app-page-card>
       <div class="stat-card">
@@ -57,12 +46,9 @@
 
         <div class="stat-value">{{ stats.processingJobs }}</div>
 
-        <span class="stat-description">
-          Currently running
-        </span>
+        <span class="stat-description"> Currently running </span>
       </div>
     </app-page-card>
-
 
     <app-page-card>
       <div class="stat-card">
@@ -76,12 +62,8 @@
 
         <div class="stat-value">{{ stats.failedJobs }}</div>
 
-        <span class="stat-description">
-          Jobs requiring attention
-        </span>
+        <span class="stat-description"> Jobs requiring attention </span>
       </div>
     </app-page-card>
-
   </section>
-
 </div>

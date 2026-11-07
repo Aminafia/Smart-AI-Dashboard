@@ -13,7 +13,7 @@ describe('AiService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()]
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     });
     service = TestBed.inject(AiService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -91,13 +91,12 @@ describe('AiService', () => {
     let receivedStatus = 0;
 
     service.getStats().subscribe({
-      error: error => receivedStatus = error.status
+      error: (error) => (receivedStatus = error.status),
     });
 
-    httpMock.expectOne(`${apiUrl}/stats`).flush(
-      { message: 'Unavailable' },
-      { status: 503, statusText: 'Service Unavailable' }
-    );
+    httpMock
+      .expectOne(`${apiUrl}/stats`)
+      .flush({ message: 'Unavailable' }, { status: 503, statusText: 'Service Unavailable' });
 
     expect(receivedStatus).toBe(503);
   });

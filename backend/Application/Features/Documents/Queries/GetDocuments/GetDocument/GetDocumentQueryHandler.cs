@@ -1,5 +1,6 @@
 using Application.Common.Exceptions;
 using Application.Interfaces;
+
 using MediatR;
 
 namespace Application.Features.Documents.Queries.GetDocument;
@@ -23,11 +24,11 @@ public class GetDocumentQueryHandler : IRequestHandler<GetDocumentQuery, GetDocu
         if (document == null) throw new NotFoundException("Document not found.");
 
         var stream = await _documentStorage.OpenReadAsync(document.StoragePath, cancellationToken);
-        return new GetDocumentResult 
-                    {
-                        Content = stream, 
-                        FileName = document.FileName, 
-                        ContentType = document.ContentType
-                    };
+        return new GetDocumentResult
+        {
+            Content = stream,
+            FileName = document.FileName,
+            ContentType = document.ContentType
+        };
     }
 }

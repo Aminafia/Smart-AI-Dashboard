@@ -4,7 +4,6 @@ import { CanActivateFn, Router } from '@angular/router';
 import { TokenService } from '../services/token.service';
 
 export const guestGuard: CanActivateFn = () => {
-
   const tokenService = inject(TokenService);
   const router = inject(Router);
 
@@ -14,5 +13,4 @@ export const guestGuard: CanActivateFn = () => {
 
   router.navigate(['/dashboard']);
   return false;
-
 };

@@ -16,10 +16,7 @@ describe('LoginComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [LoginComponent],
-      providers: [
-        { provide: AuthService, useValue: authService },
-        provideRouter([])
-      ]
+      providers: [{ provide: AuthService, useValue: authService }, provideRouter([])],
     }).compileComponents();
 
     router = TestBed.inject(Router) as unknown as { navigate: ReturnType<typeof vi.fn> };
@@ -61,14 +58,14 @@ describe('LoginComponent', () => {
 
     expect(authService.login).toHaveBeenCalledWith({
       email: 'amina@example.com',
-      password: 'secret1'
+      password: 'secret1',
     });
     expect(router.navigate).toHaveBeenCalledWith(['/dashboard']);
   });
 
   it('shows the API error message when login fails', () => {
     authService.login.mockReturnValue(
-      throwError(() => ({ error: { message: 'Invalid credentials' } }))
+      throwError(() => ({ error: { message: 'Invalid credentials' } })),
     );
     component.loginForm.setValue({ email: 'amina@example.com', password: 'secret1' });
 

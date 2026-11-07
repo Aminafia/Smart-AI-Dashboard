@@ -1,8 +1,12 @@
 using System.Reflection;
+
 using Application.Common.Behaviors;
 using Application.Features.Users.Commands.CreateUser;
+
 using FluentValidation;
+
 using MediatR;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;

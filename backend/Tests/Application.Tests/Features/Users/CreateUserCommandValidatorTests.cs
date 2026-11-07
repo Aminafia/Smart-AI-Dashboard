@@ -1,4 +1,5 @@
 using Application.Features.Users.Commands.CreateUser;
+
 using FluentValidation.TestHelper;
 
 namespace Application.Tests.Features.Users;

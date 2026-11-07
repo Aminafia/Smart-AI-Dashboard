@@ -13,7 +13,7 @@ describe('DocumentService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()]
+      providers: [provideHttpClient(), provideHttpClientTesting()],
     });
     service = TestBed.inject(DocumentService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -90,13 +90,12 @@ describe('DocumentService', () => {
     let receivedStatus = 0;
 
     service.getDocuments(1, 10).subscribe({
-      error: error => receivedStatus = error.status
+      error: (error) => (receivedStatus = error.status),
     });
 
-    httpMock.expectOne(`${apiUrl}?page=1&pageSize=10`).flush(
-      { message: 'Forbidden' },
-      { status: 403, statusText: 'Forbidden' }
-    );
+    httpMock
+      .expectOne(`${apiUrl}?page=1&pageSize=10`)
+      .flush({ message: 'Forbidden' }, { status: 403, statusText: 'Forbidden' });
 
     expect(receivedStatus).toBe(403);
   });

@@ -1,29 +1,29 @@
 <div class="max-w-4xl">
-    <app-page-header title="Summarize Text" subtitle="Create concise summaries using AI.">
-    </app-page-header>
+  <app-page-header title="Summarize Text" subtitle="Create concise summaries using AI.">
+  </app-page-header>
 
-    <app-workspace-section title="Summarize">
-        <form [formGroup]="summarizeForm">
-            <mat-form-field appearance="outline" class="w-full">
-                <mat-label>Text</mat-label>
-                <textarea matInput rows="10" formControlName="text"></textarea>
-            </mat-form-field>
-        </form>
-        <div class="mt-4">
-            <button mat-flat-button color="primary" (click)="summarize()">Summarize</button>
-        </div>
-    </app-workspace-section>
-
-    <div class="mt-6">
-        <app-workspace-section title="Result">
-            <app-result-viewer
-                [html]="renderedResult"
-                [error]="errorMessage"
-                emptyTitle="Nothing to Summarize"
-                emptyMessage="Enter some text and generate a summary."
-                emptyIcon="summarize">
-            </app-result-viewer>
-        </app-workspace-section>
+  <app-workspace-section title="Summarize">
+    <form [formGroup]="summarizeForm">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Text</mat-label>
+        <textarea matInput rows="10" formControlName="text"></textarea>
+      </mat-form-field>
+    </form>
+    <div class="mt-4">
+      <button mat-flat-button color="primary" (click)="summarize()">Summarize</button>
     </div>
+  </app-workspace-section>
 
+  <div class="mt-6">
+    <app-workspace-section title="Result">
+      <app-result-viewer
+        [html]="renderedResult"
+        [error]="errorMessage"
+        emptyTitle="Nothing to Summarize"
+        emptyMessage="Enter some text and generate a summary."
+        emptyIcon="summarize"
+      >
+      </app-result-viewer>
+    </app-workspace-section>
+  </div>
 </div>

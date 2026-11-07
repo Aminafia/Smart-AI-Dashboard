@@ -1,5 +1,6 @@
-using FluentValidation;
 using Application.Features.AI.Commands.GenerateText;
+
+using FluentValidation;
 
 namespace Application.Features.AI.Commands.GenerateText;
 

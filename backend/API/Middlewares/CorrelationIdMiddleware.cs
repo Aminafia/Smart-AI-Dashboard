@@ -14,6 +14,7 @@
 */
 
 using Microsoft.Extensions.Logging; // Provides ILogger for structured logging
+
 using Serilog.Context;
 
 namespace API.Middlewares;
@@ -30,8 +31,8 @@ public class CorrelationIdMiddleware
     // Constructor to inject dependencies (RequestDelegate and ILogger)
     public CorrelationIdMiddleware(RequestDelegate next, ILogger<CorrelationIdMiddleware> logger)
     {
-        _next = next; 
-        _logger = logger; 
+        _next = next;
+        _logger = logger;
     }
 
     /// <summary>

@@ -3,5 +3,5 @@ export enum AIJobStatus {
   Processing = 'Processing',
   Completed = 'Completed',
   Failed = 'Failed',
-  Retrying = 'Retrying'
+  Retrying = 'Retrying',
 }

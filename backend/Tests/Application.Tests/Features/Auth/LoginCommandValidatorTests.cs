@@ -1,4 +1,5 @@
 using Application.Features.Auth.Commands.Login;
+
 using FluentValidation.TestHelper;
 
 namespace Application.Tests.Features.Auth;

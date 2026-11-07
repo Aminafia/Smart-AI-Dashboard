@@ -6,8 +6,10 @@ AIQueue Purpose: -
 */
 
 using System.Collections.Concurrent;
-using Core.Entities;
+
 using Application.Interfaces;
+
+using Core.Entities;
 
 namespace Infrastructure.Services;
 

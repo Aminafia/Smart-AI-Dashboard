@@ -44,9 +44,12 @@ using Application.Common.Models;
 using Application.DTOs.Auth;
 using Application.Features.Auth.Commands.Login;
 using Application.Features.Users.Commands.CreateUser;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 using Serilog;
 
 namespace API.Controllers;
@@ -76,11 +79,11 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login(LoginRequest request)
     {
         Log.Information("[Controller] Login endpoint hit");
-        var command = new LoginCommand 
-                          {
-                            Email = request.Email,
-                            Password = request.Password
-                          };
+        var command = new LoginCommand
+        {
+            Email = request.Email,
+            Password = request.Password
+        };
         var result = await _mediator.Send(command);
         Log.Information("[Controller] Login successful, returning response");
 

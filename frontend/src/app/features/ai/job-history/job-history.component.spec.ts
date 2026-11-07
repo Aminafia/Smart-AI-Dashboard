@@ -17,8 +17,8 @@ describe('JobHistoryComponent', () => {
       imports: [JobHistoryComponent],
       providers: [
         { provide: AiService, useValue: aiService },
-        { provide: MatDialog, useValue: { open: vi.fn() } }
-      ]
+        { provide: MatDialog, useValue: { open: vi.fn() } },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(JobHistoryComponent);

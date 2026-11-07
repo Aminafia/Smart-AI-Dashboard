@@ -20,11 +20,11 @@ describe('ConfirmationDialogComponent', () => {
             title: 'Delete document',
             message: 'Are you sure?',
             confirmText: 'Delete',
-            cancelText: 'Cancel'
-          }
+            cancelText: 'Cancel',
+          },
         },
-        { provide: MatDialogRef, useValue: dialogRef }
-      ]
+        { provide: MatDialogRef, useValue: dialogRef },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ConfirmationDialogComponent);

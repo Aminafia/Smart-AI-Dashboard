@@ -1,8 +1,11 @@
 using Application.Common.Exceptions;
 using Application.Features.Auth.Commands.Login;
 using Application.Interfaces;
+
 using Core.Entities;
+
 using Microsoft.Extensions.Logging;
+
 using Moq;
 
 namespace Application.Tests.Features.Auth;

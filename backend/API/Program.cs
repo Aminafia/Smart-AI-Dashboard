@@ -2,10 +2,14 @@ using System.Text.Json.Serialization;
 
 using API.Extensions;
 using API.Middlewares;
+
 using Application;
+
 using Infrastructure;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
+
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);

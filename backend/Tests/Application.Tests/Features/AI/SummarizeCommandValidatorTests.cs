@@ -1,4 +1,5 @@
 using Application.Features.AI.Commands.Summarize;
+
 using FluentValidation.TestHelper;
 
 namespace Application.Tests.Features.AI;

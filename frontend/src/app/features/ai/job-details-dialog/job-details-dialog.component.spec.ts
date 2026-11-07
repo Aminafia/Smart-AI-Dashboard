@@ -12,8 +12,8 @@ describe('JobDetailsDialogComponent', () => {
       providers: [
         { provide: MAT_DIALOG_DATA, useValue: 'job-123' },
         { provide: AiService, useValue: { getStatus: vi.fn() } },
-        { provide: MarkdownService, useValue: { render: vi.fn() } }
-      ]
+        { provide: MarkdownService, useValue: { render: vi.fn() } },
+      ],
     }).compileComponents();
   });
 

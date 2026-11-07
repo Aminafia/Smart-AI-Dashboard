@@ -11,10 +11,7 @@ describe('RegisterComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RegisterComponent],
-      providers: [
-        provideRouter([]),
-        { provide: AuthService, useValue: { register: vi.fn() } }
-      ]
+      providers: [provideRouter([]), { provide: AuthService, useValue: { register: vi.fn() } }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegisterComponent);
@@ -32,7 +29,7 @@ describe('RegisterComponent', () => {
     component.registerForm.setValue({
       name: 'Amina',
       email: 'amina@example.com',
-      password: 'secret1'
+      password: 'secret1',
     });
 
     expect(component.registerForm.valid).toBe(true);

@@ -18,13 +18,13 @@ describe('DocumentDetailsComponent', () => {
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: { snapshot: { paramMap: { get: vi.fn().mockReturnValue('doc-1') } } }
+          useValue: { snapshot: { paramMap: { get: vi.fn().mockReturnValue('doc-1') } } },
         },
         { provide: Router, useValue: router },
         { provide: DocumentService, useValue: {} },
         { provide: AiService, useValue: {} },
-        { provide: SnackbarService, useValue: { error: vi.fn(), success: vi.fn() } }
-      ]
+        { provide: SnackbarService, useValue: { error: vi.fn(), success: vi.fn() } },
+      ],
     }).compileComponents();
 
     component = TestBed.createComponent(DocumentDetailsComponent).componentInstance;

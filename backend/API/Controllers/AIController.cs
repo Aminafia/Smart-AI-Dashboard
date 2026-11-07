@@ -4,14 +4,16 @@ using Application.Features.AI.Commands.GenerateText;
 using Application.Features.AI.Commands.Summarize;
 using Application.Features.AI.Commands.SummarizeDocument;
 using Application.Features.AI.Queries.GetAIJobs;
-using Application.Features.AI.Queries.GetAIStatus;
 using Application.Features.AI.Queries.GetAIStats;
+using Application.Features.AI.Queries.GetAIStatus;
 using Application.Features.AI.Queries.GetDocumentSummary;
 using Application.Interfaces;
+
+using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
-using MediatR;
 
 
 namespace API.Controllers;
@@ -32,7 +34,7 @@ public class AIController : ControllerBase
     [HttpPost("generate")]
     public async Task<IActionResult> Generate(GenerateTextRequest request)
     {
-        var result = await _mediator.Send(new GenerateTextCommand { Prompt = request.Prompt } );
+        var result = await _mediator.Send(new GenerateTextCommand { Prompt = request.Prompt });
         return Ok(ApiResponse<AIOperationResponse>
             .SuccessResponse(result, "AI generation job created successfully."));
     }
@@ -50,7 +52,7 @@ public class AIController : ControllerBase
     [HttpGet("jobs")]
     public async Task<IActionResult> GetJobs([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var result = await _mediator.Send(new GetAIJobsQuery { Page = page, PageSize = pageSize } );
+        var result = await _mediator.Send(new GetAIJobsQuery { Page = page, PageSize = pageSize });
         return Ok(ApiResponse<PagedResponse<GetAIJobsResponse>>
             .SuccessResponse(result, "AI jobs retrieved successfully."));
     }

@@ -1,5 +1,6 @@
-using MediatR;
 using Application.DTOs.AI;
+
+using MediatR;
 
 namespace Application.Features.AI.Commands.Summarize
 {

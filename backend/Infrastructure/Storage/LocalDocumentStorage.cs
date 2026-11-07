@@ -31,8 +31,10 @@ public class LocalDocumentStorage : IDocumentStorage
         cancellationToken.ThrowIfCancellationRequested();
         var fullPath = Path.Combine(_documentsPath, storagePath);
 
-        if (File.Exists(fullPath)) {
-            File.Delete(fullPath); }
+        if (File.Exists(fullPath))
+        {
+            File.Delete(fullPath);
+        }
 
         return Task.CompletedTask;
     }

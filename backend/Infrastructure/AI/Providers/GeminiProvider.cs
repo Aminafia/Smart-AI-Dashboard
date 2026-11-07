@@ -11,10 +11,13 @@ GeminiProvider Working:
 9. If any exception occurs, log the error and return an error message
 */
 
-using System.Net.Http.Json;
 using System.Linq;
+using System.Net.Http.Json;
+
 using Application.Interfaces;
+
 using Infrastructure.AI.Models;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -36,8 +39,10 @@ public class GeminiProvider : IAIProvider
     public async Task<string> GenerateAsync(string prompt, CancellationToken cancellationToken = default)
     {
         var apiKey = _configuration["Gemini:ApiKey"];
-        if (string.IsNullOrWhiteSpace(apiKey)) {
-            throw new InvalidOperationException("Gemini API key is not configured."); }
+        if (string.IsNullOrWhiteSpace(apiKey))
+        {
+            throw new InvalidOperationException("Gemini API key is not configured.");
+        }
 
         try
         {
@@ -67,8 +72,10 @@ public class GeminiProvider : IAIProvider
                 .Parts?
                 .FirstOrDefault()?
                 .Text;
-            if (string.IsNullOrWhiteSpace(text))  {
-                throw new InvalidOperationException("Gemini returned an empty response."); }
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                throw new InvalidOperationException("Gemini returned an empty response.");
+            }
             return text;
         }
 

@@ -8,19 +8,17 @@ describe('guestGuard', () => {
   let tokenService: TokenService;
   let router: { navigate: ReturnType<typeof vi.fn> };
 
-  const executeGuard = () => TestBed.runInInjectionContext(() =>
-    guestGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot)
-  );
+  const executeGuard = () =>
+    TestBed.runInInjectionContext(() =>
+      guestGuard({} as ActivatedRouteSnapshot, {} as RouterStateSnapshot),
+    );
 
   beforeEach(() => {
     localStorage.clear();
     router = { navigate: vi.fn().mockResolvedValue(true) };
 
     TestBed.configureTestingModule({
-      providers: [
-        TokenService,
-        { provide: Router, useValue: router }
-      ]
+      providers: [TokenService, { provide: Router, useValue: router }],
     });
     tokenService = TestBed.inject(TokenService);
   });

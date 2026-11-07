@@ -15,7 +15,7 @@ describe('DocumentListComponent', () => {
 
   beforeEach(async () => {
     documentService = {
-      getDocuments: vi.fn().mockReturnValue(of({ items: [], totalCount: 0 }))
+      getDocuments: vi.fn().mockReturnValue(of({ items: [], totalCount: 0 })),
     };
     router = { navigate: vi.fn().mockResolvedValue(true) };
 
@@ -25,8 +25,8 @@ describe('DocumentListComponent', () => {
         { provide: DocumentService, useValue: documentService },
         { provide: SnackbarService, useValue: { success: vi.fn(), error: vi.fn() } },
         { provide: MatDialog, useValue: { open: vi.fn() } },
-        { provide: Router, useValue: router }
-      ]
+        { provide: Router, useValue: router },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DocumentListComponent);

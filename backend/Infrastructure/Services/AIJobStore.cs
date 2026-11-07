@@ -1,9 +1,12 @@
 using Application.Common.Models;
 using Application.Features.AI.Queries.GetAIStats;
 using Application.Interfaces;
+
 using Core.Entities;
 using Core.Enums;
+
 using Infrastructure.Data;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services;
@@ -48,12 +51,12 @@ public class AIJobStore : IAIJobStore
         var stats = await query
             .GroupBy(_ => 1)
             .Select(g => new AIStatsResponse
-                                {
-                                    TotalJobs = g.Count(),
-                                    CompletedJobs = g.Count(x => x.Status == AIJobStatus.Completed),
-                                    ProcessingJobs = g.Count(x => x.Status == AIJobStatus.Processing),
-                                    FailedJobs = g.Count(x => x.Status == AIJobStatus.Failed)
-                                })
+            {
+                TotalJobs = g.Count(),
+                CompletedJobs = g.Count(x => x.Status == AIJobStatus.Completed),
+                ProcessingJobs = g.Count(x => x.Status == AIJobStatus.Processing),
+                FailedJobs = g.Count(x => x.Status == AIJobStatus.Failed)
+            })
             .FirstOrDefaultAsync();
         return stats ?? new AIStatsResponse();
     }

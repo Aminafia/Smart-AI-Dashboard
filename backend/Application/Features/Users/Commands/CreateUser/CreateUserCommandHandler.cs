@@ -1,8 +1,11 @@
 using Application.Common.Exceptions;
 using Application.Interfaces;
+
 using BCrypt.Net;
+
 using Core.Constants;
 using Core.Entities;
+
 using MediatR;
 
 namespace Application.Features.Users.Commands.CreateUser;
@@ -18,8 +21,10 @@ public class CreateUserCommandHandler
     public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         var emailExists = await _userRepository.EmailExistsAsync(request.Email, cancellationToken);
-        if (emailExists) {
-            throw new DuplicateEmailException(request.Email); }
+        if (emailExists)
+        {
+            throw new DuplicateEmailException(request.Email);
+        }
 
         var user = new User
         {

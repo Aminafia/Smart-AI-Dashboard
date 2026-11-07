@@ -6,15 +6,11 @@ import { EmptyStateComponent } from '../empty-state/empty-state.component';
 @Component({
   selector: 'app-result-viewer',
   standalone: true,
-  imports: [
-    CommonModule,
-    EmptyStateComponent
-  ],
+  imports: [CommonModule, EmptyStateComponent],
   templateUrl: './result-viewer.component.html',
-  styleUrl: './result-viewer.component.css'
+  styleUrl: './result-viewer.component.css',
 })
 export class ResultViewerComponent {
-
   @Input()
   html = '';
 
@@ -32,5 +28,4 @@ export class ResultViewerComponent {
 
   @Input()
   emptyIcon = 'auto_awesome';
-
 }

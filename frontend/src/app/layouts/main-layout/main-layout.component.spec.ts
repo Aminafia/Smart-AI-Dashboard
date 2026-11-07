@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
+import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 
 import { AuthStateService } from '../../core/services/auth-state.service';
@@ -23,8 +23,8 @@ describe('MainLayoutComponent', () => {
         provideRouter([]),
         { provide: AuthStateService, useValue: authState },
         { provide: CurrentUserService, useValue: { fullName: () => 'Amina' } },
-        { provide: MatDialog, useValue: dialog }
-      ]
+        { provide: MatDialog, useValue: dialog },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MainLayoutComponent);

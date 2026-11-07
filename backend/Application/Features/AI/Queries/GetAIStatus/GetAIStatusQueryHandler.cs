@@ -1,5 +1,6 @@
 using Application.Common.Exceptions;
 using Application.Interfaces;
+
 using MediatR;
 
 namespace Application.Features.AI.Queries.GetAIStatus;
@@ -22,13 +23,13 @@ public class GetAIStatusQueryHandler : IRequestHandler<GetAIStatusQuery, AIStatu
 
         return new AIStatusResponse
         {
-            Id = job.Id, 
-            JobType = job.JobType.ToString(), 
+            Id = job.Id,
+            JobType = job.JobType.ToString(),
             Prompt = job.Prompt,
-            Status = job.Status, 
-            Result = job.Result, 
+            Status = job.Status,
+            Result = job.Result,
             Error = job.Error,
-            CreatedAt = job.CreatedAt, 
+            CreatedAt = job.CreatedAt,
             CompletedAt = job.CompletedAt
         };
     }

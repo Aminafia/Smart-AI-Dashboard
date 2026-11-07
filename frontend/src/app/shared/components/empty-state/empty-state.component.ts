@@ -7,16 +7,11 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-empty-state',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatIconModule,
-    MatButtonModule
-  ],
+  imports: [CommonModule, MatIconModule, MatButtonModule],
   templateUrl: './empty-state.component.html',
-  styleUrl: './empty-state.component.css'
+  styleUrl: './empty-state.component.css',
 })
 export class EmptyStateComponent {
-
   @Input({ required: true })
   title!: string;
 
@@ -31,5 +26,4 @@ export class EmptyStateComponent {
 
   @Output()
   action = new EventEmitter<void>();
-
 }

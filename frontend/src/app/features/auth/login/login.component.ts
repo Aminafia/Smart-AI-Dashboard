@@ -11,14 +11,13 @@ Purpose of LoginComponent:
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { finalize } from 'rxjs';
 
 import { AuthService } from '../../../core/services/auth.service';
 
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LoginRequest } from '../../../core/models/auth/login-request';
 
@@ -32,10 +31,10 @@ import { LoginRequest } from '../../../core/models/auth/login-request';
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    RouterLink
+    RouterLink,
   ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
 })
 export class LoginComponent {
   hidePassword = true;
@@ -45,16 +44,15 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
 
   login(): void {
-
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
       return;
@@ -62,15 +60,18 @@ export class LoginComponent {
 
     const request: LoginRequest = {
       email: this.loginForm.value.email!,
-      password: this.loginForm.value.password!
+      password: this.loginForm.value.password!,
     };
 
     this.errorMessage = '';
 
-    this.authService.login(request)
-      .subscribe({
-        next: () => { this.router.navigate(['/dashboard']); },
-        error: (error) => { this.errorMessage = error.error?.message ?? 'Login failed. Please try again.'; } });
-
+    this.authService.login(request).subscribe({
+      next: () => {
+        this.router.navigate(['/dashboard']);
+      },
+      error: (error) => {
+        this.errorMessage = error.error?.message ?? 'Login failed. Please try again.';
+      },
+    });
   }
 }

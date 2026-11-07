@@ -1,60 +1,55 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpContext } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { SKIP_LOADING } from '../constants/loading-context';
 import { environment } from '../../../environments/environment';
+import { SKIP_LOADING } from '../constants/loading-context';
+import { DocumentContentResponse } from '../models/documents/document-content-response.model';
 import { DocumentModel } from '../models/documents/document.model';
 import { PagedResponse } from '../models/shared/paged-response.model';
-import { DocumentContentResponse } from '../models/documents/document-content-response.model';
 
 @Injectable({
-    providedIn: 'root' })
-
+  providedIn: 'root',
+})
 export class DocumentService {
+  private readonly apiUrl = `${environment.apiUrl}/Documents`;
+  constructor(private readonly http: HttpClient) {}
 
-    private readonly apiUrl = `${environment.apiUrl}/Documents`;
-    constructor(private readonly http: HttpClient) { }
+  upload(file: File): Observable<DocumentModel> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<DocumentModel>(this.apiUrl, formData);
+  }
 
-    upload(file: File): Observable<DocumentModel> {
-        const formData = new FormData();
-        formData.append('file', file);
-        return this.http.post<DocumentModel>(this.apiUrl, formData);
-    }
+  getDocuments(page: number, pageSize: number): Observable<PagedResponse<DocumentModel>> {
+    return this.http.get<PagedResponse<DocumentModel>>(
+      `${this.apiUrl}?page=${page}&pageSize=${pageSize}`,
+    );
+  }
 
-    getDocuments(page: number, pageSize: number): Observable<PagedResponse<DocumentModel>> {
-        return this.http.get<PagedResponse<DocumentModel>>(
-            `${this.apiUrl}?page=${page}&pageSize=${pageSize}`);
-    }
+  getDocument(id: string): Observable<DocumentModel> {
+    return this.http.get<DocumentModel>(`${this.apiUrl}/${id}`);
+  }
 
-    getDocument(id: string): Observable<DocumentModel> {
-        return this.http.get<DocumentModel>(`${this.apiUrl}/${id}`);
-    }
+  download(id: string): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/${id}`, {
+      responseType: 'blob',
+      context: new HttpContext().set(SKIP_LOADING, true),
+    });
+  }
 
-    download(id: string): Observable<Blob> {
-        return this.http.get(
-            `${this.apiUrl}/${id}`,
-            { responseType: 'blob',
-              context: new HttpContext().set(SKIP_LOADING, true) }
-            );
-    }
+  delete(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
 
-    delete(id: string): Observable<void> {
-        return this.http.delete<void>(
-            `${this.apiUrl}/${id}`);
-    }
+  extract(id: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/${id}/extract`, null, {
+      context: new HttpContext().set(SKIP_LOADING, true),
+    });
+  }
 
-    extract(id: string): Observable<void> {
-        return this.http.post<void>(
-            `${this.apiUrl}/${id}/extract`,
-            null,
-            { context: new HttpContext().set(SKIP_LOADING, true) }
-        );
-    }
-
-    getContent(id: string): Observable<DocumentContentResponse> {
-        return this.http.get<DocumentContentResponse>(
-            `${this.apiUrl}/${id}/content`,
-            { context: new HttpContext().set(SKIP_LOADING, true) }
-        );
-    }
+  getContent(id: string): Observable<DocumentContentResponse> {
+    return this.http.get<DocumentContentResponse>(`${this.apiUrl}/${id}/content`, {
+      context: new HttpContext().set(SKIP_LOADING, true),
+    });
+  }
 }

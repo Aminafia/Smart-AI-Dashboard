@@ -1,6 +1,8 @@
 using Application.Common.Exceptions;
 using Application.Interfaces;
+
 using Core.Entities;
+
 using MediatR;
 
 namespace Application.Features.Documents.Commands.ExtractDocument;
@@ -36,12 +38,12 @@ public class ExtractDocumentCommandHandler : IRequestHandler<ExtractDocumentComm
         if (existingContent == null)
         {
             await _documentContentRepository.AddAsync(new DocumentContent
-                                                            {
-                                                                Id = Guid.NewGuid(), 
-                                                                DocumentId = document.Id, 
-                                                                ExtractedText = extractedText, 
-                                                                ExtractedAt = DateTime.UtcNow
-                                                            }, 
+            {
+                Id = Guid.NewGuid(),
+                DocumentId = document.Id,
+                ExtractedText = extractedText,
+                ExtractedAt = DateTime.UtcNow
+            },
                                                       cancellationToken);
         }
         else

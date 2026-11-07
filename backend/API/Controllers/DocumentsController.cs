@@ -1,13 +1,15 @@
 using Application.Common.Models;
 using Application.DTOs.Documents;
 using Application.Features.Documents.Commands.DeleteDocument;
-using Application.Features.Documents.Commands.UploadDocument;
 using Application.Features.Documents.Commands.ExtractDocument;
+using Application.Features.Documents.Commands.UploadDocument;
 using Application.Features.Documents.Models;
 using Application.Features.Documents.Queries.GetDocument;
-using Application.Features.Documents.Queries.GetDocuments;
 using Application.Features.Documents.Queries.GetDocumentContent;
+using Application.Features.Documents.Queries.GetDocuments;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,10 +37,10 @@ public class DocumentsController : ControllerBase
 
         await using var stream = file.OpenReadStream();
 
-        var command = new UploadDocumentCommand 
-                          {
-                            Document = new DocumentUpload { FileName = file.FileName, ContentType = file.ContentType, Content = stream }
-                          };
+        var command = new UploadDocumentCommand
+        {
+            Document = new DocumentUpload { FileName = file.FileName, ContentType = file.ContentType, Content = stream }
+        };
         var response = await _mediator.Send(command, cancellationToken);
         return Ok(response);
     }
@@ -65,7 +67,7 @@ public class DocumentsController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<PagedResponse<DocumentResponse>>> 
+    public async Task<ActionResult<PagedResponse<DocumentResponse>>>
            GetDocuments([FromQuery] GetDocumentsQuery query, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(query, cancellationToken);

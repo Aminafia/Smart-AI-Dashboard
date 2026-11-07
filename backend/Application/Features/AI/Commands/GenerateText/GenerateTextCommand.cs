@@ -4,8 +4,9 @@
  - CommandHandlers are responsible for executing the business logic and returning a response
 */
 
-using MediatR;
 using Application.DTOs.AI;
+
+using MediatR;
 
 namespace Application.Features.AI.Commands.GenerateText;
 public class GenerateTextCommand : IRequest<AIOperationResponse>

@@ -8,11 +8,10 @@ describe('SummarizeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SummarizeComponent]
-    })
-    .compileComponents();
+      imports: [SummarizeComponent],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(SummarizeComponent  );
+    fixture = TestBed.createComponent(SummarizeComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });
