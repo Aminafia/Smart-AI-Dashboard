@@ -14,7 +14,7 @@ describe('DashboardComponent', () => {
 
     await TestBed.configureTestingModule({
       imports: [DashboardComponent],
-      providers: [{ provide: AiService, useValue: aiService }]
+      providers: [{ provide: AiService, useValue: aiService }],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DashboardComponent);
@@ -22,10 +22,12 @@ describe('DashboardComponent', () => {
   });
 
   it('loads and displays AI statistics on initialization', () => {
-    aiService.getStats.mockReturnValue(of({
-      success: true,
-      data: { totalJobs: 12, completedJobs: 8, processingJobs: 2, failedJobs: 2 }
-    }));
+    aiService.getStats.mockReturnValue(
+      of({
+        success: true,
+        data: { totalJobs: 12, completedJobs: 8, processingJobs: 2, failedJobs: 2 },
+      }),
+    );
 
     fixture.detectChanges();
 
@@ -34,15 +36,17 @@ describe('DashboardComponent', () => {
       totalJobs: 12,
       completedJobs: 8,
       processingJobs: 2,
-      failedJobs: 2
+      failedJobs: 2,
     });
   });
 
   it('keeps default zero values when the API reports failure', () => {
-    aiService.getStats.mockReturnValue(of({
-      success: false,
-      data: { totalJobs: 99, completedJobs: 99, processingJobs: 0, failedJobs: 0 }
-    }));
+    aiService.getStats.mockReturnValue(
+      of({
+        success: false,
+        data: { totalJobs: 99, completedJobs: 99, processingJobs: 0, failedJobs: 0 },
+      }),
+    );
 
     fixture.detectChanges();
 
@@ -59,7 +63,7 @@ describe('DashboardComponent', () => {
       totalJobs: 0,
       completedJobs: 0,
       processingJobs: 0,
-      failedJobs: 0
+      failedJobs: 0,
     });
   });
 });

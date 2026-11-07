@@ -8,7 +8,7 @@ describe('WorkspaceSectionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WorkspaceSectionComponent]
+      imports: [WorkspaceSectionComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(WorkspaceSectionComponent);

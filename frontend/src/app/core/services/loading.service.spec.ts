@@ -12,14 +12,14 @@ describe('LoadingService', () => {
 
   it('starts in the not-loading state', () => {
     let currentState: boolean | undefined;
-    service.loading$.subscribe(value => currentState = value);
+    service.loading$.subscribe((value) => (currentState = value));
 
     expect(currentState).toBe(false);
   });
 
   it('emits true when a request starts and false when it finishes', () => {
     const states: boolean[] = [];
-    service.loading$.subscribe(value => states.push(value));
+    service.loading$.subscribe((value) => states.push(value));
 
     service.show();
     service.hide();
@@ -29,7 +29,7 @@ describe('LoadingService', () => {
 
   it('keeps the overlay active until all concurrent requests finish', () => {
     const states: boolean[] = [];
-    service.loading$.subscribe(value => states.push(value));
+    service.loading$.subscribe((value) => states.push(value));
 
     service.show();
     service.show();
@@ -44,7 +44,7 @@ describe('LoadingService', () => {
 
   it('does not become stuck when hide is called without a matching show', () => {
     const states: boolean[] = [];
-    service.loading$.subscribe(value => states.push(value));
+    service.loading$.subscribe((value) => states.push(value));
 
     service.hide();
 

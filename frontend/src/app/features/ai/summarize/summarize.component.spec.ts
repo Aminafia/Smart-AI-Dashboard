@@ -15,7 +15,7 @@ describe('SummarizeComponent', () => {
 
   beforeEach(async () => {
     aiService = { summarize: vi.fn() };
-    markdown = { render: vi.fn(value => `<p>${value}</p>`) };
+    markdown = { render: vi.fn((value) => `<p>${value}</p>`) };
     snackbar = { success: vi.fn(), error: vi.fn() };
 
     await TestBed.configureTestingModule({
@@ -23,8 +23,8 @@ describe('SummarizeComponent', () => {
       providers: [
         { provide: AiService, useValue: aiService },
         { provide: MarkdownService, useValue: markdown },
-        { provide: SnackbarService, useValue: snackbar }
-      ]
+        { provide: SnackbarService, useValue: snackbar },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SummarizeComponent);
@@ -33,11 +33,13 @@ describe('SummarizeComponent', () => {
   });
 
   it('submits text and renders the returned summary', () => {
-    aiService.summarize.mockReturnValue(of({
-      success: true,
-      message: 'Summary generated',
-      data: { output: 'A concise summary', isFallback: false }
-    }));
+    aiService.summarize.mockReturnValue(
+      of({
+        success: true,
+        message: 'Summary generated',
+        data: { output: 'A concise summary', isFallback: false },
+      }),
+    );
     component.summarizeForm.controls.text.setValue('Long source document');
 
     component.summarize();
@@ -50,11 +52,13 @@ describe('SummarizeComponent', () => {
   });
 
   it('clears previous output and error state before summarizing again', () => {
-    aiService.summarize.mockReturnValue(of({
-      success: true,
-      message: 'Done',
-      data: { output: 'New summary', isFallback: false }
-    }));
+    aiService.summarize.mockReturnValue(
+      of({
+        success: true,
+        message: 'Done',
+        data: { output: 'New summary', isFallback: false },
+      }),
+    );
     component.errorMessage = 'Previous error';
     component.resultText = 'Old result';
     component.renderedResult = '<p>Old result</p>';

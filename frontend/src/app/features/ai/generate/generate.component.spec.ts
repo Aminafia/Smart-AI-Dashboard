@@ -16,7 +16,7 @@ describe('GenerateComponent', () => {
 
   beforeEach(async () => {
     aiService = { generate: vi.fn(), getStatus: vi.fn() };
-    markdown = { render: vi.fn(value => `<p>${value}</p>`) };
+    markdown = { render: vi.fn((value) => `<p>${value}</p>`) };
     snackbar = { success: vi.fn(), error: vi.fn() };
 
     await TestBed.configureTestingModule({
@@ -24,8 +24,8 @@ describe('GenerateComponent', () => {
       providers: [
         { provide: AiService, useValue: aiService },
         { provide: MarkdownService, useValue: markdown },
-        { provide: SnackbarService, useValue: snackbar }
-      ]
+        { provide: SnackbarService, useValue: snackbar },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(GenerateComponent);
@@ -34,11 +34,13 @@ describe('GenerateComponent', () => {
   });
 
   it('submits the prompt and starts status polling when the API accepts the job', () => {
-    aiService.generate.mockReturnValue(of({
-      success: true,
-      message: 'Job queued',
-      data: { jobId: 'job-1', status: AIJobStatus.Pending }
-    }));
+    aiService.generate.mockReturnValue(
+      of({
+        success: true,
+        message: 'Job queued',
+        data: { jobId: 'job-1', status: AIJobStatus.Pending },
+      }),
+    );
     const poll = vi.spyOn(component, 'pollJobStatus').mockImplementation(() => undefined);
     component.generateForm.controls.prompt.setValue('Explain RAG');
 
@@ -52,11 +54,13 @@ describe('GenerateComponent', () => {
   });
 
   it('clears old output and errors before starting a new request', () => {
-    aiService.generate.mockReturnValue(of({
-      success: true,
-      message: 'Queued',
-      data: { jobId: 'job-2', status: AIJobStatus.Pending }
-    }));
+    aiService.generate.mockReturnValue(
+      of({
+        success: true,
+        message: 'Queued',
+        data: { jobId: 'job-2', status: AIJobStatus.Pending },
+      }),
+    );
     vi.spyOn(component, 'pollJobStatus').mockImplementation(() => undefined);
     component.resultText = 'Old result';
     component.renderedResult = '<p>Old result</p>';
@@ -81,9 +85,11 @@ describe('GenerateComponent', () => {
 
   it('renders the completed job result after polling', () => {
     vi.useFakeTimers();
-    aiService.getStatus.mockReturnValue(of({
-      data: { status: AIJobStatus.Completed, result: '**Generated result**' }
-    }));
+    aiService.getStatus.mockReturnValue(
+      of({
+        data: { status: AIJobStatus.Completed, result: '**Generated result**' },
+      }),
+    );
     component.jobId = 'job-1';
 
     component.pollJobStatus();
@@ -98,9 +104,11 @@ describe('GenerateComponent', () => {
 
   it('renders the failure message when the polled job fails', () => {
     vi.useFakeTimers();
-    aiService.getStatus.mockReturnValue(of({
-      data: { status: AIJobStatus.Failed, error: 'Provider failed' }
-    }));
+    aiService.getStatus.mockReturnValue(
+      of({
+        data: { status: AIJobStatus.Failed, error: 'Provider failed' },
+      }),
+    );
     component.jobId = 'job-2';
 
     component.pollJobStatus();

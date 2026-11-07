@@ -16,14 +16,14 @@ describe('loadingInterceptor', () => {
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(withInterceptors([loadingInterceptor])),
-        provideHttpClientTesting()
-      ]
+        provideHttpClientTesting(),
+      ],
     });
 
     http = TestBed.inject(HttpClient);
     httpMock = TestBed.inject(HttpTestingController);
     loadingService = TestBed.inject(LoadingService);
-    loadingService.loading$.subscribe(value => loadingState = value);
+    loadingService.loading$.subscribe((value) => (loadingState = value));
   });
 
   afterEach(() => httpMock.verify());
@@ -43,10 +43,9 @@ describe('loadingInterceptor', () => {
 
     expect(loadingState).toBe(true);
 
-    httpMock.expectOne('/api/data').flush(
-      { message: 'Failure' },
-      { status: 500, statusText: 'Server Error' }
-    );
+    httpMock
+      .expectOne('/api/data')
+      .flush({ message: 'Failure' }, { status: 500, statusText: 'Server Error' });
 
     expect(loadingState).toBe(false);
   });
@@ -65,7 +64,7 @@ describe('loadingInterceptor', () => {
     http.get('/api/first').subscribe();
     http.get('/api/second').subscribe();
 
-    const requests = httpMock.match(request => request.url.startsWith('/api/'));
+    const requests = httpMock.match((request) => request.url.startsWith('/api/'));
     expect(requests).toHaveLength(2);
     expect(loadingState).toBe(true);
 

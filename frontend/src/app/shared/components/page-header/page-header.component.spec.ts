@@ -8,7 +8,7 @@ describe('PageHeaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PageHeaderComponent]
+      imports: [PageHeaderComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PageHeaderComponent);
@@ -29,7 +29,9 @@ describe('PageHeaderComponent', () => {
     fixture.componentRef.setInput('subtitle', 'Manage your uploaded files');
     fixture.detectChanges();
 
-    expect(fixture.nativeElement.querySelector('p')?.textContent).toContain('Manage your uploaded files');
+    expect(fixture.nativeElement.querySelector('p')?.textContent).toContain(
+      'Manage your uploaded files',
+    );
   });
 
   it('provides a dedicated action projection container', () => {
