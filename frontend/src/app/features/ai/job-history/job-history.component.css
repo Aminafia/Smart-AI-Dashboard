@@ -1,66 +1,13 @@
-:host {
-  display: block;
-}
-
-.completed-chip, .processing-chip, .pending-chip, .failed-chip, .retrying-chip {
-  font-weight: 600;
-  border-radius: 999px;
-}
-
-.completed-chip {
-  background: #edf8f1 !important;
-  color: #287a43 !important;
-}
-
-.processing-chip {
-  background: #fbf3e6 !important;
-  color: #a66b1d !important;
-}
-
-.pending-chip {
-  background: #f8f1e7 !important;
-  color: #98672d !important;
-}
-
-.failed-chip {
-  background: #fff0f2 !important;
-  color: #ad465d !important;
-}
-
-.retrying-chip {
-  background: #f8edf4 !important;
-  color: #8f4e73 !important;
-}
-
-.prompt-cell {
-  max-width: 350px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: default;
-}
-
-::ng-deep .mat-mdc-table {
-  background: transparent;
-}
-
-::ng-deep .mat-mdc-header-row {
-  background: #fcf8fa;
-}
-
-::ng-deep .mat-mdc-header-cell {
-  color: #746b71;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-::ng-deep .mat-mdc-cell {
-  color: #40383d;
-  border-bottom-color: #f0e6ea;
-}
-
-::ng-deep .mat-mdc-row:hover {
-  background: #fffafb;
-}
+: host { display: block; }
+.completed-chip, .processing-chip, .pending-chip, .failed-chip, .retrying-chip { font-weight: 600; border-radius: 999px; }
+.completed-chip { background: #edf8f1 !important; color: #287a43 !important; }
+.processing-chip { background: #fbf3e6 !important; color: #a66b1d !important; }
+.pending-chip { background: #f8f1e7 !important; color: #98672d !important; }
+.failed-chip { background: #fff0f2 !important; color: #ad465d !important; }
+.retrying-chip { background: #f8edf4 !important; color: #8f4e73 !important; }
+.prompt-cell { max-width: 350px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: default; }
+:: ng-deep .mat-mdc-table { background: transparent; }
+:: ng-deep .mat-mdc-header-row { background: #fcf8fa; }
+:: ng-deep .mat-mdc-header-cell { color: #746b71; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+:: ng-deep .mat-mdc-cell { color: #40383d; border-bottom-color: #f0e6ea; }
+:: ng-deep .mat-mdc-row: hover { background: #fffafb; }
