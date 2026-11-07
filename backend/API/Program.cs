@@ -1,22 +1,23 @@
-using API.Middlewares;
+using System.Text.Json.Serialization;
+
 using API.Extensions;
+using API.Middlewares;
 using Application;
 using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using Serilog;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Configuration means external values the application needs to run. Such as database connection string, JWT secret key, Redis URL, API keys, OpenAI key, ports, environment settings.
 // We use Configuration because these values change between environments, should NOT be hardcoded, may contain sensitive data.
 // Example: Development → localhost DB, Production → cloud PostgreSQL DB
-// appsettings.json is the main application configuration file. 
+// appsettings.json is the main application configuration file.
 var configuration = builder.Configuration;
 
-var dbconnectionString = configuration.GetConnectionString("DefaultConnection");
-if (string.IsNullOrWhiteSpace(dbconnectionString))
+var dbConnectionString = configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrWhiteSpace(dbConnectionString))
 {
     throw new InvalidOperationException("Database connection string is not configured.");
 }
@@ -41,19 +42,21 @@ Log.Logger = new LoggerConfiguration()
         path: "logs/log-.json",
         rollingInterval: RollingInterval.Day)
     .CreateLogger();
+
 builder.Host.UseSerilog();
 
 // ----------------------
 // Core Services
 // ----------------------
+
 builder.Services.AddControllers()
-                .AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.Converters.Add(
-                        new JsonStringEnumConverter());
-                });
-                
-builder.Services.AddEndpointsApiExplorer(); // for enabling Swagger to discover endpoints
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
+
+builder.Services.AddEndpointsApiExplorer(); // Enables Swagger to discover endpoints.
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
@@ -65,6 +68,7 @@ builder.Services.AddSwaggerGen(options =>
         In = Microsoft.OpenApi.Models.ParameterLocation.Header,
         Description = "Enter: Bearer {your token}"
     });
+
     options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
     {
         {
@@ -76,7 +80,7 @@ builder.Services.AddSwaggerGen(options =>
                     Id = "Bearer"
                 }
             },
-            new string[] {}
+            Array.Empty<string>()
         }
     });
 });
@@ -84,27 +88,33 @@ builder.Services.AddSwaggerGen(options =>
 // ----------------------
 // Application & Infrastructure
 // ----------------------
+
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(configuration);
 
 // ----------------------
 // Health Checks
 // ----------------------
-builder.Services.AddCustomHealthChecks(dbconnectionString);
+
+builder.Services.AddCustomHealthChecks(dbConnectionString);
 
 // ----------------------
 // Authentication & Authorization
 // ----------------------
+
 builder.Services.AddAuth(configuration); // Registers custom authentication and authorization configuration.
+
 builder.Services.AddCors(options => options.AddPolicy("AngularPolicy", policy =>
-{ // Cross-Origin Resource Sharing (CORS) configuration to allow requests from Angular frontend 
+{
+    // Cross-Origin Resource Sharing (CORS) allows requests from the Angular frontend.
     var origins = configuration.GetSection("Cors:AllowedOrigins").Get<string[]>() ?? Array.Empty<string>();
     policy.WithOrigins(origins).AllowAnyHeader().AllowAnyMethod();
 }));
 
 // ----------------------
-//  API Behavior
+// API Behavior
 // ----------------------
+
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.SuppressModelStateInvalidFilter = true;
@@ -113,15 +123,20 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 // ----------------------
 // Caching (Redis)
 // ----------------------
+
 var redisConnection = configuration.GetConnectionString("Redis");
 if (string.IsNullOrWhiteSpace(redisConnection))
+{
     throw new InvalidOperationException("Redis connection string is not configured.");
+}
+
 builder.Services.AddStackExchangeRedisCache(options =>
     options.Configuration = redisConnection);
 
 // ----------------------
 // Rate Limiting
 // ----------------------
+
 builder.Services.AddRateLimiter(options =>
 {
     options.AddConcurrencyLimiter("concurrency", opt =>
@@ -142,6 +157,7 @@ var app = builder.Build();
 // ----------------------
 // Middleware Pipeline
 // ----------------------
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -162,8 +178,9 @@ app.UseRateLimiter();
 // ----------------------
 // Endpoints
 // ----------------------
+
 app.MapControllers()
-   .RequireRateLimiting("concurrency");
+    .RequireRateLimiting("concurrency");
 
 app.MapCustomHealthChecks();
 
