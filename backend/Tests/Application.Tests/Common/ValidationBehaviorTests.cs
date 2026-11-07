@@ -52,7 +52,7 @@ public class ValidationBehaviorTests
         var behavior = new ValidationBehavior<TestRequest, string>([first, second]);
         var nextCalled = false;
 
-        RequestHandlerDelegate<string> next = _ =>
+        RequestHandlerDelegate<string> next = () =>
         {
             nextCalled = true;
             return Task.FromResult("handled");
