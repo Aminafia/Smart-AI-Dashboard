@@ -39,7 +39,7 @@ public class UploadDocumentCommandValidatorTests
         var result = Record.Exception(() => _validator.TestValidate(command));
 
         Assert.Null(result);
-        _validator.TestValidate(command).ShouldHaveValidationErrorFor("Document.Content.Length");
+        _validator.TestValidate(command).ShouldHaveValidationErrorFor("Document.Content");
     }
 
     [Theory]
@@ -81,6 +81,6 @@ public class UploadDocumentCommandValidatorTests
     public void Validate_FileLargerThanTenMegabytes_HasError()
     {
         var result = _validator.TestValidate(CreateCommand(content: new MemoryStream(new byte[MaxFileSize + 1])));
-        result.ShouldHaveValidationErrorFor("Document.Content");
+        result.ShouldHaveValidationErrorFor("Document.Content.Length");
     }
 }
