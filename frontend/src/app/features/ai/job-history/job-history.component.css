@@ -7,7 +7,7 @@
 .retrying-chip { background: #f8edf4 !important; color: #8f4e73 !important; }
 .prompt-cell { max-width: 350px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: default; }
 ::ng-deep .mat-mdc-table { background: transparent; }
-::ng-deep .mat-mdc-header-row { background: #fcf8fa; }
-::ng-deep .mat-mdc-header-cell { color: #746b71; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
-::ng-deep .mat-mdc-cell { color: #40383d; border-bottom-color: #f0e6ea; }
+::ng-deep .mat-mdc-header-row { background: var(--accent-soft); }
+::ng-deep .mat-mdc-header-cell { color: var(--text-secondary); font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+::ng-deep .mat-mdc-cell { color: var(--text-primary); border-bottom-color: var(--border); }
 ::ng-deep .mat-mdc-row:hover { background: #fffafb; }

@@ -1,9 +1,9 @@
 :host { display: block; }
 .label { font-size: 0.75rem; color: #9a8f95; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
-.value { font-weight: 600; color: #40383d; }
-.section-title { font-size: 1rem; font-weight: 600; color: #30292d; margin-bottom: 12px; }
-.prompt-box { background: #fcf8fa; border: 1px solid #f0e6ea; border-radius: 9px; padding: 12px; line-height: 1.6; color: #40383d; }
-.result-box { background: #ffffff; border: 1px solid #eadfe3; border-radius: 9px; padding: 16px; max-height: 400px; overflow-y: auto; }
+.value { font-weight: 600; color: var(--text-primary); }
+.section-title { font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
+.prompt-box { background: var(--accent-soft); border: 1px solid var(--border); border-radius: 9px; padding: 12px; line-height: 1.6; color: var(--text-primary); }
+.result-box { background: #ffffff; border: 1px solid var(--border); border-radius: 9px; padding: 16px; max-height: 400px; overflow-y: auto; }
 .error-box { background: #fff5f7; color: #a7465e; border: 1px solid #edc9d3; border-radius: 9px; padding: 16px; }
 .completed-chip, .processing-chip, .pending-chip, .failed-chip, .retrying-chip { font-weight: 600; border-radius: 999px; }
 .completed-chip { background: #edf8f1 !important; color: #287a43 !important; }

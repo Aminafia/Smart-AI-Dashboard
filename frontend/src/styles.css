@@ -1,19 +1,40 @@
 @import "tailwindcss";
 @source "./**/*.html";
+
 /* =========================================================
-   Smart AI Dashboard — Global Foundation
-   Mature Rose / Blush Theme
+   GLOBAL FOUNDATION — CLEAN SLATE / BLUE ACCENT
    ========================================================= */
+:root {
+  color-scheme: light;
+  --app-background: #f8fafc;
+  --app-background-soft: #f1f5f9;
+  --surface: #ffffff;
+  --surface-subtle: #f8fafc;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --accent: #315cbb;
+  --accent-hover: #264ca5;
+  --accent-active: #1e3a8a;
+  --accent-soft: #eff4ff;
+  --accent-foreground: #ffffff;
+}
 html, body { min-height: 100%; }
-body { margin: 0; background: #faf7f8; color: #29252a; font-family: Roboto, "Helvetica Neue", Arial, sans-serif; }
+body { margin: 0; background: var(--app-background); color: var(--text-primary); font-family: Roboto, "Helvetica Neue", Arial, sans-serif; }
 * { box-sizing: border-box; }
 button, input, textarea, select { font: inherit; }
-/* Shared Material surfaces */
-.mat-mdc-card, .mat-mdc-dialog-container, .mat-mdc-menu-panel { --mat-card-elevated-container-color: #ffffff; }
+
 /* =========================================================
-   Snackbar
+   SHARED MATERIAL SURFACES
+   ========================================================= */
+.mat-mdc-card, .mat-mdc-dialog-container, .mat-mdc-menu-panel { --mat-card-elevated-container-color: var(--surface); }
+
+/* =========================================================
+   SNACKBAR STATES
    ========================================================= */
 .snackbar-success { --mdc-snackbar-container-color: #2e7d32; --mat-snack-bar-button-color: #ffffff; }
 .snackbar-error { --mdc-snackbar-container-color: #d32f2f; --mat-snack-bar-button-color: #ffffff; }
 .snackbar-warning { --mdc-snackbar-container-color: #ed6c02; --mat-snack-bar-button-color: #ffffff; }
-.snackbar-info { --mdc-snackbar-container-color: #ad4967; --mat-snack-bar-button-color: #ffffff; }
+.snackbar-info { --mdc-snackbar-container-color: var(--accent); --mat-snack-bar-button-color: #ffffff; }
