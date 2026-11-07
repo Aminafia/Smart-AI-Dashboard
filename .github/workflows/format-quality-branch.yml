@@ -45,9 +45,13 @@ jobs:
         working-directory: frontend
         run: npm ci
 
+      - name: Install pinned formatting tools
+        working-directory: frontend
+        run: npm install --no-save --package-lock=false prettier@3.6.2 prettier-plugin-organize-imports@4.3.0
+
       - name: Format frontend TypeScript and Angular templates
         working-directory: frontend
-        run: npx --yes --package=prettier@3.6.2 --package=prettier-plugin-organize-imports@4.3.0 prettier --plugin prettier-plugin-organize-imports --write "src/**/*.ts" "src/**/*.html"
+        run: npx prettier --plugin prettier-plugin-organize-imports --write "src/**/*.ts" "src/**/*.html"
 
       - name: Commit formatting changes to the quality branch
         run: |
