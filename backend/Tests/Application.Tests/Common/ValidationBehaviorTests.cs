@@ -15,7 +15,7 @@ public class ValidationBehaviorTests
     {
         var behavior = new ValidationBehavior<TestRequest, string>([]);
         var nextCalled = false;
-        RequestHandlerDelegate<string> next = _ =>
+        RequestHandlerDelegate<string> next = () =>
         {
             nextCalled = true;
             return Task.FromResult("handled");
@@ -36,7 +36,7 @@ public class ValidationBehaviorTests
 
         var result = await behavior.Handle(
             new TestRequest("Amina"),
-            _ => Task.FromResult("handled"),
+            () => Task.FromResult("handled"),
             CancellationToken.None);
 
         Assert.Equal("handled", result);
@@ -68,11 +68,10 @@ public class ValidationBehaviorTests
     }
 
     [Fact]
-    public async Task Handle_PassesCancellationTokenToValidatorsAndNextHandler()
+    public async Task Handle_PassesCancellationTokenToValidators()
     {
         var token = new CancellationTokenSource().Token;
         CancellationToken validatorToken = default;
-        CancellationToken handlerToken = default;
         var validator = new InlineValidator<TestRequest>();
         validator.RuleFor(request => request.Name).MustAsync((_, cancellationToken) =>
         {
@@ -83,14 +82,9 @@ public class ValidationBehaviorTests
 
         await behavior.Handle(
             new TestRequest("Amina"),
-            cancellationToken =>
-            {
-                handlerToken = cancellationToken;
-                return Task.FromResult("handled");
-            },
+            () => Task.FromResult("handled"),
             token);
 
         Assert.Equal(token, validatorToken);
-        Assert.Equal(token, handlerToken);
     }
 }
