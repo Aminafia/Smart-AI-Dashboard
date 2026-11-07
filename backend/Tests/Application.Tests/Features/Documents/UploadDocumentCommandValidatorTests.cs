@@ -39,7 +39,7 @@ public class UploadDocumentCommandValidatorTests
         var result = Record.Exception(() => _validator.TestValidate(command));
 
         Assert.Null(result);
-        _validator.TestValidate(command).ShouldHaveValidationErrorFor("Document.Content");
+        _validator.TestValidate(command).ShouldHaveValidationErrorFor("Document.Content.Length");
     }
 
     [Theory]
