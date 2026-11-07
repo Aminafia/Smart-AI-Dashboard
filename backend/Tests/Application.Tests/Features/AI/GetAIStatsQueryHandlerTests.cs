@@ -1,5 +1,6 @@
 using Application.Features.AI.Queries.GetAIStats;
 using Application.Interfaces;
+
 using Moq;
 
 namespace Application.Tests.Features.AI;
