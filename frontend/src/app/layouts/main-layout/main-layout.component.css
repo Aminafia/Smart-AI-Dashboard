@@ -1,364 +1,51 @@
-:host {
-  display: block;
-  height: 100vh;
-  overflow: hidden;
-}
-
-.app-toolbar {
-  height: 72px;
-
-  display: flex;
-  align-items: center;
-
-  padding: 0 28px;
-
-  background: #ffffff;
-
-  color: #29252a;
-
-  border-bottom: 1px solid #eadfe3;
-
-  box-shadow:
-    0 1px 4px rgba(61, 40, 48, 0.035);
-
-  position: relative;
-  z-index: 10;
-}
-
-.toolbar-brand {
-  display: flex;
-  align-items: center;
-
-  gap: 12px;
-}
-
-.brand-icon {
-  width: 40px;
-  height: 40px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 11px;
-
-  background: #b95774;
-
-  color: #ffffff;
-
-  box-shadow:
-    0 8px 20px rgba(185, 87, 116, 0.18);
-}
-
-.brand-icon mat-icon {
-  width: 21px;
-  height: 21px;
-
-  font-size: 21px;
-}
-
-.brand-name {
-  font-size: 17px;
-
-  font-weight: 600;
-
-  letter-spacing: -0.025em;
-
-  color: #30292d;
-}
-
-.toolbar-spacer {
-  flex: 1;
-}
-
-.user-area {
-  display: flex;
-  align-items: center;
-
-  gap: 10px;
-
-  margin-right: 10px;
-}
-
-.user-avatar {
-  width: 38px;
-  height: 38px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 50%;
-
-  background: #f7e8ed;
-
-  color: #a84f69;
-}
-
-.user-avatar mat-icon {
-  font-size: 20px;
-}
-
-.user-info {
-  display: flex;
-  flex-direction: column;
-
-  line-height: 1.25;
-}
-
-.welcome-text {
-  font-size: 10px;
-
-  color: #9d9298;
-
-  font-weight: 600;
-
-  text-transform: uppercase;
-
-  letter-spacing: 0.08em;
-}
-
-.user-name {
-  margin-top: 2px;
-
-  font-size: 13px;
-
-  font-weight: 600;
-
-  color: #40383d;
-}
-
-.logout-button {
-  width: 42px;
-  height: 42px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 10px;
-
-  color: #786e74;
-
-  transition:
-    background 0.18s ease,
-    color 0.18s ease;
-}
-
-.logout-button:hover {
-  background: #f8edf1;
-
-  color: #a84f69;
-}
-
-.logout-button mat-icon {
-  font-size: 20px;
-}
-
-.app-container {
-  height: calc(100vh - 72px);
-
-  background: #faf7f8;
-}
-
-.app-sidenav {
-  width: 248px;
-
-  background: #ffffff;
-
-  border-right: 1px solid #eadfe3;
-
-  box-shadow: none;
-}
-
-.sidenav-content {
-  height: 100%;
-
-  display: flex;
-  flex-direction: column;
-}
-
-.nav-section {
-  padding: 28px 14px 0;
-}
-
-.nav-section-label {
-  display: block;
-
-  padding: 0 14px;
-
-  margin-bottom: 10px;
-
-  font-size: 10px;
-
-  font-weight: 700;
-
-  letter-spacing: 0.14em;
-
-  text-transform: uppercase;
-
-  color: #a2989e;
-}
-
-mat-nav-list {
-  padding: 0;
-}
-
-mat-nav-list a {
-  height: 46px;
-
-  margin-bottom: 4px;
-
-  border-radius: 10px;
-
-  color: #766d73;
-
-  transition:
-    background 0.18s ease,
-    color 0.18s ease;
-}
-
-mat-nav-list a:hover {
-  background: #fbf3f6;
-
-  color: #40383d;
-}
-
-mat-nav-list a.active-link {
-  background: #f8e9ee;
-
-  color: #a84f69;
-
-  font-weight: 600;
-}
-
-mat-nav-list a.active-link mat-icon {
-  color: #a84f69;
-}
-
-mat-nav-list mat-icon {
-  color: #a99da3;
-}
-
-.nav-label {
-  font-size: 13px;
-
-  margin-left: 4px;
-}
-
-.sidenav-footer {
-  margin-top: auto;
-
-  padding: 18px 14px 22px;
-}
-
-.workspace-status {
-  display: flex;
-  align-items: center;
-
-  gap: 10px;
-
-  padding: 13px;
-
-  border-radius: 12px;
-
-  background: #fcf8fa;
-
-  border: 1px solid #f0e6ea;
-}
-
-.status-dot {
-  width: 8px;
-  height: 8px;
-
-  flex-shrink: 0;
-
-  border-radius: 50%;
-
-  background: #3aa76d;
-
-  box-shadow:
-    0 0 0 4px rgba(58, 167, 109, 0.10);
-}
-
-.workspace-status div:last-child {
-  display: flex;
-  flex-direction: column;
-}
-
-.status-title {
-  font-size: 12px;
-
-  font-weight: 600;
-
-  color: #40383d;
-}
-
-.status-text {
-  margin-top: 2px;
-
-  font-size: 10px;
-
-  color: #a2989e;
-}
-
-.app-content {
-  background: #faf7f8;
-}
-
-.content {
-  min-height: 100%;
-
-  padding: 32px;
-}
-
+:host { display: block; height: 100vh; overflow: hidden; }
+.app-toolbar { height: 72px; display: flex; align-items: center; padding: 0 28px; background: #ffffff; color: #29252a; border-bottom: 1px solid #eadfe3; box-shadow: 0 1px 4px rgba(61, 40, 48, 0.035); position: relative; z-index: 10; }
+.toolbar-brand { display: flex; align-items: center; gap: 12px; }
+.brand-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 11px; background: #b95774; color: #ffffff; box-shadow: 0 8px 20px rgba(185, 87, 116, 0.18); }
+.brand-icon mat-icon { width: 21px; height: 21px; font-size: 21px; }
+.brand-name { font-size: 17px; font-weight: 600; letter-spacing: -0.025em; color: #30292d; }
+.toolbar-spacer { flex: 1; }
+.user-area { display: flex; align-items: center; gap: 10px; margin-right: 10px; }
+.user-avatar { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #f7e8ed; color: #a84f69; }
+.user-avatar mat-icon { font-size: 20px; }
+.user-info { display: flex; flex-direction: column; line-height: 1.25; }
+.welcome-text { font-size: 10px; color: #9d9298; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+.user-name { margin-top: 2px; font-size: 13px; font-weight: 600; color: #40383d; }
+.logout-button { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border-radius: 10px; color: #786e74; transition: background 0.18s ease, color 0.18s ease; }
+.logout-button:hover { background: #f8edf1; color: #a84f69; }
+.logout-button mat-icon { font-size: 20px; }
+.app-container { height: calc(100vh - 72px); background: #faf7f8; }
+.app-sidenav { width: 248px; background: #ffffff; border-right: 1px solid #eadfe3; box-shadow: none; }
+.sidenav-content { height: 100%; display: flex; flex-direction: column; }
+.nav-section { padding: 28px 14px 0; }
+.nav-section-label { display: block; padding: 0 14px; margin-bottom: 10px; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #a2989e; }
+mat-nav-list { padding: 0; }
+mat-nav-list a { height: 46px; margin-bottom: 4px; border-radius: 10px; color: #766d73; transition: background 0.18s ease, color 0.18s ease; }
+mat-nav-list a:hover { background: #fbf3f6; color: #40383d; }
+mat-nav-list a.active-link { background: #f8e9ee; color: #a84f69; font-weight: 600; }
+mat-nav-list a.active-link mat-icon { color: #a84f69; }
+mat-nav-list mat-icon { color: #a99da3; }
+.nav-label { font-size: 13px; margin-left: 4px; }
+.sidenav-footer { margin-top: auto; padding: 18px 14px 22px; }
+.workspace-status { display: flex; align-items: center; gap: 10px; padding: 13px; border-radius: 12px; background: #fcf8fa; border: 1px solid #f0e6ea; }
+.status-dot { width: 8px; height: 8px; flex-shrink: 0; border-radius: 50%; background: #3aa76d; box-shadow: 0 0 0 4px rgba(58, 167, 109, 0.10); }
+.workspace-status div:last-child { display: flex; flex-direction: column; }
+.status-title { font-size: 12px; font-weight: 600; color: #40383d; }
+.status-text { margin-top: 2px; font-size: 10px; color: #a2989e; }
+.app-content { background: #faf7f8; }
+.content { min-height: 100%; padding: 32px; }
 @media (max-width: 900px) {
-  .app-toolbar {
-    height: 64px;
-
-    padding: 0 18px;
-  }
-
-  .app-container {
-    height: calc(100vh - 64px);
-  }
-
-  .brand-name {
-    font-size: 15px;
-  }
-
-  .user-info {
-    display: none;
-  }
-
-  .app-sidenav {
-    width: 220px;
-  }
-
-  .content {
-    padding: 24px;
-  }
+  .app-toolbar { height: 64px; padding: 0 18px; }
+  .app-container { height: calc(100vh - 64px); }
+  .brand-name { font-size: 15px; }
+  .user-info { display: none; }
+  .app-sidenav { width: 220px; }
+  .content { padding: 24px; }
 }
-
 @media (max-width: 600px) {
-  .app-toolbar {
-    padding: 0 14px;
-  }
-
-  .brand-icon {
-    width: 36px;
-    height: 36px;
-  }
-
-  .brand-name {
-    font-size: 14px;
-  }
-
-  .user-area {
-    margin-right: 2px;
-  }
-
-  .content {
-    padding: 18px;
-  }
+  .app-toolbar { padding: 0 14px; }
+  .brand-icon { width: 36px; height: 36px; }
+  .brand-name { font-size: 14px; }
+  .user-area { margin-right: 2px; }
+  .content { padding: 18px; }
 }
