@@ -5,7 +5,7 @@ This file is generated from the non-ignored Git working tree so newly added sour
 It is a discovery index, not a substitute for reading source code. Regenerate with
 `python scripts/check_architecture_docs.py --write` and verify with `python scripts/check_architecture_docs.py --check`.
 
-Files indexed: **369**
+Files indexed: **370**
 
 ## Root files and configuration
 
@@ -83,10 +83,10 @@ Files indexed: **369**
 - `backend/Application/Features/Auth/Commands/Login/LoginCommandHandler.cs`
 - `backend/Application/Features/Auth/Commands/Login/LoginCommandValidator.cs`
 - `backend/Application/Features/Auth/Commands/Login/LoginResponse.cs`
+- `backend/Application/Features/Documents/Commands/DeleteDocument/DeleteDocumentCommand.cs`
 - `backend/Application/Features/Documents/Commands/DeleteDocument/DeleteDocumentCommandHandler.cs`
 - `backend/Application/Features/Documents/Commands/ExtractDocument/ExtractDocumentCommand.cs`
 - `backend/Application/Features/Documents/Commands/ExtractDocument/ExtractDocumentCommandHandler.cs`
-- `backend/Application/Features/Documents/Commands/UploadDocument/DeleteDocument/DeleteDocumentCommand.cs`
 - `backend/Application/Features/Documents/Commands/UploadDocument/UploadDocumentCommand.cs`
 - `backend/Application/Features/Documents/Commands/UploadDocument/UploadDocumentCommandHandler.cs`
 - `backend/Application/Features/Documents/Commands/UploadDocument/UploadDocumentCommandValidator.cs`
@@ -333,6 +333,7 @@ Files indexed: **369**
 ## Architecture and project documentation
 
 - `docs/ARCHITECTURE_BLUEPRINT.md`
+- `docs/AWS_DEPLOYMENT_BLUEPRINT.md`
 - `docs/DIAGRAM_MAINTENANCE.md`
 - `docs/generated/DOTNET_PROJECT_DEPENDENCIES.md`
 - `docs/generated/SOURCE_INVENTORY.md`
