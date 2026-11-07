@@ -7,11 +7,15 @@ Generated from ProjectReference entries in the backend .csproj files. Arrows mea
 flowchart TD
   API["API<br/>ASP.NET Core host"]
   Application["Application<br/>Use cases and MediatR"]
+  Application.Tests["Application.Tests<br/>Application.Tests"]
   Core["Core<br/>Domain entities and rules"]
   Infrastructure["Infrastructure<br/>Persistence, providers and adapters"]
   API --> Application
   API --> Infrastructure
   Application --> Core
+  Application.Tests --> API
+  Application.Tests --> Application
+  Application.Tests --> Core
   Infrastructure --> Application
   Infrastructure --> Core
 ```

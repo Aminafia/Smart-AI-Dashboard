@@ -2,7 +2,9 @@ name: Architecture Documentation Checks
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - "quality/**"
   pull_request:
 
 permissions:
