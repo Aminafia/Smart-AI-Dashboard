@@ -1,8 +1,10 @@
 using Application.Common.Exceptions;
 using Application.Features.AI.Queries.GetAIStatus;
 using Application.Interfaces;
+
 using Core.Entities;
 using Core.Enums;
+
 using Moq;
 
 namespace Application.Tests.Features.AI;
