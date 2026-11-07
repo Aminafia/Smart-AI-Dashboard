@@ -1,22 +1,30 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
+import { LoadingService } from '../../../core/services/loading.service';
 import { LoadingOverlayComponent } from './loading-overlay.component';
 
 describe('LoadingOverlayComponent', () => {
-  let component: LoadingOverlayComponent;
-  let fixture: ComponentFixture<LoadingOverlayComponent>;
+  it('is hidden while the application is idle', () => {
+    TestBed.configureTestingModule({ imports: [LoadingOverlayComponent] });
+    const fixture = TestBed.createComponent(LoadingOverlayComponent);
+    fixture.detectChanges();
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [LoadingOverlayComponent],
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(LoadingOverlayComponent);
-    component = fixture.componentInstance;
-    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('.loading-overlay')).toBeNull();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('appears while a request is active and disappears after completion', () => {
+    TestBed.configureTestingModule({ imports: [LoadingOverlayComponent] });
+    const fixture = TestBed.createComponent(LoadingOverlayComponent);
+    const loadingService = TestBed.inject(LoadingService);
+
+    loadingService.show();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.loading-overlay')).toBeTruthy();
+
+    loadingService.hide();
+    fixture.detectChanges();
+
+    expect(fixture.nativeElement.querySelector('.loading-overlay')).toBeNull();
   });
 });
