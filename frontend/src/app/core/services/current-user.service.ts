@@ -1,16 +1,15 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 
-import { TokenService } from './token.service';
-import { CurrentUser } from '../models/auth/current-user';
 import { JwtClaims } from '../constants/jwt-claims';
+import { CurrentUser } from '../models/auth/current-user';
 import { AppJwtPayload } from '../models/auth/jwt-payload';
+import { TokenService } from './token.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CurrentUserService {
-
   constructor(private tokenService: TokenService) {
     this.loadCurrentUser();
   }
@@ -25,13 +24,14 @@ export class CurrentUserService {
     const token = this.tokenService.getToken();
     if (!token) {
       this._currentUser.set(null);
-      return; }
+      return;
+    }
     const decoded = jwtDecode<AppJwtPayload>(token);
     this._currentUser.set({
       userId: decoded[JwtClaims.UserId],
       email: decoded[JwtClaims.Email],
       fullName: decoded[JwtClaims.FullName],
-      role: decoded[JwtClaims.Role]
+      role: decoded[JwtClaims.Role],
     });
   }
 
@@ -42,5 +42,4 @@ export class CurrentUserService {
   clearCurrentUser(): void {
     this._currentUser.set(null);
   }
-
 }

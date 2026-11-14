@@ -1,5 +1,4 @@
 <mat-toolbar class="app-toolbar">
-
   <div class="toolbar-brand">
     <div class="brand-icon">
       <mat-icon>auto_awesome</mat-icon>
@@ -33,28 +32,15 @@
   >
     <mat-icon>logout</mat-icon>
   </button>
-
 </mat-toolbar>
 
-
 <mat-sidenav-container class="app-container">
-
-  <mat-sidenav
-    class="app-sidenav"
-    mode="side"
-    opened
-  >
-
+  <mat-sidenav class="app-sidenav" mode="side" opened>
     <div class="sidenav-content">
-
       <div class="nav-section">
-
-        <span class="nav-section-label">
-          WORKSPACE
-        </span>
+        <span class="nav-section-label"> WORKSPACE </span>
 
         <mat-nav-list>
-
           <a
             mat-list-item
             routerLink="/dashboard"
@@ -65,40 +51,24 @@
             <span class="nav-label">Dashboard</span>
           </a>
 
-          <a
-            mat-list-item
-            routerLink="/ai/generate"
-            routerLinkActive="active-link"
-          >
+          <a mat-list-item routerLink="/ai/generate" routerLinkActive="active-link">
             <mat-icon matListItemIcon>auto_awesome</mat-icon>
             <span class="nav-label">Generate</span>
           </a>
 
-          <a
-            mat-list-item
-            routerLink="/summarize"
-            routerLinkActive="active-link"
-          >
+          <a mat-list-item routerLink="/summarize" routerLinkActive="active-link">
             <mat-icon matListItemIcon>summarize</mat-icon>
             <span class="nav-label">Summarize</span>
           </a>
 
-          <a
-            mat-list-item
-            routerLink="/documents"
-            routerLinkActive="active-link"
-          >
+          <a mat-list-item routerLink="/documents" routerLinkActive="active-link">
             <mat-icon matListItemIcon>description</mat-icon>
             <span class="nav-label">Documents</span>
           </a>
-
         </mat-nav-list>
-
       </div>
 
-
       <div class="sidenav-footer">
-
         <div class="workspace-status">
           <div class="status-dot"></div>
 
@@ -107,20 +77,13 @@
             <span class="status-text">Ready to use</span>
           </div>
         </div>
-
       </div>
-
     </div>
-
   </mat-sidenav>
 
-
   <mat-sidenav-content class="app-content">
-
     <main class="content">
       <router-outlet></router-outlet>
     </main>
-
   </mat-sidenav-content>
-
 </mat-sidenav-container>

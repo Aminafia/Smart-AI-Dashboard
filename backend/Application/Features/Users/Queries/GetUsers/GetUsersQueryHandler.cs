@@ -1,5 +1,6 @@
 using Application.Features.Users.DTOs;
 using Application.Interfaces;
+
 using MediatR;
 
 namespace Application.Features.Users.Queries.GetUsers;
@@ -18,11 +19,11 @@ public class GetUsersQueryHandler
     {
         var users = await _userRepository.GetAllUsersAsync(cancellationToken);
         return users.Select(user => new UserDto
-                                        {
-                                            Id = user.Id,
-                                            Email = user.Email,
-                                            FullName = user.FullName,
-                                            Role = user.Role
-                                        }).ToList();
+        {
+            Id = user.Id,
+            Email = user.Email,
+            FullName = user.FullName,
+            Role = user.Role
+        }).ToList();
     }
 }

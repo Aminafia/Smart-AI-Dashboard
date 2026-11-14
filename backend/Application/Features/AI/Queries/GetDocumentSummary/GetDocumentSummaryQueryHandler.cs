@@ -1,5 +1,7 @@
 using Application.Interfaces;
+
 using Core.Enums;
+
 using MediatR;
 
 namespace Application.Features.AI.Queries.GetDocumentSummary;
@@ -27,16 +29,16 @@ public class GetDocumentSummaryQueryHandler
         if (job is null)
         {
             return new DocumentSummaryResponse
-                        {
-                            DocumentId = request.DocumentId
-                        };
+            {
+                DocumentId = request.DocumentId
+            };
         }
 
         return new DocumentSummaryResponse
-                    {
-                        DocumentId = request.DocumentId,
-                        Summary = job.Result,
-                        GeneratedAt = job.CompletedAt
-                    };
+        {
+            DocumentId = request.DocumentId,
+            Summary = job.Result,
+            GeneratedAt = job.CompletedAt
+        };
     }
 }

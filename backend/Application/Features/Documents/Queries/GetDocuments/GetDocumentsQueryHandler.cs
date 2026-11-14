@@ -1,6 +1,7 @@
 using Application.Common.Models;
 using Application.Features.Documents.Models;
 using Application.Interfaces;
+
 using MediatR;
 
 namespace Application.Features.Documents.Queries.GetDocuments;
@@ -22,16 +23,16 @@ public class GetDocumentsQueryHandler : IRequestHandler<GetDocumentsQuery, Paged
         return new PagedResponse<DocumentResponse>
         {
             Items = documents.Items.Select(d => new DocumentResponse
-                                                    {
-                                                        Id = d.Id, 
-                                                        FileName = d.FileName, 
-                                                        ContentType = d.ContentType,
-                                                        FileSize = d.FileSize,
-                                                        UploadedAt = d.UploadedAt
-                                                    }).ToList(),
-                                                    Page = documents.Page,
-                                                    PageSize = documents.PageSize,
-                                                    TotalCount = documents.TotalCount
+            {
+                Id = d.Id,
+                FileName = d.FileName,
+                ContentType = d.ContentType,
+                FileSize = d.FileSize,
+                UploadedAt = d.UploadedAt
+            }).ToList(),
+            Page = documents.Page,
+            PageSize = documents.PageSize,
+            TotalCount = documents.TotalCount
         };
     }
 }

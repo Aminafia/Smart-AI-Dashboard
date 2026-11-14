@@ -13,8 +13,10 @@
 */
 
 using System.Text.Json; // Used to convert ApiResponse object into JSON string
+
 using Application.Common.Exceptions; // Custom exceptions
 using Application.Common.Models; // ApiResponse<T> wrapper for consistent API output
+
 using FluentValidation; // ValidationException comes from here
 
 namespace API.Middlewares;
@@ -30,10 +32,10 @@ public class ExceptionHandlingMiddleware
     private readonly ILogger<ExceptionHandlingMiddleware> _logger; // Logger instance used to log warnings/errors, Injected via Dependency Injection.
 
     // Constructor — ASP.NET injects dependencies automatically.
-    public ExceptionHandlingMiddleware(RequestDelegate next,  ILogger<ExceptionHandlingMiddleware> logger)
+    public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
     {
-        _next = next;       
-        _logger = logger;   
+        _next = next;
+        _logger = logger;
     }
 
     /// <summary>
@@ -59,7 +61,7 @@ public class ExceptionHandlingMiddleware
         {
             var correlationId = context.Items["X-Correlation-ID"];
 
-            _logger.LogWarning(ex, 
+            _logger.LogWarning(ex,
                                "Validation error | Path: {Path} | CorrelationId: {CorrelationId}",
                                context.Request.Path, correlationId);
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
@@ -101,7 +103,7 @@ public class ExceptionHandlingMiddleware
         /// </summary>
         var response = context.Response;
         response.ContentType = "application/json";
-        
+
         var correlationId = context.Items["X-Correlation-ID"];
         ApiResponse<string> apiResponse;
 
@@ -112,19 +114,19 @@ public class ExceptionHandlingMiddleware
         {
             BadRequestException => (
                    StatusCodes.Status400BadRequest,
-                    ApiResponse<string>.Failure(ex.Message)     ),
-            UnauthorizedException => (                                     
-                    StatusCodes.Status401Unauthorized,                 
-                    ApiResponse<string>.Failure(ex.Message)     ),
-            NotFoundException =>  (                                  
-                    StatusCodes.Status404NotFound,                   
-                    ApiResponse<string>.Failure(ex.Message)     ), 
-            DuplicateEmailException => (                               
-                    StatusCodes.Status409Conflict,                   
-                    ApiResponse<string>.Failure(ex.Message)     ),
+                    ApiResponse<string>.Failure(ex.Message)),
+            UnauthorizedException => (
+                    StatusCodes.Status401Unauthorized,
+                    ApiResponse<string>.Failure(ex.Message)),
+            NotFoundException => (
+                    StatusCodes.Status404NotFound,
+                    ApiResponse<string>.Failure(ex.Message)),
+            DuplicateEmailException => (
+                    StatusCodes.Status409Conflict,
+                    ApiResponse<string>.Failure(ex.Message)),
             _ => (
                   StatusCodes.Status500InternalServerError,
-                  ApiResponse<string>.Failure("Internal Server Error")  )
+                  ApiResponse<string>.Failure("Internal Server Error"))
         };
 
         /// <summary>

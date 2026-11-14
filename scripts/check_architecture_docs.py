@@ -114,11 +114,15 @@ def render_project_map() -> str:
         FENCE + "mermaid",
         "flowchart TD",
     ]
+    node_ids = {
+        project: re.sub(r"[^A-Za-z0-9_]", "_", project)
+        for project in names.values()
+    }
     for project in sorted(names.values()):
         label = descriptions.get(project, project)
-        lines.append(f'  {project}["{project}<br/>{label}"]')
+        lines.append(f'  {node_ids[project]}["{project}<br/>{label}"]')
     for source, target in sorted(refs):
-        lines.append(f"  {source} --> {target}")
+        lines.append(f"  {node_ids[source]} --> {node_ids[target]}")
     lines.extend([FENCE, ""])
     return "\n".join(lines)
 

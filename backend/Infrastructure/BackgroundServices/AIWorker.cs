@@ -23,10 +23,12 @@ AIWorker Working:
 
 using Application.DTOs.AI;
 using Application.Interfaces;
+
+using Core.Enums;
+
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Core.Enums;
 
 namespace Infrastructure.BackgroundServices;
 
@@ -54,8 +56,10 @@ public class AIWorker : BackgroundService
             var recoverableJobs = await jobStore.GetRecoverableJobsAsync();
             foreach (var job in recoverableJobs)
             {
-                if (stoppingToken.IsCancellationRequested) {
-                    break;  }
+                if (stoppingToken.IsCancellationRequested)
+                {
+                    break;
+                }
 
                 if (job.RetryCount >= job.MaxRetries)
                 {
@@ -91,9 +95,11 @@ public class AIWorker : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             var job = _queue.Dequeue();
-            if (job is null) {
+            if (job is null)
+            {
                 await Task.Delay(500, stoppingToken);
-                continue; }
+                continue;
+            }
 
             using var scope = _scopeFactory.CreateScope();
             var jobStore = scope.ServiceProvider.GetRequiredService<IAIJobStore>();
@@ -104,10 +110,10 @@ public class AIWorker : BackgroundService
                 job.Status = AIJobStatus.Processing;
                 await jobStore.UpdateJobAsync(job);
                 var request = new AIRequest
-                                    {
-                                        Input = job.Prompt,
-                                        JobType = job.JobType
-                                    };
+                {
+                    Input = job.Prompt,
+                    JobType = job.JobType
+                };
                 var response = await aiService.ProcessAsync(request, stoppingToken);
 
                 job.Result = response.Output;

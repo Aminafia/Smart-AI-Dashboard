@@ -1,18 +1,21 @@
 using Application.Interfaces;
+
 using Infrastructure.AI;
 using Infrastructure.AI.Providers;
 using Infrastructure.Auth;
 using Infrastructure.BackgroundServices;
 using Infrastructure.Data;
+using Infrastructure.DocumentProcessing;
 using Infrastructure.Repositories;
-using Infrastructure.Storage;
 using Infrastructure.Resilience;
 using Infrastructure.Services;
+using Infrastructure.Storage;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Infrastructure.DocumentProcessing;
+
 using Polly;
 
 namespace Infrastructure;

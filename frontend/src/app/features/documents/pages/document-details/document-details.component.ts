@@ -1,31 +1,33 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { DocumentModel } from '../../../../core/models/documents/document.model';
 import { DocumentContentResponse } from '../../../../core/models/documents/document-content-response.model';
-import { DocumentService } from '../../../../core/services/document.service';
+import { DocumentModel } from '../../../../core/models/documents/document.model';
 import { AiService } from '../../../../core/services/ai.service';
-import { SnackbarService } from '../../../../shared/services/snackbar.service';
+import { DocumentService } from '../../../../core/services/document.service';
 import { PageCardComponent } from '../../../../shared/components/page-card/page-card.component';
+import { SnackbarService } from '../../../../shared/services/snackbar.service';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { marked } from 'marked';
 import DOMPurify from 'dompurify';
+import { marked } from 'marked';
 
 @Component({
   selector: 'app-document-details',
   standalone: true,
-  imports: [
-    DatePipe,
-    PageCardComponent,
-    MatButtonModule,
-    MatIconModule
-  ],
+  imports: [DatePipe, PageCardComponent, MatButtonModule, MatIconModule],
   templateUrl: './document-details.component.html',
-  styleUrl: './document-details.component.css'
+  styleUrl: './document-details.component.css',
 })
 export class DocumentDetailsComponent implements OnInit, OnDestroy {
   @ViewChild('workspaceAnchor')
@@ -65,7 +67,7 @@ export class DocumentDetailsComponent implements OnInit, OnDestroy {
     private readonly aiService: AiService,
     private readonly snackbarService: SnackbarService,
     private readonly sanitizer: DomSanitizer,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -80,8 +82,8 @@ export class DocumentDetailsComponent implements OnInit, OnDestroy {
     this.loadPdfPreview(id);
 
     this.documentService.getDocuments(1, 100).subscribe({
-      next: response => {
-        const found = response.items.find(item => item.id === id);
+      next: (response) => {
+        const found = response.items.find((item) => item.id === id);
 
         if (!found) {
           this.loadingDocument = false;
@@ -102,7 +104,7 @@ export class DocumentDetailsComponent implements OnInit, OnDestroy {
         this.cdr.detectChanges();
 
         this.snackbarService.error('Unable to load document details.');
-      }
+      },
     });
   }
 
@@ -113,85 +115,84 @@ export class DocumentDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
-  
-private loadSavedWorkspace(id: string): void {
-  this.loadingContent = true;
+  private loadSavedWorkspace(id: string): void {
+    this.loadingContent = true;
 
-  this.documentService.getContent(id).subscribe({
-    next: response => {
-      if (this.currentDocumentId !== id) {
-        return;
-      }
+    this.documentService.getContent(id).subscribe({
+      next: (response) => {
+        if (this.currentDocumentId !== id) {
+          return;
+        }
 
-      this.content = response;
-      this.loadingContent = false;
-      this.contentError = '';
+        this.content = response;
+        this.loadingContent = false;
+        this.contentError = '';
 
-      if (response.extractedText?.trim()) {
-        this.workspaceVisible = true;
-      }
+        if (response.extractedText?.trim()) {
+          this.workspaceVisible = true;
+        }
 
-      this.cdr.detectChanges();
-    },
-    error: (error: { status?: number }) => {
-      if (this.currentDocumentId !== id) {
-        return;
-      }
+        this.cdr.detectChanges();
+      },
+      error: (error: { status?: number }) => {
+        if (this.currentDocumentId !== id) {
+          return;
+        }
 
-      this.loadingContent = false;
+        this.loadingContent = false;
 
-      if (error.status !== 404) {
-        this.contentError = 'Unable to restore extracted text.';
-        this.workspaceVisible = true;
-      }
+        if (error.status !== 404) {
+          this.contentError = 'Unable to restore extracted text.';
+          this.workspaceVisible = true;
+        }
 
-      this.cdr.detectChanges();
-    }
-  });
+        this.cdr.detectChanges();
+      },
+    });
 
-  this.aiService.getDocumentSummary(id).subscribe({
-    next: response => {
-      if (this.currentDocumentId !== id) {
-        return;
-      }
+    this.aiService.getDocumentSummary(id).subscribe({
+      next: (response) => {
+        if (this.currentDocumentId !== id) {
+          return;
+        }
 
-      const savedSummary = response.data?.summary?.trim() ?? '';
+        const savedSummary = response.data?.summary?.trim() ?? '';
 
-      if (savedSummary) {
-        this.summary = savedSummary;
-        this.workspaceVisible = true;
-        void this.renderSummaryMarkdown(savedSummary);
-      }
+        if (savedSummary) {
+          this.summary = savedSummary;
+          this.workspaceVisible = true;
+          void this.renderSummaryMarkdown(savedSummary);
+        }
 
-      this.cdr.detectChanges();
-    },
-    error: () => {
-      if (this.currentDocumentId !== id) {
-        return;
-      }
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        if (this.currentDocumentId !== id) {
+          return;
+        }
 
-      this.cdr.detectChanges();
-    }
-  });
-}
-
-private async renderSummaryMarkdown(markdown: string): Promise<void> {
-  const html = await marked.parse(markdown);
-
-  if (this.summary !== markdown) {
-    return;
+        this.cdr.detectChanges();
+      },
+    });
   }
 
-  this.summaryHtml = DOMPurify.sanitize(html);
-  this.cdr.detectChanges();
-}
+  private async renderSummaryMarkdown(markdown: string): Promise<void> {
+    const html = await marked.parse(markdown);
+
+    if (this.summary !== markdown) {
+      return;
+    }
+
+    this.summaryHtml = DOMPurify.sanitize(html);
+    this.cdr.detectChanges();
+  }
 
   private loadPdfPreview(id: string): void {
     this.loadingPreview = true;
     this.cdr.detectChanges();
 
     this.documentService.download(id).subscribe({
-      next: blob => {
+      next: (blob) => {
         if (this.currentDocumentId !== id) {
           return;
         }
@@ -202,10 +203,7 @@ private async renderSummaryMarkdown(markdown: string): Promise<void> {
 
         this.previewObjectUrl = URL.createObjectURL(blob);
 
-        this.pdfPreviewUrl =
-          this.sanitizer.bypassSecurityTrustResourceUrl(
-            this.previewObjectUrl
-          );
+        this.pdfPreviewUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.previewObjectUrl);
 
         this.loadingPreview = false;
         this.cdr.detectChanges();
@@ -215,7 +213,7 @@ private async renderSummaryMarkdown(markdown: string): Promise<void> {
         this.cdr.detectChanges();
 
         this.snackbarService.error('Unable to load document preview.');
-      }
+      },
     });
   }
 
@@ -231,7 +229,7 @@ private async renderSummaryMarkdown(markdown: string): Promise<void> {
     }
 
     this.documentService.download(file.id).subscribe({
-      next: blob => {
+      next: (blob) => {
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
 
@@ -247,19 +245,14 @@ private async renderSummaryMarkdown(markdown: string): Promise<void> {
       },
       error: () => {
         this.snackbarService.error('Unable to download document.');
-      }
+      },
     });
   }
 
   extractDocument(): void {
     const id = this.currentDocumentId;
 
-    if (
-      !id ||
-      this.extractionInFlight ||
-      this.extracting ||
-      this.loadingContent
-    ) {
+    if (!id || this.extractionInFlight || this.extracting || this.loadingContent) {
       return;
     }
 
@@ -290,7 +283,7 @@ private async renderSummaryMarkdown(markdown: string): Promise<void> {
 
         this.cdr.detectChanges();
         this.snackbarService.error('Unable to extract document text.');
-      }
+      },
     });
   }
 
@@ -328,11 +321,7 @@ private async renderSummaryMarkdown(markdown: string): Promise<void> {
   }
 
   private extractThenSummarize(id: string): void {
-    if (
-      this.extractionInFlight ||
-      this.extracting ||
-      this.summaryInFlight
-    ) {
+    if (this.extractionInFlight || this.extracting || this.summaryInFlight) {
       return;
     }
 
@@ -356,8 +345,7 @@ private async renderSummaryMarkdown(markdown: string): Promise<void> {
           if (this.content?.extractedText?.trim()) {
             this.generateSummary(id);
           } else {
-            this.summaryError =
-              'No text was found in this document to summarize.';
+            this.summaryError = 'No text was found in this document to summarize.';
 
             this.cdr.detectChanges();
           }
@@ -368,22 +356,16 @@ private async renderSummaryMarkdown(markdown: string): Promise<void> {
         this.extracting = false;
         this.loadingContent = false;
 
-        this.contentError =
-          'Text extraction failed. Please try Extract Text again.';
+        this.contentError = 'Text extraction failed. Please try Extract Text again.';
 
-        this.summaryError =
-          'The summary could not be generated because extraction failed.';
+        this.summaryError = 'The summary could not be generated because extraction failed.';
 
         this.cdr.detectChanges();
-      }
+      },
     });
   }
 
-  private fetchContent(
-    id: string,
-    scrollWhenReady: boolean,
-    afterLoad?: () => void
-  ): void {
+  private fetchContent(id: string, scrollWhenReady: boolean, afterLoad?: () => void): void {
     if (this.contentRequestInFlight) {
       return;
     }
@@ -395,7 +377,7 @@ private async renderSummaryMarkdown(markdown: string): Promise<void> {
     this.cdr.detectChanges();
 
     this.documentService.getContent(id).subscribe({
-      next: response => {
+      next: (response) => {
         this.content = response;
         this.contentRequestInFlight = false;
         this.loadingContent = false;
@@ -427,77 +409,69 @@ private async renderSummaryMarkdown(markdown: string): Promise<void> {
         if (afterLoad) {
           afterLoad();
         } else {
-          this.contentError =
-            'Unable to load extracted text. Please try again.';
+          this.contentError = 'Unable to load extracted text. Please try again.';
 
           this.cdr.detectChanges();
         }
-      }
+      },
     });
   }
 
-  
-private generateSummary(id: string): void {
-  if (this.summaryInFlight || this.summarizing) {
-    return;
-  }
-
-  this.summaryInFlight = true;
-  this.summarizing = true;
-  this.summaryError = '';
-  this.cdr.detectChanges();
-
-  this.aiService.summarizeDocument(id).subscribe({
-    next: async response => {
-      const generatedSummary =
-        response.data?.output?.trim() ?? '';
-
-      this.summarizing = false;
-      this.summaryInFlight = false;
-
-      if (!generatedSummary) {
-        this.summary = '';
-        this.summaryHtml = '';
-        this.summaryError =
-          'The request completed, but no summary text was returned.';
-        this.cdr.detectChanges();
-        return;
-      }
-
-      try {
-        const html = await marked.parse(generatedSummary);
-        const sanitizedHtml = DOMPurify.sanitize(html);
-
-        this.summary = generatedSummary;
-        this.summaryHtml = sanitizedHtml;
-        this.summaryError = '';
-      } catch (error) {
-        console.error('Summary Markdown rendering failed:', error);
-
-        // Preserve the generated content even if rendering fails.
-        this.summary = generatedSummary;
-        this.summaryHtml = '';
-        this.summaryError =
-          'The summary was generated, but its formatting failed.';
-      }
-
-      this.cdr.detectChanges();
-    },
-    error: error => {
-      console.error('Summary generation failed:', error);
-
-      this.summarizing = false;
-      this.summaryInFlight = false;
-      this.summaryError =
-        'Summary generation failed. Please try again.';
-
-      this.cdr.detectChanges();
-      this.snackbarService.error(
-        'Unable to summarize document.'
-      );
+  private generateSummary(id: string): void {
+    if (this.summaryInFlight || this.summarizing) {
+      return;
     }
-  });
-}
+
+    this.summaryInFlight = true;
+    this.summarizing = true;
+    this.summaryError = '';
+    this.cdr.detectChanges();
+
+    this.aiService.summarizeDocument(id).subscribe({
+      next: async (response) => {
+        const generatedSummary = response.data?.output?.trim() ?? '';
+
+        this.summarizing = false;
+        this.summaryInFlight = false;
+
+        if (!generatedSummary) {
+          this.summary = '';
+          this.summaryHtml = '';
+          this.summaryError = 'The request completed, but no summary text was returned.';
+          this.cdr.detectChanges();
+          return;
+        }
+
+        try {
+          const html = await marked.parse(generatedSummary);
+          const sanitizedHtml = DOMPurify.sanitize(html);
+
+          this.summary = generatedSummary;
+          this.summaryHtml = sanitizedHtml;
+          this.summaryError = '';
+        } catch (error) {
+          console.error('Summary Markdown rendering failed:', error);
+
+          // Preserve the generated content even if rendering fails.
+          this.summary = generatedSummary;
+          this.summaryHtml = '';
+          this.summaryError = 'The summary was generated, but its formatting failed.';
+        }
+
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        console.error('Summary generation failed:', error);
+
+        this.summarizing = false;
+        this.summaryInFlight = false;
+        this.summaryError = 'Summary generation failed. Please try again.';
+
+        this.cdr.detectChanges();
+        this.snackbarService.error('Unable to summarize document.');
+      },
+    });
+  }
 
   private revealWorkspace(): void {
     this.workspaceVisible = true;
@@ -510,7 +484,7 @@ private generateSummary(id: string): void {
     requestAnimationFrame(() => {
       this.workspaceAnchor?.nativeElement.scrollIntoView({
         behavior: 'smooth',
-        block: 'start'
+        block: 'start',
       });
     });
   }

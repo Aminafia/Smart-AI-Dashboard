@@ -1,33 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
-import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
-import { PageCardComponent } from '../../shared/components/page-card/page-card.component';
-import { AiService } from '../../core/services/ai.service';
 import { AIStats } from '../../core/models/ai/ai-stats.model';
+import { AiService } from '../../core/services/ai.service';
+import { PageCardComponent } from '../../shared/components/page-card/page-card.component';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [
-    PageHeaderComponent,
-    PageCardComponent,
-    MatIconModule
-  ],
+  imports: [PageHeaderComponent, PageCardComponent, MatIconModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })
 export class DashboardComponent implements OnInit {
-
   stats: AIStats = {
     totalJobs: 0,
     completedJobs: 0,
     processingJobs: 0,
-    failedJobs: 0
+    failedJobs: 0,
   };
 
-  constructor(
-    private readonly aiService: AiService
-  ) {}
+  constructor(private readonly aiService: AiService) {}
 
   ngOnInit(): void {
     this.loadStats();
@@ -42,7 +35,7 @@ export class DashboardComponent implements OnInit {
       },
       error: () => {
         // Keep default zero values if statistics cannot be loaded.
-      }
+      },
     });
   }
 }

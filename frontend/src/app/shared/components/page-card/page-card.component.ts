@@ -6,13 +6,8 @@ import { MatCardModule } from '@angular/material/card';
 @Component({
   selector: 'app-page-card',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule
-  ],
+  imports: [CommonModule, MatCardModule],
   templateUrl: './page-card.component.html',
-  styleUrl: './page-card.component.css'
+  styleUrl: './page-card.component.css',
 })
-export class PageCardComponent {
-
-}
+export class PageCardComponent {}

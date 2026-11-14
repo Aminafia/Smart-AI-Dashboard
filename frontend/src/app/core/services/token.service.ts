@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TokenService {
-
   private readonly tokenKey = 'token'; // localStorage key, can  rename just here if required
 
   saveToken(token: string): void {

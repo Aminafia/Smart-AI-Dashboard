@@ -6,14 +6,12 @@ import { Component, Input } from '@angular/core';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './page-header.component.html',
-  styleUrl: './page-header.component.css'
+  styleUrl: './page-header.component.css',
 })
 export class PageHeaderComponent {
-
   @Input({ required: true })
   title!: string;
 
   @Input()
   subtitle = '';
-
 }

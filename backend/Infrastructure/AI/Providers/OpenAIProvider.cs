@@ -1,7 +1,9 @@
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
+
 using Application.Interfaces;
+
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.AI.Providers;
@@ -24,9 +26,9 @@ public class OpenAIProvider : IAIProvider
             var url = "https://postman-echo.com/post";
 
             var requestBody = new
-                                {
-                                    input = prompt
-                                };
+            {
+                input = prompt
+            };
 
             var response = await _httpClient.PostAsJsonAsync(url, requestBody, cancellationToken);
             response.EnsureSuccessStatusCode();

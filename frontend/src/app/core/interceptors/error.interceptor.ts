@@ -9,31 +9,25 @@ import { AuthStateService } from '../services/auth-state.service';
 function getMessage(error: HttpErrorResponse): string {
   const apiError = error.error;
   if (!apiError) {
-    return 'Something went wrong.'; }
-  return (
-    apiError.message ??
-    apiError.Message ??
-    'Something went wrong.');
+    return 'Something went wrong.';
+  }
+  return apiError.message ?? apiError.Message ?? 'Something went wrong.';
 }
 
 function getErrors(error: HttpErrorResponse): string[] {
   const apiError = error.error;
   if (!apiError) {
-    return []; }
-  return (
-    apiError.errors ??
-    apiError.Errors ??
-    [] );
+    return [];
+  }
+  return apiError.errors ?? apiError.Errors ?? [];
 }
 
 export const errorInterceptor: HttpInterceptorFn = (req, next) => {
-
   const snackbar = inject(SnackbarService);
   const authStateService = inject(AuthStateService);
 
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
-      
       switch (error.status) {
         case 0:
           snackbar.error('Unable to connect to the server.');
@@ -41,10 +35,12 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
         case 400: {
           const errors = getErrors(error);
           if (errors.length > 0) {
-            snackbar.warning(errors); }
-          else {
-            snackbar.warning(getMessage(error)); }
-          break; }
+            snackbar.warning(errors);
+          } else {
+            snackbar.warning(getMessage(error));
+          }
+          break;
+        }
         case 401:
           snackbar.error(getMessage(error));
           authStateService.logout();
@@ -63,7 +59,6 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
       }
 
       return throwError(() => error);
-    })
+    }),
   );
-
 };

@@ -12,8 +12,10 @@ AiService Working:
 
 using Application.DTOs.AI;
 using Application.Interfaces;
-using Microsoft.Extensions.Logging;
+
 using Core.Enums;
+
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.AI;
 
@@ -48,10 +50,10 @@ public class AiService : IAIService
         {
             _logger.LogInformation("Cache HIT for key {Key}", cacheKey);
             return new AIProviderResponse
-                        {
-                            Output = cachedResult,
-                            IsFallback = false
-                        };
+            {
+                Output = cachedResult,
+                IsFallback = false
+            };
         }
 
         _logger.LogInformation("Cache MISS for key {Key}", cacheKey);
@@ -60,7 +62,7 @@ public class AiService : IAIService
         {
             AIJobType.GenerateText => request.Input,
             AIJobType.Summarize => $"Summarize the following text:\n\n{request.Input}",
-                              _ => throw new NotSupportedException($"Unsupported task {request.JobType}")
+            _ => throw new NotSupportedException($"Unsupported task {request.JobType}")
         };
 
         // 2. Call actual AI provider
@@ -69,8 +71,10 @@ public class AiService : IAIService
 
         var aiResult = await _provider.GenerateAsync(prompt, cancellationToken);
 
-        if (string.IsNullOrWhiteSpace(aiResult)) {
-            throw new InvalidOperationException("The AI provider returned an empty result."); }
+        if (string.IsNullOrWhiteSpace(aiResult))
+        {
+            throw new InvalidOperationException("The AI provider returned an empty result.");
+        }
 
         try
         {
@@ -83,10 +87,10 @@ public class AiService : IAIService
         }
 
         return new AIProviderResponse
-                    {
-                        Output = aiResult,
-                        IsFallback = false
-                    };
+        {
+            Output = aiResult,
+            IsFallback = false
+        };
 
     }
 }

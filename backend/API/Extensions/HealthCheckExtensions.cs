@@ -31,15 +31,15 @@ public static class HealthCheckExtensions
             {
                 context.Response.ContentType = "application/json";
                 var result = new
-                            {
-                            status = report.Status.ToString(),
-                            checks = report.Entries.Select(e => new 
-                                                                { 
-                                                                    name = e.Key,
-                                                                    status = e.Value.Status.ToString(),
-                                                                    error = e.Value.Exception?.Message
-                                                                })
-                            };
+                {
+                    status = report.Status.ToString(),
+                    checks = report.Entries.Select(e => new
+                    {
+                        name = e.Key,
+                        status = e.Value.Status.ToString(),
+                        error = e.Value.Exception?.Message
+                    })
+                };
 
                 await context.Response.WriteAsJsonAsync(result);
             }

@@ -1,42 +1,22 @@
 <div class="login-page">
-
   <!-- Brand -->
-  <header class="brand">
-    Smart AI Dashboard
-  </header>
-
+  <header class="brand">Smart AI Dashboard</header>
 
   <!-- Centered Login Experience -->
   <main class="login-content">
-
     <section class="login-intro">
-
       <h1>Welcome back</h1>
 
-      <p>
-        Sign in to continue to your AI workspace.
-      </p>
-
+      <p>Sign in to continue to your AI workspace.</p>
     </section>
-
 
     <!-- Login Card -->
     <div class="login-card">
-
       <h2>Login</h2>
 
-
-      <form
-        [formGroup]="loginForm"
-        (ngSubmit)="login()"
-        class="login-form"
-      >
-
+      <form [formGroup]="loginForm" (ngSubmit)="login()" class="login-form">
         <!-- Email -->
-        <mat-form-field
-          appearance="outline"
-          class="full-width"
-        >
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Email</mat-label>
 
           <input
@@ -48,28 +28,19 @@
           />
 
           @if (loginForm.get('email')?.hasError('required')) {
-            <mat-error>
-              Email is required
-            </mat-error>
+            <mat-error> Email is required </mat-error>
           }
 
           @if (
             loginForm.get('email')?.hasError('email') &&
             !loginForm.get('email')?.hasError('required')
           ) {
-            <mat-error>
-              Please enter a valid email address
-            </mat-error>
+            <mat-error> Please enter a valid email address </mat-error>
           }
-
         </mat-form-field>
 
-
         <!-- Password -->
-        <mat-form-field
-          appearance="outline"
-          class="full-width"
-        >
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Password</mat-label>
 
           <input
@@ -93,61 +64,39 @@
           </button>
 
           @if (loginForm.get('password')?.hasError('required')) {
-            <mat-error>
-              Password is required
-            </mat-error>
+            <mat-error> Password is required </mat-error>
           }
 
           @if (
             loginForm.get('password')?.hasError('minlength') &&
             !loginForm.get('password')?.hasError('required')
           ) {
-            <mat-error>
-              Password must be at least 6 characters
-            </mat-error>
+            <mat-error> Password must be at least 6 characters </mat-error>
           }
-
         </mat-form-field>
-
 
         <!-- Error -->
         @if (errorMessage) {
-
-          <div
-            class="error-message"
-            role="alert"
-          >
-            <mat-icon>
-              error_outline
-            </mat-icon>
+          <div class="error-message" role="alert">
+            <mat-icon> error_outline </mat-icon>
 
             <span>
               {{ errorMessage }}
             </span>
           </div>
-
         }
 
-
         <!-- Sign In -->
-        <button
-          mat-flat-button
-          type="submit"
-          class="login-button"
-        >
+        <button mat-flat-button type="submit" class="login-button">
           Sign in
 
-          <mat-icon>
-            arrow_forward
-          </mat-icon>
+          <mat-icon> arrow_forward </mat-icon>
         </button>
-
 
         <!-- Divider -->
         <div class="divider">
           <span>OR</span>
         </div>
-
 
         <!-- Google -->
         <button
@@ -158,40 +107,20 @@
         >
           <span class="google-icon">G</span>
 
-          <span>
-            Continue with Google
-          </span>
+          <span> Continue with Google </span>
         </button>
 
-        <p class="google-note">
-          Google sign-in will be available in a future version.
-        </p>
-
+        <p class="google-note">Google sign-in will be available in a future version.</p>
       </form>
-
     </div>
-
 
     <!-- Register -->
     <div class="register-link">
-
       <span>Don't have an account?</span>
 
-      <button
-        type="button"
-        mat-button
-        routerLink="/register"
-      >
-        Create account
-      </button>
-
+      <button type="button" mat-button routerLink="/register">Create account</button>
     </div>
-
   </main>
 
-
-  <p class="login-footer">
-    Your private AI workspace
-  </p>
-
+  <p class="login-footer">Your private AI workspace</p>
 </div>

@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { TokenService } from './token.service';
 import { CurrentUserService } from './current-user.service';
+import { TokenService } from './token.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthStateService {
-
   constructor(
     private tokenService: TokenService,
     private currentUserService: CurrentUserService,
-    private router: Router
-  ) { }
+    private router: Router,
+  ) {}
 
   isLoggedIn(): boolean {
     return this.tokenService.isLoggedIn();

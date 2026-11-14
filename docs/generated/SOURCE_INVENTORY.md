@@ -5,10 +5,11 @@ This file is generated from the non-ignored Git working tree so newly added sour
 It is a discovery index, not a substitute for reading source code. Regenerate with
 `python scripts/check_architecture_docs.py --write` and verify with `python scripts/check_architecture_docs.py --check`.
 
-Files indexed: **370**
+Files indexed: **398**
 
 ## Root files and configuration
 
+- `.editorconfig`
 - `.gitignore`
 - `global.json`
 - `README.md`
@@ -173,6 +174,32 @@ Files indexed: **370**
 - `backend/Infrastructure/Services/CacheService.cs`
 - `backend/Infrastructure/Services/CurrentUserService.cs`
 - `backend/Infrastructure/Storage/LocalDocumentStorage.cs`
+- `backend/Tests/Application.Tests/API/CorrelationIdMiddlewareTests.cs`
+- `backend/Tests/Application.Tests/API/ExceptionHandlingMiddlewareTests.cs`
+- `backend/Tests/Application.Tests/API/RequestLoggingMiddlewareTests.cs`
+- `backend/Tests/Application.Tests/Application.Tests.csproj`
+- `backend/Tests/Application.Tests/Common/ValidationBehaviorTests.cs`
+- `backend/Tests/Application.Tests/Features/AI/GenerateTextCommandHandlerTests.cs`
+- `backend/Tests/Application.Tests/Features/AI/GetAIJobsQueryHandlerTests.cs`
+- `backend/Tests/Application.Tests/Features/AI/GetAIStatsQueryHandlerTests.cs`
+- `backend/Tests/Application.Tests/Features/AI/GetAIStatusQueryHandlerTests.cs`
+- `backend/Tests/Application.Tests/Features/AI/GetDocumentSummaryQueryHandlerTests.cs`
+- `backend/Tests/Application.Tests/Features/AI/SummarizeCommandHandlerTests.cs`
+- `backend/Tests/Application.Tests/Features/AI/SummarizeCommandValidatorTests.cs`
+- `backend/Tests/Application.Tests/Features/AI/SummarizeDocumentCommandHandlerTests.cs`
+- `backend/Tests/Application.Tests/Features/Auth/LoginCommandHandlerTests.cs`
+- `backend/Tests/Application.Tests/Features/Auth/LoginCommandValidatorTests.cs`
+- `backend/Tests/Application.Tests/Features/Documents/DeleteDocumentCommandHandlerTests.cs`
+- `backend/Tests/Application.Tests/Features/Documents/ExtractDocumentCommandHandlerTests.cs`
+- `backend/Tests/Application.Tests/Features/Documents/GetDocumentContentQueryHandlerTests.cs`
+- `backend/Tests/Application.Tests/Features/Documents/GetDocumentQueryHandlerTests.cs`
+- `backend/Tests/Application.Tests/Features/Documents/GetDocumentsQueryHandlerTests.cs`
+- `backend/Tests/Application.Tests/Features/Documents/UploadDocumentCommandHandlerTests.cs`
+- `backend/Tests/Application.Tests/Features/Documents/UploadDocumentCommandValidatorTests.cs`
+- `backend/Tests/Application.Tests/Features/Users/CreateUserCommandHandlerTests.cs`
+- `backend/Tests/Application.Tests/Features/Users/CreateUserCommandValidatorTests.cs`
+- `backend/Tests/Application.Tests/Features/Users/GetUsersQueryHandlerTests.cs`
+- `backend/Tests/Application.Tests/GlobalUsings.cs`
 
 ## Frontend (Angular)
 
@@ -399,4 +426,5 @@ Files indexed: **370**
 
 ## GitHub automation
 
+- `.github/workflows/application-quality.yml`
 - `.github/workflows/architecture-docs.yml`

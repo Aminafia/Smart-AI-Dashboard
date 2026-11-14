@@ -1,22 +1,21 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { AiService } from '../../../core/services/ai.service';
-import { AIJob } from '../../../core/models/ai/ai-job.model';
-import { MatTableModule } from '@angular/material/table';
 import { DatePipe } from '@angular/common';
-import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
-import { PageCardComponent } from '../../../shared/components/page-card/page-card.component';
-import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatIconModule } from '@angular/material/icon';
+import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { JobDetailsDialogComponent } from '../job-details-dialog/job-details-dialog.component';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { interval, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AIJobStatus } from '../../../core/models/ai/ai-job-status.model';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { PagedResponse } from '../../../core/models/shared/paged-response.model';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { AIJob } from '../../../core/models/ai/ai-job.model';
+import { AiService } from '../../../core/services/ai.service';
+import { EmptyStateComponent } from '../../../shared/components/empty-state/empty-state.component';
+import { PageCardComponent } from '../../../shared/components/page-card/page-card.component';
+import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
+import { JobDetailsDialogComponent } from '../job-details-dialog/job-details-dialog.component';
 
 @Component({
   selector: 'app-job-history',
@@ -32,22 +31,14 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
     MatDialogModule,
     EmptyStateComponent,
     MatTooltipModule,
-    MatPaginatorModule
+    MatPaginatorModule,
   ],
   templateUrl: './job-history.component.html',
   styleUrl: './job-history.component.css',
 })
-
 export class JobHistoryComponent implements OnInit {
-
   jobs: AIJob[] = [];
-  displayedColumns: string[] = [
-    'jobType',
-    'prompt',
-    'status',
-    'createdAt',
-    'actions'
-  ];
+  displayedColumns: string[] = ['jobType', 'prompt', 'status', 'createdAt', 'actions'];
   page = 1;
   pageSize = 10;
   totalCount = 0;
@@ -55,7 +46,10 @@ export class JobHistoryComponent implements OnInit {
 
   private pollingSubscription?: Subscription;
 
-  constructor(private aiService: AiService, private dialog: MatDialog) { }
+  constructor(
+    private aiService: AiService,
+    private dialog: MatDialog,
+  ) {}
 
   ngOnInit(): void {
     this.loadJobs();
@@ -68,24 +62,27 @@ export class JobHistoryComponent implements OnInit {
         this.totalCount = response.data.totalCount;
 
         if (this.hasRunningJobs()) {
-          this.startPolling(); }
-        else {
-          this.stopPolling(); }
-      }
+          this.startPolling();
+        } else {
+          this.stopPolling();
+        }
+      },
     });
   }
 
   private hasRunningJobs(): boolean {
-    return this.jobs.some(job =>
-      job.status === AIJobStatus.Pending ||
-      job.status === AIJobStatus.Processing ||
-      job.status === AIJobStatus.Retrying
+    return this.jobs.some(
+      (job) =>
+        job.status === AIJobStatus.Pending ||
+        job.status === AIJobStatus.Processing ||
+        job.status === AIJobStatus.Retrying,
     );
   }
 
   private startPolling(): void {
     if (this.pollingSubscription) {
-      return; }
+      return;
+    }
     this.pollingSubscription = interval(5000)
       .pipe(switchMap(() => this.aiService.getJobs(this.page, this.pageSize)))
       .subscribe({
@@ -93,8 +90,9 @@ export class JobHistoryComponent implements OnInit {
           this.jobs = response.data.items;
           this.totalCount = response.data.totalCount;
           if (!this.hasRunningJobs()) {
-            this.stopPolling(); }
-        }
+            this.stopPolling();
+          }
+        },
       });
   }
 
@@ -108,8 +106,11 @@ export class JobHistoryComponent implements OnInit {
   }
 
   viewJob(job: AIJob): void {
-    this.dialog.open(JobDetailsDialogComponent,
-      { width: '900px', maxHeight: '85vh', data: job.id});
+    this.dialog.open(JobDetailsDialogComponent, {
+      width: '900px',
+      maxHeight: '85vh',
+      data: job.id,
+    });
   }
 
   onPageChange(event: PageEvent): void {
@@ -119,11 +120,10 @@ export class JobHistoryComponent implements OnInit {
   }
 
   get startItem(): number {
-  return this.totalCount === 0 ? 0 : (this.page - 1) * this.pageSize + 1;
+    return this.totalCount === 0 ? 0 : (this.page - 1) * this.pageSize + 1;
   }
 
   get endItem(): number {
-    return Math.min(this.page * this.pageSize, this.totalCount); 
+    return Math.min(this.page * this.pageSize, this.totalCount);
   }
-
 }

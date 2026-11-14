@@ -1,24 +1,6 @@
-:host {
-  display: block;
-}
-
-.page-card {
-  border-radius: 14px !important;
-
-  border: 1px solid #eee4e8;
-
-  background: #ffffff;
-
-  box-shadow:
-    0 2px 12px rgba(77, 47, 58, 0.035) !important;
-}
-
-::ng-deep .page-card .mat-mdc-card-content {
-  padding: 22px !important;
-}
-
+:host { display: block; }
+.page-card { border-radius: 14px !important; border: 1px solid #eee4e8; background: #ffffff; box-shadow: 0 2px 12px rgba(15, 23, 42, 0.035) !important; }
+::ng-deep .page-card .mat-mdc-card-content { padding: 22px !important; }
 @media (max-width: 600px) {
-  ::ng-deep .page-card .mat-mdc-card-content {
-    padding: 18px !important;
-  }
+  ::ng-deep .page-card .mat-mdc-card-content { padding: 18px !important; }
 }
