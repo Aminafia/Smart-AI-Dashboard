@@ -1,15 +1,13 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-
-import { RegisterRequest } from '../../../core/models/auth/register-request';
-import { AuthService } from '../../../core/services/auth.service';
-
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Router, RouterLink } from '@angular/router';
+import { RegisterRequest } from '../../../core/models/auth/register-request';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-register',
