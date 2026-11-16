@@ -21,20 +21,45 @@
   --accent-soft: #eff4ff;
   --accent-foreground: #ffffff;
 }
-html, body { min-height: 100%; }
-body { margin: 0; background: var(--app-background); color: var(--text-primary); font-family: Roboto, "Helvetica Neue", Arial, sans-serif; }
-* { box-sizing: border-box; }
-button, input, textarea, select { font: inherit; }
+html, body {
+  min-height: 100%;
+}
+body {
+  margin: 0;
+  background: var(--app-background);
+  color: var(--text-primary);
+  font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+* {
+  box-sizing: border-box;
+}
+button, input, textarea, select {
+  font: inherit;
+}
 
 /* =========================================================
    SHARED MATERIAL SURFACES
    ========================================================= */
-.mat-mdc-card, .mat-mdc-dialog-container, .mat-mdc-menu-panel { --mat-card-elevated-container-color: var(--surface); }
+.mat-mdc-card, .mat-mdc-dialog-container, .mat-mdc-menu-panel {
+  --mat-card-elevated-container-color: var(--surface);
+}
 
 /* =========================================================
    SNACKBAR STATES
    ========================================================= */
-.snackbar-success { --mdc-snackbar-container-color: #2e7d32; --mat-snack-bar-button-color: #ffffff; }
-.snackbar-error { --mdc-snackbar-container-color: #d32f2f; --mat-snack-bar-button-color: #ffffff; }
-.snackbar-warning { --mdc-snackbar-container-color: #ed6c02; --mat-snack-bar-button-color: #ffffff; }
-.snackbar-info { --mdc-snackbar-container-color: var(--accent); --mat-snack-bar-button-color: #ffffff; }
+.snackbar-success {
+  --mdc-snackbar-container-color: #2e7d32;
+  --mat-snack-bar-button-color: #ffffff;
+}
+.snackbar-error {
+  --mdc-snackbar-container-color: #d32f2f;
+  --mat-snack-bar-button-color: #ffffff;
+}
+.snackbar-warning {
+  --mdc-snackbar-container-color: #ed6c02;
+  --mat-snack-bar-button-color: #ffffff;
+}
+.snackbar-info {
+  --mdc-snackbar-container-color: var(--accent);
+  --mat-snack-bar-button-color: #ffffff;
+}

@@ -1,4 +1,12 @@
-:host { display: block; }
-::ng-deep .result-viewer-content { color: var(--text-primary); }
-::ng-deep .result-viewer-content h1, ::ng-deep .result-viewer-content h2, ::ng-deep .result-viewer-content h3 { color: var(--text-primary); }
-::ng-deep .result-viewer-content a { color: var(--accent); }
+:host {
+  display: block;
+}
+::ng-deep .result-viewer-content {
+  color: var(--text-primary);
+}
+::ng-deep .result-viewer-content h1, ::ng-deep .result-viewer-content h2, ::ng-deep .result-viewer-content h3 {
+  color: var(--text-primary);
+}
+::ng-deep .result-viewer-content a {
+  color: var(--accent);
+}
