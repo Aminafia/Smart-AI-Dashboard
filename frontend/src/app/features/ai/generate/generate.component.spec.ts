@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NEVER, of, throwError } from 'rxjs';
-
 import { AIJobStatus } from '../../../core/models/ai/ai-job-status.model';
 import { AiService } from '../../../core/services/ai.service';
 import { MarkdownService } from '../../../shared/services/markdown.service';
