@@ -1,8 +1,6 @@
 using Application.Common.Exceptions;
 using Application.Interfaces;
-
 using Core.Entities;
-
 using MediatR;
 
 namespace Application.Features.Documents.Commands.ExtractDocument;

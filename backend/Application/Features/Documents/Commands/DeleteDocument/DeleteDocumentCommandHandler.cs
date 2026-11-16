@@ -1,6 +1,5 @@
 using Application.Common.Exceptions;
 using Application.Interfaces;
-
 using MediatR;
 
 namespace Application.Features.Documents.Commands.DeleteDocument;
