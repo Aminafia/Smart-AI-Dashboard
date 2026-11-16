@@ -1,15 +1,12 @@
 :host {
   display: block;
 }
-
 .max-w-4xl {
   max-width: 900px;
 }
-
 mat-form-field {
   width: 100%;
 }
-
 ::ng-deep .max-w-4xl .mat-mdc-form-field {
   --mdc-outlined-text-field-container-shape: 10px;
   --mdc-outlined-text-field-outline-color: var(--border-strong);
@@ -17,11 +14,9 @@ mat-form-field {
   --mdc-outlined-text-field-focus-outline-color: var(--accent);
   --mdc-outlined-text-field-focus-label-text-color: var(--accent);
 }
-
 ::ng-deep .max-w-4xl .mat-mdc-text-field-wrapper {
   background: #ffffff;
 }
-
 button[mat-flat-button] {
   --mdc-filled-button-container-color: var(--accent);
   --mdc-filled-button-label-text-color: #ffffff;
@@ -29,7 +24,6 @@ button[mat-flat-button] {
   padding: 0 22px;
   height: 42px;
 }
-
 pre {
   white-space: pre-wrap;
   word-break: break-word;
@@ -37,7 +31,6 @@ pre {
   line-height: 1.6;
   margin: 0;
 }
-
 .result-content {
   margin-top: 16px;
 }

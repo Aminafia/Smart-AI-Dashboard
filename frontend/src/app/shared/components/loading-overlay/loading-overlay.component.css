@@ -1,6 +1,7 @@
 :host {
   display: block;
 }
+
 .loading-overlay {
   position: fixed;
   inset: 0;
@@ -11,6 +12,7 @@
   background: rgba(253, 249, 250, 0.72);
   backdrop-filter: blur(3px);
 }
+
 ::ng-deep .loading-overlay .mat-mdc-progress-spinner {
   --mdc-circular-progress-active-indicator-color: var(--accent);
 }
