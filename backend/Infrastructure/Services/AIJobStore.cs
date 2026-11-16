@@ -1,12 +1,9 @@
 using Application.Common.Models;
 using Application.Features.AI.Queries.GetAIStats;
 using Application.Interfaces;
-
 using Core.Entities;
 using Core.Enums;
-
 using Infrastructure.Data;
-
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Services;
