@@ -8,7 +8,6 @@
 */
 
 using System.Diagnostics;
-
 using Serilog;
 
 namespace API.Middlewares;

@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { LoadingService } from '../../../core/services/loading.service';
 import { LoadingOverlayComponent } from './loading-overlay.component';
 

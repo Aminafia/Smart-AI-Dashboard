@@ -13,11 +13,8 @@ GeminiProvider Working:
 
 using System.Linq;
 using System.Net.Http.Json;
-
 using Application.Interfaces;
-
 using Infrastructure.AI.Models;
-
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 

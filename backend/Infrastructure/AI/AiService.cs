@@ -12,9 +12,7 @@ AiService Working:
 
 using Application.DTOs.AI;
 using Application.Interfaces;
-
 using Core.Enums;
-
 using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.AI;

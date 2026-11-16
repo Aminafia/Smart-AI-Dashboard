@@ -1,10 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { environment } from '../../../environments/environment';
-
 import { tap } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 import { LoginRequest } from '../models/auth/login-request';
 import { LoginResponse } from '../models/auth/login-response';
 import { RegisterRequest } from '../models/auth/register-request';

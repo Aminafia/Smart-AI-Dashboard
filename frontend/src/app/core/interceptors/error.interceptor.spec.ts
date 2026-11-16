@@ -1,7 +1,6 @@
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-
 import { SnackbarService } from '../../shared/services/snackbar.service';
 import { AuthStateService } from '../services/auth-state.service';
 import { errorInterceptor } from './error.interceptor';

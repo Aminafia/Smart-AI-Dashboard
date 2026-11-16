@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-
 import { EmptyStateComponent } from '../empty-state/empty-state.component';
 
 @Component({

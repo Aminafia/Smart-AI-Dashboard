@@ -2,9 +2,7 @@ using Application.Common.Models;
 using Application.Features.Users.Commands.CreateUser;
 using Application.Features.Users.DTOs;
 using Application.Features.Users.Queries.GetUsers;
-
 using MediatR;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

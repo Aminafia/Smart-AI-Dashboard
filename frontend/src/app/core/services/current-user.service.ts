@@ -1,6 +1,5 @@
 import { computed, Injectable, signal } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
-
 import { JwtClaims } from '../constants/jwt-claims';
 import { CurrentUser } from '../models/auth/current-user';
 import { AppJwtPayload } from '../models/auth/jwt-payload';

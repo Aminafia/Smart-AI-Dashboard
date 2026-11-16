@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
 import { SnackbarService } from './snackbar.service';
 
 describe('SnackbarService', () => {

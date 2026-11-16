@@ -1,10 +1,8 @@
 using Application.Common.Models;
 using Application.Features.AI.Queries.GetAIJobs;
 using Application.Interfaces;
-
 using Core.Entities;
 using Core.Enums;
-
 using Moq;
 
 namespace Application.Tests.Features.AI;

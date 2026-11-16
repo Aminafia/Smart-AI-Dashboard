@@ -1,5 +1,4 @@
 using Application.Interfaces;
-
 using Infrastructure.AI;
 using Infrastructure.AI.Providers;
 using Infrastructure.Auth;
@@ -10,12 +9,10 @@ using Infrastructure.Repositories;
 using Infrastructure.Resilience;
 using Infrastructure.Services;
 using Infrastructure.Storage;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
 using Polly;
 
 namespace Infrastructure;

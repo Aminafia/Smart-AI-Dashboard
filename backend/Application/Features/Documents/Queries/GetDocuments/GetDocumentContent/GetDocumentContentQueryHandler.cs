@@ -1,7 +1,6 @@
 using Application.Common.Exceptions;
 using Application.Features.Documents.Models;
 using Application.Interfaces;
-
 using MediatR;
 
 namespace Application.Features.Documents.Queries.GetDocumentContent;

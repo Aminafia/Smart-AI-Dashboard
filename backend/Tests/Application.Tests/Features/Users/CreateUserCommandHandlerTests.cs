@@ -1,10 +1,8 @@
 using Application.Common.Exceptions;
 using Application.Features.Users.Commands.CreateUser;
 using Application.Interfaces;
-
 using Core.Constants;
 using Core.Entities;
-
 using Moq;
 
 namespace Application.Tests.Features.Users;

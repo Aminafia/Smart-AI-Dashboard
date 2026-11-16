@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-
 import DOMPurify from 'dompurify';
 import { marked } from 'marked';
 

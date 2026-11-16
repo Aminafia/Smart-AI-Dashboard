@@ -1,11 +1,8 @@
 using Application.Features.AI.Commands.GenerateText;
 using Application.Interfaces;
-
 using Core.Entities;
 using Core.Enums;
-
 using Microsoft.Extensions.Logging;
-
 using Moq;
 
 namespace Application.Tests.Features.AI;
