@@ -1,5 +1,16 @@
-:host { display: block; }
-::ng-deep app-empty-state > div { border-color: var(--border) !important; background: var(--accent-soft) !important; }
-::ng-deep app-empty-state mat-icon { color: var(--accent) !important; }
-::ng-deep app-empty-state h2 { color: var(--text-primary); }
-::ng-deep app-empty-state p { color: var(--text-secondary); }
+:host {
+  display: block;
+}
+::ng-deep app-empty-state > div {
+  border-color: var(--border) !important;
+  background: var(--accent-soft) !important;
+}
+::ng-deep app-empty-state mat-icon {
+  color: var(--accent) !important;
+}
+::ng-deep app-empty-state h2 {
+  color: var(--text-primary);
+}
+::ng-deep app-empty-state p {
+  color: var(--text-secondary);
+}
