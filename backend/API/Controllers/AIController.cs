@@ -8,9 +8,7 @@ using Application.Features.AI.Queries.GetAIStats;
 using Application.Features.AI.Queries.GetAIStatus;
 using Application.Features.AI.Queries.GetDocumentSummary;
 using Application.Interfaces;
-
 using MediatR;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;

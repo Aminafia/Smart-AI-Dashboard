@@ -7,9 +7,7 @@ using Application.Features.Documents.Models;
 using Application.Features.Documents.Queries.GetDocument;
 using Application.Features.Documents.Queries.GetDocumentContent;
 using Application.Features.Documents.Queries.GetDocuments;
-
 using MediatR;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

@@ -44,12 +44,9 @@ using Application.Common.Models;
 using Application.DTOs.Auth;
 using Application.Features.Auth.Commands.Login;
 using Application.Features.Users.Commands.CreateUser;
-
 using MediatR;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 using Serilog;
 
 namespace API.Controllers;
