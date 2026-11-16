@@ -1,15 +1,10 @@
 using System.Text.Json;
-
 using API.Middlewares;
-
 using Application.Common.Exceptions;
-
 using FluentValidation;
 using FluentValidation.Results;
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-
 using Moq;
 
 namespace Application.Tests.API;
