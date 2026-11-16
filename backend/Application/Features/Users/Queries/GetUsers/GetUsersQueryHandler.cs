@@ -1,6 +1,5 @@
 using Application.Features.Users.DTOs;
 using Application.Interfaces;
-
 using MediatR;
 
 namespace Application.Features.Users.Queries.GetUsers;
