@@ -1,11 +1,8 @@
 using Application.DTOs.AI;
 using Application.Interfaces;
-
 using Core.Entities;
 using Core.Enums;
-
 using MediatR;
-
 using Microsoft.Extensions.Logging;
 
 namespace Application.Features.AI.Commands.GenerateText;

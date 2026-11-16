@@ -1,9 +1,7 @@
 using Application.DTOs.AI;
 using Application.Interfaces;
-
 using Core.Entities;
 using Core.Enums;
-
 using MediatR;
 
 namespace Application.Features.AI.Commands.Summarize;
