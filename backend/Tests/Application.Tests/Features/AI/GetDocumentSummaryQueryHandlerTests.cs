@@ -1,8 +1,6 @@
 using Application.Features.AI.Queries.GetDocumentSummary;
 using Application.Interfaces;
-
 using Core.Entities;
-
 using Moq;
 
 namespace Application.Tests.Features.AI;

@@ -1,10 +1,8 @@
 using Application.DTOs.AI;
 using Application.Features.AI.Commands.Summarize;
 using Application.Interfaces;
-
 using Core.Entities;
 using Core.Enums;
-
 using Moq;
 
 namespace Application.Tests.Features.AI;
