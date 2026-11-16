@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
-
 import { DocumentService } from '../../../../core/services/document.service';
 import { SnackbarService } from '../../../../shared/services/snackbar.service';
 import { DocumentListComponent } from './document-list.component';

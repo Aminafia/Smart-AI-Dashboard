@@ -1,10 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-
-import { DocumentModel } from '../../../../core/models/documents/document.model';
-import { DocumentService } from '../../../../core/services/document.service';
-import { SnackbarService } from '../../../../shared/services/snackbar.service';
-
 import { DatePipe } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,10 +7,13 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
+import { DocumentModel } from '../../../../core/models/documents/document.model';
+import { DocumentService } from '../../../../core/services/document.service';
 import { ConfirmationDialogComponent } from '../../../../shared/components/confirmation-dialog/confirmation-dialog.component';
 import { EmptyStateComponent } from '../../../../shared/components/empty-state/empty-state.component';
 import { PageCardComponent } from '../../../../shared/components/page-card/page-card.component';
 import { PageHeaderComponent } from '../../../../shared/components/page-header/page-header.component';
+import { SnackbarService } from '../../../../shared/services/snackbar.service';
 
 @Component({
   selector: 'app-document-list',
