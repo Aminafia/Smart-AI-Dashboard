@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { CurrentUserService } from './current-user.service';
 import { TokenService } from './token.service';
 

@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-
 import { AuthStateService } from './auth-state.service';
 import { CurrentUserService } from './current-user.service';
 import { TokenService } from './token.service';

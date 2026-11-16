@@ -1,7 +1,6 @@
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
 import { environment } from '../../../environments/environment';
 import { SKIP_LOADING } from '../constants/loading-context';
 import { AIJob } from '../models/ai/ai-job.model';
