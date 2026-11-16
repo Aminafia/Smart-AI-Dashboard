@@ -19,8 +19,6 @@ AIWorker Working:
        • Save to database.
        • Log the final failure.
 */
-
-
 using Application.DTOs.AI;
 using Application.Interfaces;
 using Core.Enums;
@@ -36,13 +34,15 @@ public class AIWorker : BackgroundService
     private readonly IServiceScopeFactory _scopeFactory;
     private readonly ILogger<AIWorker> _logger;
 
-    public AIWorker(IAIQueue queue, IServiceScopeFactory scopeFactory, ILogger<AIWorker> logger)
+    public AIWorker(
+        IAIQueue queue,
+        IServiceScopeFactory scopeFactory,
+        ILogger<AIWorker> logger)
     {
         _queue = queue;
         _scopeFactory = scopeFactory;
         _logger = logger;
     }
-
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -52,6 +52,7 @@ public class AIWorker : BackgroundService
         {
             var jobStore = recoveryScope.ServiceProvider.GetRequiredService<IAIJobStore>();
             var recoverableJobs = await jobStore.GetRecoverableJobsAsync();
+
             foreach (var job in recoverableJobs)
             {
                 if (stoppingToken.IsCancellationRequested)
@@ -68,12 +69,16 @@ public class AIWorker : BackgroundService
                     job.CompletedAt ??= DateTime.UtcNow;
 
                     await jobStore.UpdateJobAsync(job);
-                    _logger.LogWarning("Job {JobId} was marked Failed during recovery because its retry allowance was exhausted ({RetryCount}/{MaxRetries}).",
-                                       job.Id,
-                                       job.RetryCount,
-                                       job.MaxRetries);
+
+                    _logger.LogWarning(
+                        "Job {JobId} was marked Failed during recovery because its retry allowance was exhausted ({RetryCount}/{MaxRetries}).",
+                        job.Id,
+                        job.RetryCount,
+                        job.MaxRetries);
+
                     continue;
                 }
+
                 if (job.Status == AIJobStatus.Processing)
                 {
                     job.Status = AIJobStatus.Pending;
@@ -82,9 +87,10 @@ public class AIWorker : BackgroundService
 
                 _queue.Enqueue(job);
 
-                _logger.LogInformation("Recovered AI job {JobId} with status {Status}",
-                                       job.Id,
-                                       job.Status);
+                _logger.LogInformation(
+                    "Recovered AI job {JobId} with status {Status}",
+                    job.Id,
+                    job.Status);
             }
         }
 
@@ -93,6 +99,7 @@ public class AIWorker : BackgroundService
         while (!stoppingToken.IsCancellationRequested)
         {
             var job = _queue.Dequeue();
+
             if (job is null)
             {
                 await Task.Delay(500, stoppingToken);
@@ -100,6 +107,7 @@ public class AIWorker : BackgroundService
             }
 
             using var scope = _scopeFactory.CreateScope();
+
             var jobStore = scope.ServiceProvider.GetRequiredService<IAIJobStore>();
             var aiService = scope.ServiceProvider.GetRequiredService<IAIService>();
 
@@ -107,11 +115,13 @@ public class AIWorker : BackgroundService
             {
                 job.Status = AIJobStatus.Processing;
                 await jobStore.UpdateJobAsync(job);
+
                 var request = new AIRequest
                 {
                     Input = job.Prompt,
                     JobType = job.JobType
                 };
+
                 var response = await aiService.ProcessAsync(request, stoppingToken);
 
                 job.Result = response.Output;
@@ -120,37 +130,45 @@ public class AIWorker : BackgroundService
 
                 await jobStore.UpdateJobAsync(job);
             }
-
             catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
             {
-                _logger.LogInformation("AI job {JobId} processing was cancelled during worker shutdown.",
-                                       job.Id);
+                _logger.LogInformation(
+                    "AI job {JobId} processing was cancelled during worker shutdown.",
+                    job.Id);
+
                 break;
             }
             catch (Exception ex)
             {
                 job.RetryCount++;
-                _logger.LogWarning(ex,
-                                   "Job {JobId} failed. Retry {RetryCount}/{MaxRetries}",
-                                    job.Id,
-                                    job.RetryCount,
-                                    job.MaxRetries);
+
+                _logger.LogWarning(
+                    ex,
+                    "Job {JobId} failed. Retry {RetryCount}/{MaxRetries}",
+                    job.Id,
+                    job.RetryCount,
+                    job.MaxRetries);
 
                 if (job.RetryCount < job.MaxRetries)
                 {
                     job.Status = AIJobStatus.Retrying;
                     await jobStore.UpdateJobAsync(job);
+
                     var delaySeconds = Math.Pow(2, job.RetryCount);
+
                     try
                     {
                         await Task.Delay(TimeSpan.FromSeconds(delaySeconds), stoppingToken);
                     }
                     catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
                     {
-                        _logger.LogInformation("Worker shutting down while job {JobId} was waiting to retry.",
-                                               job.Id);
+                        _logger.LogInformation(
+                            "Worker shutting down while job {JobId} was waiting to retry.",
+                            job.Id);
+
                         break;
                     }
+
                     _queue.Enqueue(job);
                 }
                 else
@@ -158,10 +176,13 @@ public class AIWorker : BackgroundService
                     job.Status = AIJobStatus.Failed;
                     job.Error = $"Job failed after {job.RetryCount} attempts: {ex.Message}";
                     job.CompletedAt = DateTime.UtcNow;
+
                     await jobStore.UpdateJobAsync(job);
-                    _logger.LogError(ex,
-                                     "Job {JobId} failed after max retries",
-                                     job.Id);
+
+                    _logger.LogError(
+                        ex,
+                        "Job {JobId} failed after max retries",
+                        job.Id);
                 }
             }
         }

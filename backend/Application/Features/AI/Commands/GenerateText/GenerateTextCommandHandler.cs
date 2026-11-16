@@ -14,7 +14,11 @@ public class GenerateTextCommandHandler : IRequestHandler<GenerateTextCommand, A
     private readonly ICurrentUserService _currentUser;
     private readonly ILogger<GenerateTextCommandHandler> _logger;
 
-    public GenerateTextCommandHandler(IAIQueue queue, IAIJobStore jobStore, ICurrentUserService currentUser, ILogger<GenerateTextCommandHandler> logger)
+    public GenerateTextCommandHandler(
+        IAIQueue queue,
+        IAIJobStore jobStore,
+        ICurrentUserService currentUser,
+        ILogger<GenerateTextCommandHandler> logger)
     {
         _queue = queue;
         _jobStore = jobStore;
@@ -22,7 +26,9 @@ public class GenerateTextCommandHandler : IRequestHandler<GenerateTextCommand, A
         _logger = logger;
     }
 
-    public async Task<AIOperationResponse> Handle(GenerateTextCommand request, CancellationToken cancellationToken)
+    public async Task<AIOperationResponse> Handle(
+        GenerateTextCommand request,
+        CancellationToken cancellationToken)
     {
         var job = new AIJob
         {
@@ -31,9 +37,12 @@ public class GenerateTextCommandHandler : IRequestHandler<GenerateTextCommand, A
             JobType = AIJobType.GenerateText,
             Prompt = request.Prompt
         };
+
         await _jobStore.AddJobAsync(job);
         _queue.Enqueue(job);
+
         _logger.LogInformation("AI job created: {JobId}", job.Id);
+
         return new AIOperationResponse
         {
             JobId = job.Id,
