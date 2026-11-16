@@ -23,9 +23,7 @@ AIWorker Working:
 
 using Application.DTOs.AI;
 using Application.Interfaces;
-
 using Core.Enums;
-
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
