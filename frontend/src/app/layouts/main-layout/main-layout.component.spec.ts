@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
-
 import { AuthStateService } from '../../core/services/auth-state.service';
 import { CurrentUserService } from '../../core/services/current-user.service';
 import { MainLayoutComponent } from './main-layout.component';

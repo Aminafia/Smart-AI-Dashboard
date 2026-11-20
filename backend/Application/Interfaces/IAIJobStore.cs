@@ -1,6 +1,5 @@
 using Application.Common.Models;
 using Application.Features.AI.Queries.GetAIStats;
-
 using Core.Entities;
 
 namespace Application.Interfaces;

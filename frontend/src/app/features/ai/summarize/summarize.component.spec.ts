@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
-
 import { AiService } from '../../../core/services/ai.service';
 import { MarkdownService } from '../../../shared/services/markdown.service';
 import { SnackbarService } from '../../../shared/services/snackbar.service';

@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
-
 import { TokenService } from '../services/token.service';
 import { authGuard } from './auth.guard';
 

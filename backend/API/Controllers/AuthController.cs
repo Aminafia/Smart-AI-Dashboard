@@ -1,8 +1,8 @@
 /*
-User logs in with Eamil and password 
+User logs in with Eamil and password
     |
     | LoginRequest(Email, Password)
-    ↓ 
+    ↓
 (----API----)
 AuthController - converts LoginRequest to LoginCommand via MediatR
     |
@@ -16,7 +16,7 @@ MediatR - routes LoginCommand to LoginCommandHandler
 LoginCommandHandler - processes the command using IUserRepository to fetch user data (still in Application layer), validates credentials, generates JWT token
     |
     | LoginResponse(Token, Email)
-    ↓ 
+    ↓
 IUserRepository (Application)
     |
     | call UserRepository.GetByEmailAsync(Email)
@@ -44,12 +44,9 @@ using Application.Common.Models;
 using Application.DTOs.Auth;
 using Application.Features.Auth.Commands.Login;
 using Application.Features.Users.Commands.CreateUser;
-
 using MediatR;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 using Serilog;
 
 namespace API.Controllers;
@@ -65,7 +62,6 @@ public class AuthController : ControllerBase
         _mediator = mediator;
     }
 
-
     /// <summary>
     /// Handles authentication endpoints.
     /// 1. Receives `LoginRequest` from client as JSON payload containing Email and Password.
@@ -79,12 +75,15 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login(LoginRequest request)
     {
         Log.Information("[Controller] Login endpoint hit");
+
         var command = new LoginCommand
         {
             Email = request.Email,
             Password = request.Password
         };
+
         var result = await _mediator.Send(command);
+
         Log.Information("[Controller] Login successful, returning response");
 
         return Ok(ApiResponse<LoginResponse>.SuccessResponse(result, "Login successful"));
@@ -92,13 +91,14 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("register")]
-    public async Task<IActionResult> Register(
-    [FromBody] CreateUserCommand command)
+    public async Task<IActionResult> Register([FromBody] CreateUserCommand command)
     {
         Log.Information("[Controller] Register endpoint hit");
+
         var userId = await _mediator.Send(command);
 
         Log.Information("[Controller] User registered with ID: {UserId}", userId);
+
         return Ok(ApiResponse<Guid>.SuccessResponse(userId, "Account created successfully"));
     }
 }

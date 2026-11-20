@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-
 import { AIStats } from '../../core/models/ai/ai-stats.model';
 import { AiService } from '../../core/services/ai.service';
 import { PageCardComponent } from '../../shared/components/page-card/page-card.component';

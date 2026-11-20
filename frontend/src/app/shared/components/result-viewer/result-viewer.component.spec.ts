@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ResultViewerComponent } from './result-viewer.component';
 
 describe('ResultViewerComponent', () => {

@@ -1,16 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { SummarizeRequest } from '../../../core/models/ai/summarize-request.model';
+import { AiService } from '../../../core/services/ai.service';
 import { PageHeaderComponent } from '../../../shared/components/page-header/page-header.component';
 import { ResultViewerComponent } from '../../../shared/components/result-viewer/result-viewer.component';
 import { WorkspaceSectionComponent } from '../../../shared/components/workspace-section/workspace-section.component';
-
-import { SummarizeRequest } from '../../../core/models/ai/summarize-request.model';
-import { AiService } from '../../../core/services/ai.service';
 import { MarkdownService } from '../../../shared/services/markdown.service';
 import { SnackbarService } from '../../../shared/services/snackbar.service';
 

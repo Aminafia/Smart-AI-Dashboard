@@ -7,19 +7,16 @@ Purpose of LoginComponent:
     * Navigate to dashboard on success
     * Display error message on failure
 */
-
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-
-import { AuthService } from '../../../core/services/auth.service';
-
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Router, RouterLink } from '@angular/router';
 import { LoginRequest } from '../../../core/models/auth/login-request';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',

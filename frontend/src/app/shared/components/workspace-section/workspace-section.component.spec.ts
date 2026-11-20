@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { WorkspaceSectionComponent } from './workspace-section.component';
 
 describe('WorkspaceSectionComponent', () => {

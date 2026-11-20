@@ -1,5 +1,4 @@
 using Application.Interfaces;
-
 using UglyToad.PdfPig;
 using UglyToad.PdfPig.DocumentLayoutAnalysis.TextExtractor;
 

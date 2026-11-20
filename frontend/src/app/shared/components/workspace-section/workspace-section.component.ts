@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-
 import { MatDividerModule } from '@angular/material/divider';
 import { PageCardComponent } from '../page-card/page-card.component';
 

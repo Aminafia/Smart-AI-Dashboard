@@ -12,9 +12,7 @@ Return response
 
 using Application.Common.Exceptions;
 using Application.Interfaces;
-
 using MediatR;
-
 using Microsoft.Extensions.Logging;
 
 namespace Application.Features.Auth.Commands.Login;

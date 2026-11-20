@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { MarkdownService } from './markdown.service';
 
 describe('MarkdownService', () => {

@@ -2,10 +2,8 @@ using Application.Common.Exceptions;
 using Application.DTOs.AI;
 using Application.Features.AI.Commands.SummarizeDocument;
 using Application.Interfaces;
-
 using Core.Entities;
 using Core.Enums;
-
 using Moq;
 
 namespace Application.Tests.Features.AI;

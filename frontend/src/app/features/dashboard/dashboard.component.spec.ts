@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of, throwError } from 'rxjs';
-
 import { AiService } from '../../core/services/ai.service';
 import { DashboardComponent } from './dashboard.component';
 

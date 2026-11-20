@@ -1,9 +1,7 @@
 using Application.Common.Exceptions;
 using Application.Features.Documents.Queries.GetDocumentContent;
 using Application.Interfaces;
-
 using Core.Entities;
-
 using Moq;
 
 namespace Application.Tests.Features.Documents;

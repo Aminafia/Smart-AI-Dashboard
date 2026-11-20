@@ -7,20 +7,18 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import DOMPurify from 'dompurify';
+import { marked } from 'marked';
 import { DocumentContentResponse } from '../../../../core/models/documents/document-content-response.model';
 import { DocumentModel } from '../../../../core/models/documents/document.model';
 import { AiService } from '../../../../core/services/ai.service';
 import { DocumentService } from '../../../../core/services/document.service';
 import { PageCardComponent } from '../../../../shared/components/page-card/page-card.component';
 import { SnackbarService } from '../../../../shared/services/snackbar.service';
-
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import DOMPurify from 'dompurify';
-import { marked } from 'marked';
 
 @Component({
   selector: 'app-document-details',

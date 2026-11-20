@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { of } from 'rxjs';
-
 import { AiService } from '../../../core/services/ai.service';
 import { JobHistoryComponent } from './job-history.component';
 
